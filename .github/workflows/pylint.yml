@@ -23,7 +23,6 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        cd catchb_backend
         source test/bin/activate
         DJANGO_SETTINGS_MODULE=catchb.settings pylint **/*.py --load-plugins pylint_django
         pylint $(git ls-files '*.py')
