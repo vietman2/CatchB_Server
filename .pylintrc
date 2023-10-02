@@ -1,5 +1,5 @@
 [MASTER]
 disable=
-    C0114
+    C0114, R0801
 ignore=manage.py
 ignore-paths=.*/migrations

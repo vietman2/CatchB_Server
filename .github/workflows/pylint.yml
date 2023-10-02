@@ -24,5 +24,9 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         source test/bin/activate
-        DJANGO_SETTINGS_MODULE=catchb.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=community_service.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=file_management_service.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=payments_service.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=reservations_service.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=user_management_service.settings pylint **/*.py --load-plugins pylint_django
         pylint $(git ls-files '*.py')
