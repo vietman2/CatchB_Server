@@ -20,7 +20,10 @@ class ChatMessage(models.Model):
     dialog = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, db_comment="ChatRoom. 채팅방")
     author = models.IntegerField(db_comment="ChatMessage Author. 채팅 메시지 작성자")
     message = models.TextField(db_comment="ChatMessage. 채팅 메시지")
-    created_at = models.DateTimeField(auto_now_add=True, db_comment="ChatMessage Created At. 채팅 메시지 작성일")
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        db_comment="ChatMessage Created At. 채팅 메시지 작성일"
+    )
 
     ## 추후 추가할 필드
     ## 채팅 메시지 읽음 여부
