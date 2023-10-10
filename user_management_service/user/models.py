@@ -45,8 +45,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_comment='이메일')
     phone_number = PhoneNumberField(unique=True, db_comment='전화번호')
 
-    birth_date = models.DateField(db_comment='생년월일')
-    gender = models.CharField(max_length=1, db_comment='성별')
+    birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
+    gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True, db_comment='가입일')
 
     experience_tier = models.IntegerField(choices=ExperienceTierChoices.choices, db_comment='야구 경험 등급', default=ExperienceTierChoices.BEGINNER)
@@ -70,6 +70,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     register_route = models.IntegerField(choices=RegisterRouteChoices.choices, db_comment='가입 경로', default=RegisterRouteChoices.CATCHB)
 
     USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = [
+        'first_name',
+        'last_name',
+        'email',
+        'phone_number',
+    ]
 
     objects = UserManager()
 
@@ -77,7 +83,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         db_table = 'user'
         verbose_name = _('user')
         verbose_name_plural = _('users')
-
 
 class Coach(CustomUser):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
