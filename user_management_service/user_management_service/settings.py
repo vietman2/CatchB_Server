@@ -44,9 +44,15 @@ INSTALLED_APPS = [
     "phonenumber_field",
     'rest_framework',
     'rest_framework.authtoken',
+    'dj_rest_auth',
     #'rest_framework_simplejwt',
     "drf_spectacular",
 ]
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'jwt-auth',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -112,6 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL='user.CustomUser'
+PHONENUMBER_DEFAULT_REGION = 'KR'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
