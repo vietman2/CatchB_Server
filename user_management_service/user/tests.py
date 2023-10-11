@@ -60,7 +60,6 @@ class RegisterAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         response = self.client.post("/api/account/register/", data=self.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print(response.data)
 
     def test_register_fail_password(self):
         # 1. password is not matched
