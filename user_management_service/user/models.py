@@ -42,7 +42,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(max_length=150, db_comment='이름')
     last_name = models.CharField(max_length=150, db_comment='성')
-    email = models.EmailField(db_comment='이메일')
+    email = models.EmailField(unique=True, db_comment='이메일')
     phone_number = PhoneNumberField(unique=True, db_comment='전화번호')
 
     birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
