@@ -37,6 +37,10 @@ class UserRegisterSerializer(ModelSerializer):
         validated_data.pop("password2")
         user = CustomUser.objects.create_user(**validated_data)
         return user
+    
+    def save(self, **kwargs):
+        self.create(self.validated_data)
+        return self.validated_data
 
 class PasswordChangeSerializer(ModelSerializer):
     old_password = serializers.CharField(write_only=True)

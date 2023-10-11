@@ -21,7 +21,7 @@ class RegisterView(CreateAPIView):
                 "errors": e.detail,
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        super().post(request, *args, **kwargs)
+        serializer.save()
         return Response(data={
             "message": "회원가입이 완료되었습니다.",
         }, status=status.HTTP_201_CREATED)
@@ -31,7 +31,7 @@ class PasswordChangeView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
     throttle_scope = 'dj_rest_auth'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
