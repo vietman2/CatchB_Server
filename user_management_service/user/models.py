@@ -93,11 +93,35 @@ class Coach(CustomUser):
     # facility = models.TextField(db_comment="소속 시설")
     # areas = models.TextField(db_comment="레슨 영역", help_text="레슨 영역: 타격, 투구, 수비, 주루, 트레이닝, 피지컬, 기타")
 
+    class Meta:
+        db_table = 'coach'
+        verbose_name = _('coach')
+        verbose_name_plural = _('coaches')
+
 class FacilityOwner(CustomUser):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
+
+    facility_name = models.CharField(max_length=150, db_comment='시설명')
+    facility_address = models.CharField(max_length=150, db_comment='시설 주소')
+    facility_phone_number = PhoneNumberField(db_comment='시설 전화번호')
+
+    class Meta:
+        db_table = 'facility_owner'
+        verbose_name = _('facility_owner')
+        verbose_name_plural = _('facility_owners')
 
 class Partner(CustomUser):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
 
+    class Meta:
+        db_table = 'partner'
+        verbose_name = _('partner')
+        verbose_name_plural = _('partners')
+
 class Counselor(CustomUser):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
+
+    class Meta:
+        db_table = 'counselor'
+        verbose_name = _('counselor')
+        verbose_name_plural = _('counselors')
