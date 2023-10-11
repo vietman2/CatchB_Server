@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
     strategy:
       matrix:
         python-version: ["3.9"]
