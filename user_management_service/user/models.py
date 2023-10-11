@@ -133,7 +133,12 @@ class FacilityOwner(CustomUser):
         verbose_name_plural = _('facility_owners')
 
 class Partner(CustomUser):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        parent_link=True
+    )
 
     class Meta:
         db_table = 'partner'
@@ -141,7 +146,12 @@ class Partner(CustomUser):
         verbose_name_plural = _('partners')
 
 class Counselor(CustomUser):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        parent_link=True
+    )
 
     class Meta:
         db_table = 'counselor'
