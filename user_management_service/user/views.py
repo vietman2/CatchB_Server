@@ -2,10 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import GenericAPIView
 
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer, PasswordChangeSerializer
 
-class RegisterAPIView(CreateAPIView):
+class RegisterView(CreateAPIView):
     serializer_class = UserRegisterSerializer
 
     def post(self, request, *args, **kwargs):
@@ -23,3 +25,22 @@ class RegisterAPIView(CreateAPIView):
         return Response(data={
             "message": "회원가입이 완료되었습니다.",
         }, status=status.HTTP_201_CREATED)
+
+class PasswordChangeView(GenericAPIView):
+    serializer_class = PasswordChangeSerializer
+    permission_classes = (IsAuthenticated,)
+    throttle_scope = 'dj_rest_auth'
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={
+                "errors": e.detail,
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response(data={
+            "message": "비밀번호가 변경되었습니다.",
+        }, status=status.HTTP_200_OK)

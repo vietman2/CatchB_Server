@@ -1,17 +1,18 @@
 from django.urls import path
 from dj_rest_auth.views import (
-    LoginView, LogoutView, PasswordChangeView,
+    LoginView, LogoutView,
     PasswordResetConfirmView, PasswordResetView
 )
 
-from .views import RegisterAPIView
+from .views import RegisterView, PasswordChangeView
 
 urlpatterns = [
-    path("register/", RegisterAPIView.as_view(), name="register"),
+    path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path("password-change/", PasswordChangeView.as_view(), name="pw-change"),
+
     path("password-reset/", PasswordResetView.as_view(), name="pw-reset"),
     path("password-reset-confirm/", PasswordResetConfirmView.as_view(), name="pw-reset-confirm"),
-    path("password-change/", PasswordChangeView.as_view(), name="pw-change"),
     # path("user/", )
 ]
