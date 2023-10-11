@@ -1,4 +1,3 @@
-from django.db import models
 from django.apps import apps
 from django.contrib.auth.base_user import BaseUserManager
 
@@ -11,7 +10,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-    
+
     def create_superuser(self, password=None, **extra_fields):
         user = self.create_user(
             password=password,
@@ -26,5 +25,5 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-    
+
     # def update_password():

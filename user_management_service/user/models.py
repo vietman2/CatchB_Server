@@ -16,7 +16,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         PARTNER = 4, '파트너'
         COUNSELOR = 5, '상담사'
         GOODS_SELLER = 6, '용품판매자'
-        FASHION_EDITOR = 7, '패션에디터'   
+        FASHION_EDITOR = 7, '패션에디터'
 
     class RegisterRouteChoices(models.IntegerChoices):
         CATCHB = 0, '캐치비'
@@ -49,7 +49,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True, db_comment='가입일')
 
-    experience_tier = models.IntegerField(choices=ExperienceTierChoices.choices, db_comment='야구 경험 등급', default=ExperienceTierChoices.BEGINNER)
+    experience_tier = models.IntegerField(
+        choices=ExperienceTierChoices.choices,
+        db_comment='야구 경험 등급',
+        default=ExperienceTierChoices.BEGINNER
+    )
     ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
     # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
     # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
@@ -65,9 +69,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         help_text='Designates whether this user should be treated as active. '
                     'Unselect this instead of deleting accounts.',
     )
-    
-    user_type = models.IntegerField(choices=UserTypeChoices.choices, db_comment='유저 타입', default=UserTypeChoices.NORMAL)
-    register_route = models.IntegerField(choices=RegisterRouteChoices.choices, db_comment='가입 경로', default=RegisterRouteChoices.CATCHB)
+
+    user_type = models.IntegerField(
+        choices=UserTypeChoices.choices,
+        db_comment='유저 타입',
+        default=UserTypeChoices.NORMAL
+    )
+    register_route = models.IntegerField(
+        choices=RegisterRouteChoices.choices,
+        db_comment='가입 경로',
+        default=RegisterRouteChoices.CATCHB
+    )
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = [
@@ -85,7 +97,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
 class Coach(CustomUser):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        parent_link=True
+    )
 
     academic_background = models.TextField(db_comment='학력', help_text='학력을 입력해주세요.')
     baseball_career = models.TextField(db_comment='야구 경력', help_text='야구 경력을 입력해주세요.')
@@ -99,7 +116,12 @@ class Coach(CustomUser):
         verbose_name_plural = _('coaches')
 
 class FacilityOwner(CustomUser):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, parent_link=True)
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        parent_link=True
+    )
 
     facility_name = models.CharField(max_length=150, db_comment='시설명')
     facility_address = models.CharField(max_length=150, db_comment='시설 주소')
