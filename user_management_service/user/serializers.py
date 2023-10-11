@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from django.contrib.auth.password_validation import validate_password
 
 from .models import CustomUser
 
@@ -65,25 +65,25 @@ class PasswordChangeSerializer(ModelSerializer):
         if not user.check_password(value):
             raise serializers.ValidationError("기존 비밀번호가 일치하지 않습니다.")
         return value
-    
-    def validate(self, value):
-        if value["new_password1"] != value["new_password2"]:
+
+    def validate(self, attrs):
+        if attrs["new_password1"] != attrs["new_password2"]:
             raise serializers.ValidationError("새로운 비밀번호가 일치하지 않습니다.")
-        
-        if value["old_password"] == value["new_password1"]:
+
+        if attrs["old_password"] == attrs["new_password1"]:
             raise serializers.ValidationError("새로운 비밀번호가 기존 비밀번호와 일치합니다.")
 
         self.set_password_form = self.set_password_form_class(
             user=self.context["request"].user,
-            data=value
+            data=attrs
         )
 
         if not self.set_password_form.is_valid():
             raise serializers.ValidationError(self.set_password_form.errors)
 
-        return value
+        return attrs
 
-    def save(self):
+    def save(self, **kwargs):
         self.set_password_form.save()
         self.set_password_form.user.refresh_from_db()
         return self.set_password_form.user

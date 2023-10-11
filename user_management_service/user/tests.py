@@ -125,7 +125,7 @@ class RegisterAPITestCase(APITestCase):
         # 2. username is not valid
         self.data["username"] = "test!"
         response = self.client.post("/api/account/register/", data=self.data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_register_fail_emptyfields(self):
         response = self.client.post("/api/account/register/", data={})
@@ -342,7 +342,7 @@ class PasswordChangeAPITestCase(APITestCase):
         self.user.save()
         response = self.client.post("/api/account/password-change/", data=self.change_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        
+
     def test_password_change_fail_3(self):
         # 1. user is not logged in
         response = self.client.post("/api/account/login/", data=self.data)
@@ -351,5 +351,3 @@ class PasswordChangeAPITestCase(APITestCase):
         self.client.logout()
         response = self.client.post("/api/account/password-change/", data=self.change_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        
