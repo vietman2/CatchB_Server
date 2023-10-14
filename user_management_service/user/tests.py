@@ -351,3 +351,51 @@ class PasswordChangeAPITestCase(APITestCase):
         self.client.logout()
         response = self.client.post("/api/account/password-change/", data=self.change_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+class PasswordResetAPITestCase(APITestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(
+            username="test",
+            first_name="test",
+            last_name="test",
+            email="test@test.com",
+            phone_number="010-1234-5678",
+            password="passpass1234",
+        )
+
+    def test_unallowed_method(self):
+        response = self.client.get("/api/account/password/reset/")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.put("/api/account/password/reset/")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.patch("/api/account/password/reset/")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.delete("/api/account/password/reset/")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_password_reset_success(self):
+        # 1. password is reset
+        response = self.client.post("/api/account/password/reset/", data={"email": "test@test.com"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_password_reset_fail(self):
+        # 1. user is not found
+        response = self.client.post("/api/account/password/reset/", data={"email": "wrong@email.com"})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # 2. email is not valid
+        response = self.client.post("/api/account/password/reset/", data={"email": "test"})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # 3. empty fields
+        response = self.client.post("/api/account/password/reset/", data={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # 4. user is not active
+        self.user.is_active = False
+        self.user.save()
+        response = self.client.post("/api/account/password/reset/", data={"email": "test@test.com"})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

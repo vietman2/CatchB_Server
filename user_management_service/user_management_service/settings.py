@@ -42,12 +42,14 @@ INSTALLED_APPS = [
 
     'user.apps.UserConfig',
 
+    "allauth",
+    "allauth.account",
     "phonenumber_field",
     'rest_framework',
     'rest_framework.authtoken',
-    'dj_rest_auth',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'dj_rest_auth',
     "drf_spectacular",
 ]
 
@@ -59,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'user_management_service.urls'
@@ -156,6 +159,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
+## TODO: FIX THIS LATER!!!
+## DEFAULT_FROM_EMAIL = 'vietman0@gmail.com'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
