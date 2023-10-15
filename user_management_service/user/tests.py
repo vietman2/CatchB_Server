@@ -40,9 +40,7 @@ class RegisterAPITestCase(APITestCase):
 
         # 디폴트 값들이 잘 들어갔는지 확인
         self.assertEqual(CustomUser.objects.get().is_active, True)
-        self.assertEqual(CustomUser.objects.get().is_staff, False)
         self.assertEqual(CustomUser.objects.get().is_superuser, False)
-        self.assertEqual(CustomUser.objects.get().user_type, 1)
         self.assertEqual(CustomUser.objects.get().register_route, 0)
         self.assertEqual(CustomUser.objects.get().birth_date, None)
         self.assertEqual(CustomUser.objects.get().experience_tier, 0)
@@ -59,8 +57,6 @@ class RegisterAPITestCase(APITestCase):
         )
         self.assertEqual(CustomUser.objects.count(), 1)
         self.assertEqual(CustomUser.objects.get().is_superuser, True)
-        self.assertEqual(CustomUser.objects.get().is_staff, True)
-        self.assertEqual(CustomUser.objects.get().user_type, 0)
 
     def test_register_fail_unique(self):
         # 1. username is not unique

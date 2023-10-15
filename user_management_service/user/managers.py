@@ -17,10 +17,8 @@ class UserManager(BaseUserManager):
             **extra_fields
         )
         user.is_superuser = True
-        user.is_staff = True
 
         CustomUser = apps.get_model('user', 'CustomUser')
-        user.user_type = CustomUser.UserTypeChoices.ADMIN
 
         user.save(using=self._db)
 

@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -20,6 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
 
+    uuid = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
     username = models.CharField(
         max_length=150,
         unique=True,
