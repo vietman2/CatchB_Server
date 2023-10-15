@@ -2,7 +2,6 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.password_validation import validate_password
 from dj_rest_auth.forms import AllAuthPasswordResetForm
-from allauth.account.forms import default_token_generator
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -110,9 +109,9 @@ class PasswordResetSerializer(serializers.Serializer):
 
         return value
 
-    def save(self):
+    def save(self, **kwargs):
         request = self.context["request"]
-        
+
         opts = {
             "use_https": request.is_secure(),
             "token_generator": default_token_generator,
@@ -121,3 +120,9 @@ class PasswordResetSerializer(serializers.Serializer):
         }
 
         self.reset_form.save(**opts)
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
