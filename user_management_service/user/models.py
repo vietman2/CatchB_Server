@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -8,16 +9,6 @@ from .managers import UserManager
 
 # Create your models here.
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    class UserTypeChoices(models.IntegerChoices):
-        ADMIN = 0, '관리자'
-        NORMAL = 1, '일반'
-        COACH = 2, '코치'
-        FACILITY_OWNER = 3, '시설주'
-        PARTNER = 4, '파트너'
-        COUNSELOR = 5, '상담사'
-        GOODS_SELLER = 6, '용품판매자'
-        FASHION_EDITOR = 7, '패션에디터'
-
     class RegisterRouteChoices(models.IntegerChoices):
         CATCHB = 0, '캐치비'
         KAKAO = 1, '카카오'
@@ -30,6 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
 
+    uuid = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
     username = models.CharField(
         max_length=150,
         unique=True,
@@ -42,7 +34,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(max_length=150, db_comment='이름')
     last_name = models.CharField(max_length=150, db_comment='성')
-    email = models.EmailField(db_comment='이메일')
+    email = models.EmailField(unique=True, db_comment='이메일')
     phone_number = PhoneNumberField(unique=True, db_comment='전화번호')
 
     birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
@@ -58,10 +50,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
     # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
 
-    is_staff = models.BooleanField(
+    is_superuser = models.BooleanField(
         default=False,
-        db_comment='스태프 여부',
-        help_text='Designates whether the user can log into this admin site.',
+        db_comment='슈퍼유저 여부',
+        help_text='Designates that this user has all permissions without '
+                    'explicitly assigning them.',
     )
     is_active = models.BooleanField(
         default=True,
@@ -70,11 +63,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                     'Unselect this instead of deleting accounts.',
     )
 
-    user_type = models.IntegerField(
-        choices=UserTypeChoices.choices,
-        db_comment='유저 타입',
-        default=UserTypeChoices.NORMAL
-    )
     register_route = models.IntegerField(
         choices=RegisterRouteChoices.choices,
         db_comment='가입 경로',
@@ -101,7 +89,8 @@ class Coach(CustomUser):
         CustomUser,
         on_delete=models.CASCADE,
         primary_key=True,
-        parent_link=True
+        parent_link=True,
+        related_name='coach'
     )
 
     academic_background = models.TextField(db_comment='학력', help_text='학력을 입력해주세요.')
@@ -120,7 +109,8 @@ class FacilityOwner(CustomUser):
         CustomUser,
         on_delete=models.CASCADE,
         primary_key=True,
-        parent_link=True
+        parent_link=True,
+        related_name='facility_owner'
     )
 
     facility_name = models.CharField(max_length=150, db_comment='시설명')
@@ -137,7 +127,8 @@ class Partner(CustomUser):
         CustomUser,
         on_delete=models.CASCADE,
         primary_key=True,
-        parent_link=True
+        parent_link=True,
+        related_name='partner'
     )
 
     class Meta:
@@ -150,7 +141,8 @@ class Counselor(CustomUser):
         CustomUser,
         on_delete=models.CASCADE,
         primary_key=True,
-        parent_link=True
+        parent_link=True,
+        related_name='counselor'
     )
 
     class Meta:
