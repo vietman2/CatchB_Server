@@ -379,7 +379,10 @@ class PasswordResetAPITestCase(APITestCase):
 
     def test_password_reset_fail(self):
         # 1. user is not found
-        response = self.client.post("/api/account/password/reset/", data={"email": "wrong@email.com"})
+        response = self.client.post(
+            "/api/account/password/reset/",
+            data={"email": "wrong@email.com"}
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         # 2. email is not valid

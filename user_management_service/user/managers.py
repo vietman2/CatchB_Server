@@ -18,8 +18,6 @@ class UserManager(BaseUserManager):
         )
         user.is_superuser = True
 
-        CustomUser = apps.get_model('user', 'CustomUser')
-
         user.save(using=self._db)
 
         return user
