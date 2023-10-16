@@ -21,7 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
 
-    uuid = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     username = models.CharField(
         max_length=150,
         unique=True,
@@ -83,6 +83,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         db_table = 'user'
         verbose_name = _('user')
         verbose_name_plural = _('users')
+        indexes = [
+            models.Index(fields=['uuid'], name='uuid_index'),
+        ]
 
 class Coach(CustomUser):
     user = models.OneToOneField(
