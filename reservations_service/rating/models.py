@@ -13,7 +13,12 @@ class FacilityReview(models.Model):
     user        = models.UUIDField(null=False, blank=False, db_comment="사용자 고유번호")
     content     = models.TextField(null=False, blank=False, db_comment="내용")
     images      = models.JSONField(null=True, blank=True, db_comment="이미지 URL 배열")
-    stars       = models.IntegerField(choices=stars_choices.choices, db_comment="별점", null=False, blank=False)
+    stars       = models.IntegerField(
+        choices=stars_choices.choices,
+        db_comment="별점",
+        null=False,
+        blank=False
+    )
 
     class Meta:
         db_table = "review"
