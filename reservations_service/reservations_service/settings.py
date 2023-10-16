@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'facility.apps.FacilityConfig',
-    'rating.apps.RatingConfig',
     'reservation.apps.ReservationConfig',
     'lesson.apps.LessonConfig',
 
