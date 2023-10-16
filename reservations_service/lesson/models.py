@@ -37,6 +37,6 @@ class LessonReview(models.Model):
     class Meta:
         db_table = "lesson_review"
         indexes = [
-            models.Index(fields=["main_coach"], name="lesson_review_main_coach_index"),
+            #TODO: 코치에 대한 인덱스 추가
             models.Index(fields=["user"], name="lesson_review_user_index"),
         ]
