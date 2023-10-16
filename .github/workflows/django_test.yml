@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
+      RESERVATIONS_SECRET_KEY: ${{ secrets.RESERVATIONS_SECRET_KEY }}
     strategy:
       max-parallel: 4
       matrix:
