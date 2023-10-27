@@ -560,7 +560,6 @@ class UserProfileAPITestCase(APITestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.user.is_active, False)
 
-
     def test_delete_user_profile_failure(self):
         # 1. user is not authenticated
         response = self.client.delete(self.url)
