@@ -102,7 +102,7 @@ class UserViewSet(ModelViewSet):
                 return Response(data={
                     "errors": e.detail,
                 }, status=status.HTTP_400_BAD_REQUEST)
-            
+
             serializer.save()
         else:
             serializer = UserProfileSerializer(user.user_profile, data=request.data, partial=True)

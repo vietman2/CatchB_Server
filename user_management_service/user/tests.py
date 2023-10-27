@@ -626,7 +626,7 @@ class UserProfileAPITestCase(APITestCase):
         self.user.is_active = True
         self.user.save()
         self.client.force_authenticate(user=self.user)
-        response = self.client.patch("/api/users/12345678-1234-1234-1234-123456789012/", data=data, format="json")
+        response = self.client.patch("/api/users/notauuid/", data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # 5. attempt to update username
