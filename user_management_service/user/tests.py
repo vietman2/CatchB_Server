@@ -553,6 +553,14 @@ class UserProfileAPITestCase(APITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        # check if user is not deleted
+        self.assertEqual(CustomUser.objects.count(), 3)
+
+        # instead of deleting, user is deactivated
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.is_active, False)
+
+
     def test_delete_user_profile_failure(self):
         # 1. user is not authenticated
         response = self.client.delete(self.url)
