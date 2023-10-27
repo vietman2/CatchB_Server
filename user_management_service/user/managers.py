@@ -21,9 +21,6 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def is_admin(self, user):
-        return user.is_superuser
-
     def is_coach(self, user):
         ## check if user is connected to coach model (related_name='coach')
         return hasattr(user, 'coach')

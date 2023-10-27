@@ -1,13 +1,22 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DNEError
+from django.utils.encoding import force_str
 from dj_rest_auth.forms import AllAuthPasswordResetForm
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
+from allauth.account.forms import default_token_generator
+from allauth.account.utils import url_str_to_user_pk as uid_decoder
 
-from .models import CustomUser
+from .models import CustomUser, UserProfile, Coach
 
 class UserRegisterSerializer(ModelSerializer):
+    """
+    회원가입 시리얼라이저
+    """
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
@@ -44,7 +53,42 @@ class UserRegisterSerializer(ModelSerializer):
         self.create(self.validated_data)
         return self.validated_data
 
+class UserProfileSerializer(ModelSerializer):
+    """
+    유저 프로필 시리얼라이저: 유저가 자신의 프로필을 조회하거나 수정할 때 사용
+    """
+    class Meta:
+        model = UserProfile
+        fields = [
+            "user",
+            "nickname",
+            "birth_date",
+            "gender",
+            "experience_tier",
+            "register_route",
+        ]
+        extra_kwargs = {
+            "user": {"read_only": True},
+        }
+
+class CoachProfileSerializer(ModelSerializer):
+    """
+    코치 프로필 시리얼라이저: 코치가 자신의 프로필을 조회하거나 수정할 때 사용
+    """
+    class Meta:
+        model = Coach
+        fields = [
+            # "user",
+            # "profile",
+            "academic_background",
+            "baseball_career",
+            "coaching_career",
+        ]
+
 class PasswordChangeSerializer(ModelSerializer):
+    """
+    비밀번호 변경 시리얼라이저: 로그인이 된 유저가 자신의 비밀번호를 변경할 때 사용
+    """
     old_password = serializers.CharField(write_only=True)
     new_password1 = serializers.CharField(write_only=True)
     new_password2 = serializers.CharField(write_only=True)
@@ -95,17 +139,22 @@ class PasswordChangeSerializer(ModelSerializer):
         return self.set_password_form.user
 
 class PasswordResetSerializer(serializers.Serializer):
+    """
+    비밀번호 재설정 시리얼라이저: 비밀번호를 잊어버린 유저가 비밀번호를 이메일을 통해
+        재설정 링크를 받아 새로운 비밀번호를 설정할 때 사용
+    """
     email = serializers.EmailField()
     reset_form = AllAuthPasswordResetForm
 
     def validate_email(self, value):
+        self.reset_form = self.reset_form(data=self.initial_data)
+        if not self.reset_form.is_valid():
+            raise serializers.ValidationError(self.reset_form.errors)
+
         if not CustomUser.objects.filter(email=value).exists():
             raise serializers.ValidationError("가입되지 않은 이메일입니다.")
         if not CustomUser.objects.filter(email=value, is_active=True).exists():
             raise serializers.ValidationError("탈퇴한 계정입니다.")
-        self.reset_form = self.reset_form(data=self.initial_data)
-        if not self.reset_form.is_valid():
-            raise serializers.ValidationError(self.reset_form.errors)
 
         return value
 
@@ -121,8 +170,40 @@ class PasswordResetSerializer(serializers.Serializer):
 
         self.reset_form.save(**opts)
 
-    def create(self, validated_data):
-        pass
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """
+    비밀번호 재설정 확인 시리얼라이저: 비밀번호를 재설정할 때 사용
+    """
+    new_password1 = serializers.CharField(write_only=True)
+    new_password2 = serializers.CharField(write_only=True)
+    uid = serializers.CharField()
+    token = serializers.CharField()
 
-    def update(self, instance, validated_data):
-        pass
+    set_password_form_class = SetPasswordForm
+
+    _errors = {}
+    user = None
+    set_password_form = None
+
+    def validate(self, attrs):
+        try:
+            uid = force_str(uid_decoder(attrs["uid"]))
+            self.user = CustomUser.objects.get(pk=uid)
+        # catch error when user is not found
+        except (TypeError, ValueError, OverflowError, DNEError):
+            raise ValidationError({"uid": ["올바르지 않은 값입니다."]})
+ 
+        if not default_token_generator.check_token(self.user, attrs["token"]):
+            raise ValidationError({"token": ["올바르지 않은 값입니다."]})
+        
+        self.set_password_form = self.set_password_form_class(user=self.user, data=attrs)
+
+        if not self.set_password_form.is_valid():
+            raise serializers.ValidationError(self.set_password_form.errors)
+        
+        return attrs
+    
+    def save(self, **kwargs):
+        self.set_password_form.save()
+        self.set_password_form.user.refresh_from_db()
+        return self.set_password_form.user

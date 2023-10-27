@@ -16,11 +16,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenVerifyView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView as SSV
+from dj_rest_auth.jwt_auth import get_refresh_view
+
+from user.views import UserViewSet
+from user.views import MyLoginView, MyLogoutView, PasswordResetView, PasswordResetConfirmView
+
+router = DefaultRouter()
+
+router.register(prefix=r'users', viewset=UserViewSet)
 
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('api/account/', include('user.urls')),
+
+    path('api/login/', MyLoginView.as_view(), name='login'),
+    path('api/logout/', MyLogoutView.as_view(), name='logout'),
+    path('api/password/reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('api/password/reset/confirm/<str:uidb64>/<str:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
 
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SSV.as_view(url_name='schema'), name='swagger-ui')
