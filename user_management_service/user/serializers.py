@@ -51,10 +51,36 @@ class UserRegisterSerializer(ModelSerializer):
         self.create(self.validated_data)
         return self.validated_data
 
+class UserSerializer(ModelSerializer):
+    phone_number = serializers.SerializerMethodField()
+
+    def get_phone_number(self, obj):
+        return obj.phone_number.as_national
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            "uuid",
+            "username",
+            "first_name",
+            "last_name",
+            "full_name",
+            "email",
+            "phone_number",
+            "date_joined",
+        ]
+
+    def validate_username(self, value):
+        raise serializers.ValidationError("username은 수정할 수 없습니다.")
+
 class UserProfileSerializer(ModelSerializer):
     """
     유저 프로필 시리얼라이저: 유저가 자신의 프로필을 조회하거나 수정할 때 사용
     """
+    user = UserSerializer()
+    experience_tier = serializers.CharField(source="get_experience_tier_display")
+    register_route = serializers.CharField(source="get_register_route_display")
+
     class Meta:
         model = UserProfile
         fields = [
@@ -65,9 +91,10 @@ class UserProfileSerializer(ModelSerializer):
             "experience_tier",
             "register_route",
         ]
-        extra_kwargs = {
-            "user": {"read_only": True},
-        }
+        depth = 1
+
+    def validate_register_route(self, value):
+        raise serializers.ValidationError("register_route는 수정할 수 없습니다.")
 
 class CoachProfileSerializer(ModelSerializer):
     """

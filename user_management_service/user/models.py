@@ -51,6 +51,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     class Meta:
         db_table = 'user'
         verbose_name = _('user')
@@ -69,6 +73,10 @@ class UserProfile(models.Model):
     birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
     gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
 
+    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
+    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
+    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
+
     class ExperienceTierChoices(models.IntegerChoices):
         BEGINNER = 0, '초보'
         INTERMEDIATE = 1, '중급'
@@ -79,9 +87,6 @@ class UserProfile(models.Model):
         db_comment='야구 경험 등급',
         default=ExperienceTierChoices.BEGINNER
     )
-    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
-    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
-    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
 
     class RegisterRouteChoices(models.IntegerChoices):
         CATCHB = 0, '캐치비'

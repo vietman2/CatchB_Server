@@ -36,14 +36,18 @@ class RegisterAPITestCase(APITestCase):
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(CustomUser.objects.count(), 1)
-        self.assertEqual(CustomUser.objects.get().username, "test")
+        created_user = CustomUser.objects.get()
+        self.assertEqual(created_user.username, "test")
 
         # 비밀번호가 암호화되어 저장되었는지 확인
-        self.assertNotEqual(CustomUser.objects.get().password, "passpass1234")
+        self.assertNotEqual(created_user.password, "passpass1234")
 
         # 디폴트 값들이 잘 들어갔는지 확인
-        self.assertEqual(CustomUser.objects.get().is_active, True)
-        self.assertEqual(CustomUser.objects.get().is_superuser, False)
+        self.assertEqual(created_user.is_active, True)
+        self.assertEqual(created_user.is_superuser, False)
+
+        # UserProfile이 잘 생성되었는지 확인
+        self.assertTrue(hasattr(created_user, "user_profile"))
 
     def test_register_success_superuser(self):
         call_command(
@@ -453,4 +457,190 @@ class PasswordResetAPITestCase(APITestCase):
             "new_password2": "newpass12345",
         }
         response = self.client.post(confirm_url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class UserProfileAPITestCase(APITestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(
+            username="test",
+            first_name="test",
+            last_name="test",
+            email="test@test.com",
+            phone_number="010-1234-5678",
+            password="passpass1234",
+        )
+        self.admin = CustomUser.objects.create_superuser(
+            username="admin",
+            first_name="admin",
+            last_name="admin",
+            email="admin@admin.com",
+            phone_number="010-1234-1234",
+            password="adminadmin4321",
+        )
+        self.user2 = CustomUser.objects.create_user(
+            username="test2",
+            first_name="test2",
+            last_name="test2",
+            email="test@email.com",
+            phone_number="010-1234-0101",
+            password="asdffdsa12344321",
+        )
+        self.uuid = self.user.uuid
+        self.url = f"/api/users/{self.uuid}/"
+
+    def test_unallowed_methods(self):
+        data = {'username': "test", "password": "passpass1234"}
+        response = self.client.post("/api/users/", data=data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # login first for coverage
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post("/api/users/", data=data)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.put(self.url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_get_user_profile_success(self):
+        # 1. user is authenticated
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_user_profile_failure(self):
+        # 1. user is not authenticated
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 2. user with random token
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.user.password}')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 3. user is not active
+        self.user.is_active = False
+        self.user.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 4. user is not self
+        self.user.is_active = True
+        self.user.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get("/api/users/12345678-1234-1234-1234-123456789012/")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_user_profile_list_success(self):
+        # 1. user is authenticated
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.get("/api/users/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_user_profile_list_failure(self):
+        # 1. user is not authenticated
+        response = self.client.get("/api/users/")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 2. user is not admin
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get("/api/users/")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_user_profile_success(self):
+        # 1. user is authenticated
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_user_profile_failure(self):
+        # 1. user is not authenticated
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 2. user with random token
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.user.password}')
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 3. user is not active
+        self.user.is_active = False
+        self.user.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 4. user is not self
+        self.user.is_active = True
+        self.user.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete("/api/users/12345678-1234-1234-1234-123456789012/")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_user_profile_success(self):
+        # 1. user is authenticated
+        self.client.force_authenticate(user=self.user)
+
+        # 2. update user info
+        data = {
+            "user": {
+                "first_name": "newname"
+            }
+        }
+        response = self.client.patch(self.url, data=data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["user"]["first_name"], "newname")
+
+        # partial update: check if other fields are not changed
+        self.assertEqual(response.data["user"]["last_name"], "test")
+
+        # 3. update user profile
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, data={"nickname": "newnickname"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["nickname"], "newnickname")
+
+    def test_update_user_profile_failure(self):
+        # 1. user is not authenticated
+        data = {
+            "user": {
+                "first_name": "newname"
+            }
+        }
+        response = self.client.patch(self.url, data=data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 2. user with random token
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.user.password}')
+        response = self.client.patch(self.url, data=data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 3. user is not active
+        self.user.is_active = False
+        self.user.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, data=data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 4. user is not self
+        self.user.is_active = True
+        self.user.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch("/api/users/12345678-1234-1234-1234-123456789012/", data=data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # 5. attempt to update username
+        self.client.force_authenticate(user=self.user)
+        data = {
+            "user": {
+                "username": "notallowed",
+            }
+        }
+        response = self.client.patch(self.url, data=data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        data = {
+            "register_route": "notallowed"
+        }
+        response = self.client.patch(self.url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
