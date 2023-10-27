@@ -188,8 +188,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             uid = force_str(uid_decoder(attrs["uid"]))
             self.user = CustomUser.objects.get(pk=uid)
         # catch error when user is not found
-        except (TypeError, ValueError, OverflowError, DNEError):
-            raise ValidationError({"uid": ["올바르지 않은 값입니다."]})
+        except (TypeError, ValueError, OverflowError, DNEError) as exc:
+            raise ValidationError({"uid": ["올바르지 않은 값입니다."]}) from exc
 
         if not default_token_generator.check_token(self.user, attrs["token"]):
             raise ValidationError({"token": ["올바르지 않은 값입니다."]})
