@@ -132,6 +132,7 @@ class PasswordResetConfirmView(GenericAPIView):
 
     @extend_schema(summary="비밀번호 재설정 확인", tags=["회원 관리"])
     def post(self, request, *args, **kwargs):
+        # pylint: disable=unused-argument
         request_data_copy = request.data.copy()
         request_data_copy['uid'] = kwargs['uidb64']
         request_data_copy['token'] = kwargs['token']
