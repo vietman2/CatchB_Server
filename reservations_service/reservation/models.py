@@ -5,7 +5,10 @@ class Reservation(models.Model):
     reserved_user   = models.UUIDField(null=False, blank=False, db_comment="사용자 고유번호")
 
     ## 레슨이랑 연결 가능
-    ## lesson = models.ForeignKey("lesson.Lesson", on_delete=models.DO_NOTHING, db_comment="레슨 고유번호")
+    ## lesson = models.ForeignKey("lesson.Lesson",
+    # on_delete=models.DO_NOTHING,
+    # db_comment="레슨 고유번호"
+    # )
 
     start_time      = models.DateTimeField(null=False, blank=False, db_comment="시작 시간")
     end_time        = models.DateTimeField(null=False, blank=False, db_comment="종료 시간")
