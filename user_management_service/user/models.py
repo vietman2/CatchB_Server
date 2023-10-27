@@ -7,21 +7,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
 
-# Create your models here.
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    class RegisterRouteChoices(models.IntegerChoices):
-        CATCHB = 0, '캐치비'
-        KAKAO = 1, '카카오'
-        NAVER = 2, '네이버'
-
-    class ExperienceTierChoices(models.IntegerChoices):
-        BEGINNER = 0, '초보'
-        INTERMEDIATE = 1, '중급'
-        ADVANCED = 2, '고급'
-
     username_validator = UnicodeUsernameValidator()
 
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, db_index=True, default=uuid.uuid4, editable=False)
     username = models.CharField(
         max_length=150,
         unique=True,
@@ -37,18 +26,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, db_comment='이메일')
     phone_number = PhoneNumberField(unique=True, db_comment='전화번호')
 
-    birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
-    gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True, db_comment='가입일')
-
-    experience_tier = models.IntegerField(
-        choices=ExperienceTierChoices.choices,
-        db_comment='야구 경험 등급',
-        default=ExperienceTierChoices.BEGINNER
-    )
-    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
-    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
-    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
 
     is_superuser = models.BooleanField(
         default=False,
@@ -63,12 +41,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                     'Unselect this instead of deleting accounts.',
     )
 
-    register_route = models.IntegerField(
-        choices=RegisterRouteChoices.choices,
-        db_comment='가입 경로',
-        default=RegisterRouteChoices.CATCHB
-    )
-
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = [
         'first_name',
@@ -79,15 +51,60 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     class Meta:
         db_table = 'user'
         verbose_name = _('user')
         verbose_name_plural = _('users')
-        indexes = [
-            models.Index(fields=['uuid'], name='uuid_index'),
-        ]
 
-class Coach(CustomUser):
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        parent_link=True,
+        related_name='user_profile'
+    )
+
+    nickname = models.CharField(max_length=150, db_comment='닉네임', null=True, blank=True)
+    birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
+    gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
+
+    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
+    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
+    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
+
+    class ExperienceTierChoices(models.IntegerChoices):
+        BEGINNER = 0, '초보'
+        INTERMEDIATE = 1, '중급'
+        ADVANCED = 2, '고급'
+
+    experience_tier = models.IntegerField(
+        choices=ExperienceTierChoices.choices,
+        db_comment='야구 경험 등급',
+        default=ExperienceTierChoices.BEGINNER
+    )
+
+    class RegisterRouteChoices(models.IntegerChoices):
+        CATCHB = 0, '캐치비'
+        KAKAO = 1, '카카오'
+        NAVER = 2, '네이버'
+
+    register_route = models.IntegerField(
+        choices=RegisterRouteChoices.choices,
+        db_comment='가입 경로',
+        default=RegisterRouteChoices.CATCHB
+    )
+
+    class Meta:
+        db_table = 'user_profile'
+        verbose_name = _('user_profile')
+        verbose_name_plural = _('user_profiles')
+
+class Coach(models.Model):
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
@@ -96,18 +113,21 @@ class Coach(CustomUser):
         related_name='coach'
     )
 
+    # certification = models.FileField(db_comment='자격증', help_text='자격증을 첨부해주세요.')
     academic_background = models.TextField(db_comment='학력', help_text='학력을 입력해주세요.')
     baseball_career = models.TextField(db_comment='야구 경력', help_text='야구 경력을 입력해주세요.')
     coaching_career = models.TextField(db_comment='코칭 경력', help_text='코칭 경력을 입력해주세요.')
     # facility = models.TextField(db_comment="소속 시설")
     # areas = models.TextField(db_comment="레슨 영역", help_text="레슨 영역: 타격, 투구, 수비, 주루, 트레이닝, 피지컬, 기타")
 
+    is_approved = models.BooleanField(default=False, db_comment='코치 승인 여부')
+
     class Meta:
         db_table = 'coach'
         verbose_name = _('coach')
         verbose_name_plural = _('coaches')
 
-class FacilityOwner(CustomUser):
+class FacilityOwner(models.Model):
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
@@ -125,7 +145,7 @@ class FacilityOwner(CustomUser):
         verbose_name = _('facility_owner')
         verbose_name_plural = _('facility_owners')
 
-class Partner(CustomUser):
+class Partner(models.Model):
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
