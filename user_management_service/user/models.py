@@ -167,4 +167,3 @@ class Counselor(CustomUser):
         db_table = 'counselor'
         verbose_name = _('counselor')
         verbose_name_plural = _('counselors')
-

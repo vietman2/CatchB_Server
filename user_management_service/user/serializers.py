@@ -1,6 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DNEError
 from django.utils.encoding import force_str
@@ -192,17 +190,17 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         # catch error when user is not found
         except (TypeError, ValueError, OverflowError, DNEError):
             raise ValidationError({"uid": ["올바르지 않은 값입니다."]})
- 
+
         if not default_token_generator.check_token(self.user, attrs["token"]):
             raise ValidationError({"token": ["올바르지 않은 값입니다."]})
-        
+
         self.set_password_form = self.set_password_form_class(user=self.user, data=attrs)
 
         if not self.set_password_form.is_valid():
             raise serializers.ValidationError(self.set_password_form.errors)
-        
+
         return attrs
-    
+
     def save(self, **kwargs):
         self.set_password_form.save()
         self.set_password_form.user.refresh_from_db()

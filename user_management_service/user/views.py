@@ -6,12 +6,12 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
-from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
+from drf_spectacular.utils import extend_schema
 from dj_rest_auth.views import LoginView, LogoutView
 
 from .serializers import (
-    UserRegisterSerializer, UserProfileSerializer, CoachProfileSerializer,
+    UserRegisterSerializer, UserProfileSerializer,
     PasswordChangeSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer,
 )
 from .models import CustomUser
@@ -27,48 +27,6 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated,]
     http_method_names = ['get', 'post', 'head', 'options']
-
-    @extend_schema(summary="회원 가입", tags=["회원 관리"])
-    @action(
-        detail=False,
-        methods=['post'],
-        permission_classes=[AllowAny,],
-        serializer_class=UserRegisterSerializer,
-    )
-    def register(self, request):
-        serializer = UserRegisterSerializer(data=request.data)
-
-        try:
-            serializer.is_valid(raise_exception=True)
-            serializer.validate_passwords(serializer.validated_data)
-        except ValidationError as e:
-            return Response(data={
-                "errors": e.detail,
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        serializer.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    @extend_schema(summary="비밀번호 변경", tags=["회원 관리"])
-    @action(
-        detail=False,
-        methods=['post'],
-        permission_classes=[IsAuthenticated,],
-        serializer_class=PasswordChangeSerializer,
-    )
-    def password_change(self, request):
-        serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return Response(data={
-                "errors": e.detail,
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
     """
     @extend_schema(summary="코치 등록", tags=["회원 관리"])
@@ -92,6 +50,48 @@ class UserViewSet(ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     """
+
+    @extend_schema(summary="회원 가입", tags=["회원 관리"])
+    @action(
+        detail=False,
+        methods=['post'],
+        permission_classes=[AllowAny,],
+        serializer_class=UserRegisterSerializer,
+    )
+    def register(self, request):
+        serializer = UserRegisterSerializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.validate_passwords(serializer.validated_data)
+        except ValidationError as e:
+            return Response(data={
+                "errors": e.detail,
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @extend_schema(summary="비밀번호 변경", tags=["회원 관리"])
+    @action(
+        detail=False,
+        methods=['post'],
+        permission_classes=[IsAuthenticated,],
+        serializer_class=PasswordChangeSerializer,
+    )
+    def password_change(self, request):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={
+                "errors": e.detail,
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 class MyLoginView(LoginView):
     @extend_schema(summary="로그인", tags=["회원 관리"])
@@ -142,6 +142,6 @@ class PasswordResetConfirmView(GenericAPIView):
             return Response(data={
                 "errors": e.detail,
             }, status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

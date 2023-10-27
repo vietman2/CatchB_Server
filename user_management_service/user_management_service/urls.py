@@ -35,7 +35,11 @@ urlpatterns = [
     path('api/login/', MyLoginView.as_view(), name='login'),
     path('api/logout/', MyLogoutView.as_view(), name='logout'),
     path('api/password/reset/', PasswordResetView.as_view(), name='password_reset'),
-    path('api/password/reset/confirm/<str:uidb64>/<str:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path(
+        'api/password/reset/confirm/<str:uidb64>/<str:token>/',
+        PasswordResetConfirmView.as_view(),
+        name='password_reset_confirm'
+    ),
 
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
