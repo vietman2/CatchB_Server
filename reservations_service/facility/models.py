@@ -10,7 +10,7 @@ class Facility(models.Model):
         editable=False,
         db_comment="시설 고유번호"
     )
-    name        = models.CharField(max_length=100, db_comment="시설 이름") 
+    name        = models.CharField(max_length=100, db_comment="시설 이름")
     owner_uuid  = models.UUIDField(db_comment="시설 소유자 유저번호")
 
     ## 상세 정보: 시설 주소, 시설 전화번호
