@@ -4,17 +4,14 @@ from django.contrib.postgres.fields import ArrayField
 
 class Facility(models.Model):
     ## 기본 정보: 시설 이름, 시설 고유번호, 시설 소유자 고유번호
-    name        = models.CharField(max_length=100, db_comment="시설 이름")
     uuid        = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False,
         db_comment="시설 고유번호"
     )
-    owner_uuid  = models.UUIDField(db_comment="시설 소유자")
-
-    ## 사업자 등록번호
-    ## business_number = models.CharField(max_length=20, db_comment="사업자 등록번호")
+    name        = models.CharField(max_length=100, db_comment="시설 이름")
+    owner_uuid  = models.UUIDField(db_comment="시설 소유자 유저번호")
 
     ## 상세 정보: 시설 주소, 시설 전화번호
     address     = models.ForeignKey("Address", on_delete=models.DO_NOTHING, db_comment="시설 주소")
