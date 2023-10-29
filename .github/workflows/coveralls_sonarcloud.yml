@@ -37,15 +37,15 @@ jobs:
       run: |
         cd user_management_service
         coverage run --source='.' manage.py test
-        coverage lcov
-        coverage xml
+        coverage lcov -o ../coverage.lcov
+        coverage xml -o ../coverage.xml
         cd ..
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./user_management_service/coverage.lcov        
+        path-to-lcov: ./coverage.lcov        
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
