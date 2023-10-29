@@ -37,11 +37,11 @@ jobs:
       run: |
         cd user_management_service
         coverage run --source='.' manage.py test
-        coverage lcov -o ../coverage.lcov
+        coverage lcov
         cd ..
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: coverage.lcov
+        path-to-lcov: ./user_management_service/coverage.lcov
