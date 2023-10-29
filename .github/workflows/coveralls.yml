@@ -39,6 +39,7 @@ jobs:
         coverage run --source='.' manage.py test
         coverage lcov -o ../coverage.lcov
         cd ..
+        ls
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
