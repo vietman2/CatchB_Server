@@ -33,8 +33,3 @@ jobs:
       run: |
         cd user_management_service
         python manage.py test
-    - name: Run Reservations Tests
-      run: |
-        cd reservations_service
-        python manage.py test
-

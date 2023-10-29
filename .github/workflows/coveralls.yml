@@ -35,8 +35,6 @@ jobs:
       run: |
         cd user_management_service
         coverage run --source='.' manage.py test
-        coverage xml
-        sed -i 's/<source>.<\/source>/<source>user_management_service<\/source>/g' coverage.xml
         coverage lcov
         cd ..
 
@@ -44,7 +42,5 @@ jobs:
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./user_management_service/lcov.info
-        flag-name: user_management_service
-        
+        path-to-lcov: ./user_management_service/coverage.lcov        
             
