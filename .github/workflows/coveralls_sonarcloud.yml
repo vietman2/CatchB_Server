@@ -1,4 +1,4 @@
-name: Coveralls
+name: Coveralls and SonarCloud
 
 on:
   push:
@@ -36,6 +36,7 @@ jobs:
         cd user_management_service
         coverage run --source='.' manage.py test
         coverage lcov
+        coverage xml
         cd ..
 
     - name: Coveralls GitHub Action
@@ -43,3 +44,9 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./user_management_service/coverage.lcov        
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
