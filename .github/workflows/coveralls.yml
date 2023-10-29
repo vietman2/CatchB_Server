@@ -37,8 +37,8 @@ jobs:
         coverage run --source='.' manage.py test
         coverage xml
         sed -i 's/<source>.<\/source>/<source>user_management_service<\/source>/g' coverage.xml
+        coverage lcov
         cd ..
-        coverage lcov --output-file user_management_service/lcov.info --rcfile=user_management_service/.coveragerc
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
