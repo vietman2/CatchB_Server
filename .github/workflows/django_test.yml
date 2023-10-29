@@ -29,7 +29,12 @@ jobs:
         python -m pip install --upgrade pip
         sudo apt-get install graphviz graphviz-dev
         pip install -r requirements.txt
-    - name: Run Tests
+    - name: Run User Management Tests
       run: |
         cd user_management_service
         python manage.py test
+    - name: Run Reservations Tests
+      run: |
+        cd reservations_service
+        python manage.py test
+

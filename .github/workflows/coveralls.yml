@@ -24,11 +24,27 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         sudo apt-get install graphviz graphviz-dev
         pip install -r requirements.txt
+
+    - name: Run user_management tests
+      run: |
+        cd user_management_service
+        coverage run --source='.' manage.py test
+        coverage xml
+        sed -i 's/<source>.<\/source>/<source>user_management_service<\/source>/g' coverage.xml
+        cd ..
+        coverage lcov --output-file user_management_service/lcov.info --rcfile=user_management_service/.coveragerc
+
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./user_management_service/lcov.info
+        flag-name: user_management_service
+        
             
