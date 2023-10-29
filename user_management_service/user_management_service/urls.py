@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenVerifyView
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView as SSV
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView as SSV, SpectacularRedocView
 from dj_rest_auth.jwt_auth import get_refresh_view
 
 from user.views import UserViewSet
@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
 
-    path('api/schema', SpectacularAPIView.as_view(), name='schema'),
-    path('api/schema/swagger-ui/', SSV.as_view(url_name='schema'), name='swagger-ui')
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SSV.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc')
 ]
