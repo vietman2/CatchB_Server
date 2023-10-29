@@ -1,4 +1,4 @@
-name: Coveralls and SonarCloud
+name: Coveralls
 
 on:
   push:
