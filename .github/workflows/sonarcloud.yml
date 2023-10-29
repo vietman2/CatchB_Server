@@ -31,10 +31,13 @@ jobs:
         sudo apt-get install graphviz graphviz-dev
         pip install -r requirements.txt
 
-    - name: Run User Management Tests
+    - name: Run user_management tests
       run: |
         cd user_management_service
-        python manage.py test
+        coverage run --source='.' manage.py test
+        coverage lcov
+        coverage xml
+        cd ..
 
     - name: SonalCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
