@@ -18,7 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenVerifyView
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView as SSV, SpectacularRedocView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView as SSV,
+    SpectacularRedocView
+)
 from dj_rest_auth.jwt_auth import get_refresh_view
 
 from user.views import UserViewSet
