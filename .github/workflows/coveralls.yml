@@ -13,15 +13,29 @@ jobs:
     env:
       USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
       RESERVATIONS_SECRET_KEY: ${{ secrets.RESERVATIONS_SECRET_KEY }}
+      RESERVATIONS_DB_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
+      RESERVATIONS_DB_USER: ${{ secrets.RESERVATIONS_DB_USER }}
+      RESERVATIONS_DB_NAME: ${{ secrets.RESERVATIONS_DB_NAME }}
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.9]
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: ${{ secrets.RESERVATIONS_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.RESERVATIONS_DB_NAME }}
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -33,9 +47,20 @@ jobs:
         sudo apt-get install graphviz graphviz-dev
         pip install -r requirements.txt
 
+    - name: Setup Django Database Config
+      run: |
+        echo "DATABASE_URL=postgres://${{ secrets.RESERVATIONS_DB_USER }}:${{ secrets.RESERVATIONS_DB_PASSWORD }}@postgres:5432/${{ secrets.RESERVATIONS_DB_NAME }}" >> .env
+
     - name: Run user_management tests
       run: |
         cd user_management_service
+        coverage run --source='.' manage.py test
+        coverage lcov
+        cd ..
+
+    - name: Run reservations tests
+      run: |
+        cd reservations_service
         coverage run --source='.' manage.py test
         coverage lcov
         cd ..
