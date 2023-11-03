@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'user.apps.UserConfig',
+    'coupon.apps.CouponConfig',
+    'point.apps.PointConfig',
 
     "allauth",
     "allauth.account",
