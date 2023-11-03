@@ -8,6 +8,9 @@ jobs:
     env:
       USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
       RESERVATIONS_SECRET_KEY: ${{ secrets.RESERVATIONS_SECRET_KEY }}
+      RESERVATIONS_DB_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
+      RESERVATIONS_DB_USER: ${{ secrets.RESERVATIONS_DB_USER }}
+      RESERVATIONS_DB_NAME: ${{ secrets.RESERVATIONS_DB_NAME }}
     strategy:
       matrix:
         python-version: ["3.9"]
