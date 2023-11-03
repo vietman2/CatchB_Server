@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
+from .enums import ExperienceTierChoices, RegisterRouteChoices
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username_validator = UnicodeUsernameValidator()
@@ -77,21 +78,11 @@ class UserProfile(models.Model):
     # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
     # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
 
-    class ExperienceTierChoices(models.IntegerChoices):
-        BEGINNER = 0, '초보'
-        INTERMEDIATE = 1, '중급'
-        ADVANCED = 2, '고급'
-
     experience_tier = models.IntegerField(
         choices=ExperienceTierChoices.choices,
         db_comment='야구 경험 등급',
         default=ExperienceTierChoices.BEGINNER
     )
-
-    class RegisterRouteChoices(models.IntegerChoices):
-        CATCHB = 0, '캐치비'
-        KAKAO = 1, '카카오'
-        NAVER = 2, '네이버'
 
     register_route = models.IntegerField(
         choices=RegisterRouteChoices.choices,
