@@ -33,11 +33,11 @@ class Coupon(models.Model):
         verbose_name_plural = _('coupons')
 
 class CouponType(models.Model):
-    coupon_name = models.CharField(max_length=100)
-    coupon_description = models.CharField(max_length=100)
-    #coupon_image = models.ImageField(upload_to='coupon_images')
-    registered_at = models.DateTimeField(auto_now_add=True)
-    valid_days = models.IntegerField()
+    coupon_name         = models.CharField(max_length=100)
+    coupon_description  = models.CharField(max_length=100)
+    #coupon_image       = models.ImageField(upload_to='coupon_images')
+    registered_at       = models.DateTimeField(auto_now_add=True)
+    valid_days          = models.IntegerField()
 
     class Meta:
         db_table = 'coupon_type'
