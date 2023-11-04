@@ -8,7 +8,12 @@ class StatusChoices(models.TextChoices):
     FINISHED    = "FINISHED", "완료"
 
 class Reservation(models.Model):
-    uuid            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_comment="예약 고유번호")
+    uuid            = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_comment="예약 고유번호"
+    )
     facility        = models.UUIDField(null=False, blank=False, db_comment="시설 고유번호")
     reserved_user   = models.UUIDField(null=False, blank=False, db_comment="사용자 고유번호")
 
