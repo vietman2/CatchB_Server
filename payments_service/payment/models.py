@@ -1,12 +1,6 @@
-import uuid
 from django.db import models
 
-class PaymentStatus(models.TextChoices):
-    PENDING     = 'PENDING', '대기'
-    COMPLETED   = 'COMPLETED', '완료'
-    FAILED      = 'FAILED', '실패'
-
-class RefundStatus(models.TextChoices):
+class Status(models.TextChoices):
     PENDING     = 'PENDING', '대기'
     COMPLETED   = 'COMPLETED', '완료'
     FAILED      = 'FAILED', '실패'
@@ -24,8 +18,8 @@ class Payment(models.Model):
     uuid        = models.UUIDField(primary_key=True)
     status      = models.CharField(
         max_length=10,
-        choices=PaymentStatus.choices,
-        default=PaymentStatus.PENDING
+        choices=Status.choices,
+        default=Status.PENDING
     )
     price       = models.PositiveIntegerField(db_comment='결제 금액')
 
@@ -40,8 +34,8 @@ class Refund(models.Model):
     payment     = models.ForeignKey(Payment, on_delete=models.CASCADE)
     status      = models.CharField(
         max_length=10,
-        choices=RefundStatus.choices,
-        default=RefundStatus.PENDING
+        choices=Status.choices,
+        default=Status.PENDING
     )
     price       = models.DecimalField(max_digits=10, decimal_places=2)
 
