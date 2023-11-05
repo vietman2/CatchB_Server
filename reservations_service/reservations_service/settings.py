@@ -32,11 +32,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
 
     'facility.apps.FacilityConfig',
     'reservation.apps.ReservationConfig',
     'lesson.apps.LessonConfig',
+    'schedule.apps.ScheduleConfig',
 
     'rest_framework',
     'drf_spectacular',

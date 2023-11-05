@@ -29,6 +29,8 @@ class Facility(models.Model):
 
     class Meta:
         db_table = "facility"
+        verbose_name = "시설"
+        verbose_name_plural = "시설"
 
 class Address(models.Model):
     # 주소
@@ -53,6 +55,8 @@ class Address(models.Model):
             models.Index(fields=["sido"], name="sido_index"),
             models.Index(fields=["sigungu"], name="sigungu_index"),
         ]
+        verbose_name = "주소"
+        verbose_name_plural = "주소"
 
 class FacilityReview(models.Model):
     class stars_choices(models.IntegerChoices):
@@ -80,6 +84,8 @@ class FacilityReview(models.Model):
             models.Index(fields=["facility"], name="facility_review_facility_index"),
             models.Index(fields=["user"], name="facility_review_user_index"),
         ]
+        verbose_name = "시설 리뷰"
+        verbose_name_plural = "시설 리뷰"
 
 class FacilityLike(models.Model):
     facility    = models.UUIDField(null=False, blank=False, db_comment="시설 고유번호")
@@ -91,3 +97,5 @@ class FacilityLike(models.Model):
             models.Index(fields=["facility"], name="facility_like_facility_index"),
             models.Index(fields=["user"], name="facility_like_user_index"),
         ]
+        verbose_name = "시설 좋아요"
+        verbose_name_plural = "시설 좋아요"

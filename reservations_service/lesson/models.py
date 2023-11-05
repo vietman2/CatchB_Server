@@ -13,6 +13,8 @@ class Lesson(models.Model):
 
     class Meta:
         db_table = "lesson"
+        verbose_name = "레슨"
+        verbose_name_plural = "레슨"
 
 class LessonReview(models.Model):
     class stars_choices(models.IntegerChoices):
@@ -40,3 +42,5 @@ class LessonReview(models.Model):
             #TODO: 코치에 대한 인덱스 추가
             models.Index(fields=["user"], name="lesson_review_user_index"),
         ]
+        verbose_name = "레슨 리뷰"
+        verbose_name_plural = "레슨 리뷰"

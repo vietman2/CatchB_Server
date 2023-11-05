@@ -6,12 +6,18 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
+from .enums import ExperienceTierChoices, RegisterRouteChoices
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username_validator = UnicodeUsernameValidator()
 
-    uuid = models.UUIDField(primary_key=True, db_index=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(
+    uuid            = models.UUIDField(
+        primary_key=True,
+        db_index=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    username        = models.CharField(
         max_length=150,
         unique=True,
         db_comment='아이디',
@@ -21,27 +27,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             'unique': _("A user with that username already exists."),
         }
     )
-    first_name = models.CharField(max_length=150, db_comment='이름')
-    last_name = models.CharField(max_length=150, db_comment='성')
-    email = models.EmailField(unique=True, db_comment='이메일')
-    phone_number = PhoneNumberField(unique=True, db_comment='전화번호')
+    first_name      = models.CharField(max_length=150, db_comment='이름')
+    last_name       = models.CharField(max_length=150, db_comment='성')
+    email           = models.EmailField(unique=True, db_comment='이메일')
+    phone_number    = PhoneNumberField(unique=True, db_comment='전화번호')
 
-    date_joined = models.DateTimeField(auto_now_add=True, db_comment='가입일')
+    date_joined     = models.DateTimeField(auto_now_add=True, db_comment='가입일')
 
-    is_superuser = models.BooleanField(
+    is_superuser    = models.BooleanField(
         default=False,
         db_comment='슈퍼유저 여부',
         help_text='Designates that this user has all permissions without '
                     'explicitly assigning them.',
     )
-    is_active = models.BooleanField(
+    is_active       = models.BooleanField(
         default=True,
         db_comment='계정 활성화 여부',
         help_text='Designates whether this user should be treated as active. '
                     'Unselect this instead of deleting accounts.',
     )
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD  = 'username'
     REQUIRED_FIELDS = [
         'first_name',
         'last_name',
@@ -77,21 +83,11 @@ class UserProfile(models.Model):
     # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
     # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
 
-    class ExperienceTierChoices(models.IntegerChoices):
-        BEGINNER = 0, '초보'
-        INTERMEDIATE = 1, '중급'
-        ADVANCED = 2, '고급'
-
     experience_tier = models.IntegerField(
         choices=ExperienceTierChoices.choices,
         db_comment='야구 경험 등급',
         default=ExperienceTierChoices.BEGINNER
     )
-
-    class RegisterRouteChoices(models.IntegerChoices):
-        CATCHB = 0, '캐치비'
-        KAKAO = 1, '카카오'
-        NAVER = 2, '네이버'
 
     register_route = models.IntegerField(
         choices=RegisterRouteChoices.choices,
