@@ -14,7 +14,7 @@ class PointsManager(models.Manager):
         try:
             self.filter(user__uuid=user_uuid).exists()
         except ValidationError as e:
-            raise ValueError("유효한 user_uuid가 아닙니다.")
+            raise ValueError("유효한 user_uuid가 아닙니다.") from e
 
         # only active and partial points
         points = self.filter(
@@ -55,12 +55,12 @@ class PointsManager(models.Manager):
                 point.used_points += points_to_use
                 point.save()
                 break
-            else:
-                points_to_use -= point.remaining_points
-                point.status = PointStatus.USED
-                point.used_points += point.remaining_points
-                point.save()
-                continue
+
+            points_to_use -= point.remaining_points
+            point.status = PointStatus.USED
+            point.used_points += point.remaining_points
+            point.save()
+            continue
 
 class Points(models.Model):
     user        = models.ForeignKey(

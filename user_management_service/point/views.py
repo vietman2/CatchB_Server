@@ -49,7 +49,7 @@ class PointViewSet(ModelViewSet):
         methods=["PATCH"],
         serializer_class=UsePointsSerializer
     )
-    # pylint: disable=W0221
+    # pylint: disable=W0613
     def use(self, request, *args, **kwargs):
         serializer = UsePointsSerializer(data=request.data)
 
@@ -110,7 +110,7 @@ class PointViewSet(ModelViewSet):
         methods=["GET"],
         serializer_class=UserTotalPointsSerializer
     )
-    # pylint: disable=W0221
+    # pylint: disable=W0613
     def total(self, request, *args, **kwargs):
         user_uuid = request.query_params.get("user_uuid")
 

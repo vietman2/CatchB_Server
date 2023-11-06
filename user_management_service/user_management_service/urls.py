@@ -26,7 +26,7 @@ from drf_spectacular.views import (
 from dj_rest_auth.jwt_auth import get_refresh_view
 
 from user.views import (
-    UserViewSet, MyLoginView, MyLogoutView, 
+    UserViewSet, MyLoginView, MyLogoutView,
     PasswordResetView, PasswordResetConfirmView
 )
 from point.views import PointViewSet
