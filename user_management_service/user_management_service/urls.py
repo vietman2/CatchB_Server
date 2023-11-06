@@ -25,12 +25,16 @@ from drf_spectacular.views import (
 )
 from dj_rest_auth.jwt_auth import get_refresh_view
 
-from user.views import UserViewSet
-from user.views import MyLoginView, MyLogoutView, PasswordResetView, PasswordResetConfirmView
+from user.views import (
+    UserViewSet, MyLoginView, MyLogoutView, 
+    PasswordResetView, PasswordResetConfirmView
+)
+from point.views import PointViewSet
 
 router = DefaultRouter()
 
 router.register(prefix=r'users', viewset=UserViewSet)
+router.register(prefix=r'points', viewset=PointViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
