@@ -24,7 +24,7 @@ class CreatePointsSerizlier(ModelSerializer):
 
     def create(self, validated_data):
         return Points.objects.create(**validated_data)
-    
+
     def save(self, **kwargs):
         self.create(self.validated_data)
         return self.validated_data
@@ -48,6 +48,7 @@ class UsePointsSerializer(ModelSerializer):
             raise serializers.ValidationError("point must be positive.")
         return value
 
+    # pylint: disable=W0221
     def update(self, validated_data):
         Points.objects.use_points(**validated_data)
 

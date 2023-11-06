@@ -7,8 +7,8 @@ from rest_framework.serializers import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
 
-from .models import Points
 from user.models import CustomUser
+from .models import Points
 from .serializers import (
     UserTotalPointsSerializer, CreatePointsSerizlier,
     UsePointsSerializer, PointsDetailSerializer
@@ -49,6 +49,7 @@ class PointViewSet(ModelViewSet):
         methods=["PATCH"],
         serializer_class=UsePointsSerializer
     )
+    # pylint: disable=W0221
     def use(self, request, *args, **kwargs):
         serializer = UsePointsSerializer(data=request.data)
 
@@ -59,7 +60,7 @@ class PointViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": e.detail}
             )
-        
+
         try:
             serializer.save()
         except ValueError as e:
@@ -109,6 +110,7 @@ class PointViewSet(ModelViewSet):
         methods=["GET"],
         serializer_class=UserTotalPointsSerializer
     )
+    # pylint: disable=W0221
     def total(self, request, *args, **kwargs):
         user_uuid = request.query_params.get("user_uuid")
 

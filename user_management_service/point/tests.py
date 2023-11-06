@@ -1,8 +1,9 @@
 import datetime
 from rest_framework.test import APITestCase
 
-from .models import Points, PointStatus
+
 from user.models import CustomUser
+from .models import Points, PointStatus
 
 class PointsTestCase(APITestCase):
     def setUp(self):
@@ -21,7 +22,8 @@ class PointsTestCase(APITestCase):
             points=1000,
             used_points=0,
             status=PointStatus.ACTIVE,
-            valid_until=datetime.datetime.now().astimezone(datetime.timezone.utc) + datetime.timedelta(days=30),
+            valid_until=datetime.datetime.now().astimezone(datetime.timezone.utc) + \
+                datetime.timedelta(days=30),
         )
 
     def test_unallowed_methods(self):
