@@ -6,7 +6,7 @@ class Lesson(models.Model):
     reserved_user   = models.UUIDField(null=False, blank=False, db_comment="사용자 고유번호")
 
     ## 팀이면 팀 정보
-    
+
     ## 예약이랑 연결
 
     start_time      = models.DateTimeField(null=False, blank=False, db_comment="시작 시간")
