@@ -18,7 +18,7 @@ class Post(models.Model):
     updated_at      = models.DateTimeField(auto_now=True)
     anonymous       = models.BooleanField(default=False)
     num_shares      = models.IntegerField(default=0)
-    num_shares      = models.IntegerField(default=0)
+    num_clicks      = models.IntegerField(default=0)
 
 class Comment(models.Model):
     post_id         = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
