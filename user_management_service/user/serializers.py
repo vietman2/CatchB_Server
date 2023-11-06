@@ -6,6 +6,7 @@ from dj_rest_auth.forms import AllAuthPasswordResetForm
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
+from drf_spectacular.utils import extend_schema_field
 from allauth.account.forms import default_token_generator
 from allauth.account.utils import url_str_to_user_pk as uid_decoder
 
@@ -53,9 +54,15 @@ class UserRegisterSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     phone_number = serializers.SerializerMethodField()
+    full_name = serializers.SerializerMethodField()
 
+    @extend_schema_field(serializers.CharField())
     def get_phone_number(self, obj):
         return obj.phone_number.as_national
+
+    @extend_schema_field(serializers.CharField())
+    def get_full_name(self, obj):
+        return obj.full_name
 
     class Meta:
         model = CustomUser
