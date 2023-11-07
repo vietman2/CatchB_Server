@@ -32,6 +32,8 @@ class Reservation(models.Model):
         default=StatusChoices.WAITING,
         db_comment="예약 상태"
     )
+    created_at      = models.DateTimeField(auto_now_add=True, db_comment="생성일")
+    confirmed_at    = models.DateTimeField(null=True, blank=True, db_comment="승인일")
 
     class Meta:
         db_table = "reservation"
