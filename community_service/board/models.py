@@ -49,3 +49,22 @@ class CommentLike(models.Model):
 class ReCommentLike(models.Model):
     recomment_id    = models.ForeignKey(ReComment, on_delete=models.SET_NULL, null=True)
     like_user_uuid  = models.UUIDField()
+
+class Bookmark(models.Model):
+    user_uuid       = models.UUIDField()
+    post_id         = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
+
+class PostReport(models.Model):
+    post_id         = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
+    report_user_uuid= models.UUIDField()
+    report_content  = models.TextField()
+
+class CommentReport(models.Model):
+    comment_id      = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True)
+    report_user_uuid= models.UUIDField()
+    report_content  = models.TextField()
+
+class ReCommentReport(models.Model):
+    recomment_id    = models.ForeignKey(ReComment, on_delete=models.SET_NULL, null=True)
+    report_user_uuid= models.UUIDField()
+    report_content  = models.TextField()
