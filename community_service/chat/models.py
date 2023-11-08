@@ -8,7 +8,7 @@ class ChatRoomManager(models.Manager):
         ).filter(
             members__user_uuid=other_uuid
         ).distinct().first()
-    
+
     def get_chatrooms(self, user_uuid):
         # get chatrooms with user_uuid
         # should exclude chatrooms with left_members
@@ -17,16 +17,16 @@ class ChatRoomManager(models.Manager):
         ).exclude(
             left_members__user_uuid=user_uuid
         ).order_by('-updated_at')
-    
+
     def get_chatroom_name(self, id, user_uuid):
         # get chatroom name
         chatroom = self.get_queryset().get(id=id)
         if chatroom.name:
             return chatroom.name
-        else:
-            # return the other user's name
-            return chatroom.members.exclude(user_uuid=user_uuid).first().user_name
-        
+
+        # return the other user's name
+        return chatroom.members.exclude(user_uuid=user_uuid).first().user_name
+
     def delete_chatroom(self, id, user_uuid):
         # get chatroom with id
         chatroom = self.get_queryset().get(id=id)
@@ -37,6 +37,8 @@ class ChatMember(models.Model):
     user_uuid   = models.UUIDField(primary_key=True, editable=False, db_comment="채팅방 멤버")
     user_name   = models.CharField(max_length=100, db_comment="채팅방 멤버 이름")
     is_active   = models.BooleanField(default=False, db_comment="서비스 탈퇴 여부")
+
+    objects = models.Manager()
 
     class Meta:
         db_table            = "chat_member"

@@ -23,7 +23,6 @@ class ChatRoomViewSet(ModelViewSet):
     @extend_schema(summary="채팅방 조회", tags=["채팅방"])
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        user_uuid = request.query_params.get('user_uuid')
         serializer = ChatRoomSerializer(instance, context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
