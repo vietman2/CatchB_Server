@@ -65,6 +65,13 @@ jobs:
         coverage lcov
         cd ..
 
+    - name: Run community tests
+      run: |
+        cd community_service
+        coverage run --source='.' manage.py test
+        coverage lcov
+        cd ..
+
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
       with:

@@ -58,3 +58,8 @@ jobs:
       run: |
         cd reservations_service
         python manage.py test
+
+    - name: Run Community Tests
+      run: |
+        cd community_service
+        python manage.py test
