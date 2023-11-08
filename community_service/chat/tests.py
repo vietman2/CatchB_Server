@@ -113,7 +113,6 @@ class ChatRoomAPITestCase(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, 400)
 
-        data['members'][1]['user_uuid'] = self.other_uuid[0]
         data['members'][1]['user_uuid'] = 'invalid uuid'
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, 400)
