@@ -12,11 +12,11 @@ class ChatRoomAPITestCase(APITestCase):
         self.data = {
             'members': [
                 {
-                    'user_uuid': self.user_uuid[0],
+                    'user_uuid': self.user_uuid,
                     'user_name': 'user1',
                 },
                 {
-                    'user_uuid': self.other_uuid[0],
+                    'user_uuid': self.other_uuid,
                     'user_name': 'user2',
                 }
             ]
@@ -24,11 +24,11 @@ class ChatRoomAPITestCase(APITestCase):
         self.data2 = {
             'members': [
                 {
-                    'user_uuid': self.user_uuid[0],
+                    'user_uuid': self.user_uuid,
                     'user_name': 'user1',
                 },
                 {
-                    'user_uuid': self.other2_uuid[0],
+                    'user_uuid': self.other2_uuid,
                     'user_name': 'user3',
                 }
             ]
@@ -36,17 +36,17 @@ class ChatRoomAPITestCase(APITestCase):
         self.data3 = {
             'members': [
                 {
-                    'user_uuid': self.other_uuid[0],
+                    'user_uuid': self.other_uuid,
                     'user_name': 'user2',
                 },
                 {
-                    'user_uuid': self.other2_uuid[0],
+                    'user_uuid': self.other2_uuid,
                     'user_name': 'user3',
                 }
             ]
         }
         self.updated_data = {
-            'members': [self.user_uuid[0],self.other_uuid[0]],
+            'members': [self.user_uuid,self.other_uuid],
             'name': 'new name'
         }
 
@@ -66,27 +66,27 @@ class ChatRoomAPITestCase(APITestCase):
         self.client.post(self.url, self.data2, format='json')
         self.client.post(self.url, self.data3, format='json')
         response = self.client.get(self.url, {
-            'user_uuid': self.user_uuid[0]
+            'user_uuid': self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 2)
 
         # test retrieve
         response = self.client.get(self.url + f'{chatroom.id}/', {
-            'user_uuid': self.user_uuid[0]
+            'user_uuid': self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['id'], chatroom.id)
-        self.assertEqual(response.data['members'][0], self.user_uuid[0])
-        self.assertEqual(response.data['members'][1], self.other_uuid[0])
+        self.assertEqual(response.data['members'][0], self.user_uuid)
+        self.assertEqual(response.data['members'][1], self.other_uuid)
         self.assertEqual(response.data['name'], 'user2')
 
         # test update
-        response = self.client.put(self.url + f'{chatroom.id}/?user_uuid={self.user_uuid[0]}', data=self.updated_data, format='json')
+        response = self.client.put(self.url + f'{chatroom.id}/?user_uuid={self.user_uuid}', data=self.updated_data, format='json')
         self.assertEqual(response.status_code, 200)
 
         # test delete
-        response = self.client.delete(self.url + f'{chatroom.id}/?user_uuid={self.user_uuid[0]}')
+        response = self.client.delete(self.url + f'{chatroom.id}/?user_uuid={self.user_uuid}')
         self.assertEqual(response.status_code, 204)
         # check soft delete
         self.assertEqual(ChatRoom.objects.count(), 3)
@@ -101,11 +101,11 @@ class ChatRoomAPITestCase(APITestCase):
         data = {
             'members': [
                 {
-                    'user_uuid': self.user_uuid[0],
+                    'user_uuid': self.user_uuid,
                     'user_name': 'user1',
                 },
                 {
-                    'user_uuid': self.user_uuid[0],
+                    'user_uuid': self.user_uuid,
                     'user_name': 'user2',
                 }
             ]
@@ -118,7 +118,7 @@ class ChatRoomAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.put(
-            self.url + f'{chatroom.id}/?user_uuid={self.user_uuid[0]}',
+            self.url + f'{chatroom.id}/?user_uuid={self.user_uuid}',
             data={},
             format='json'
         )
