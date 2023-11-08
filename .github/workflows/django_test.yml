@@ -42,7 +42,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.COMMUNITY_DB_NAME }}
         ports:
-          - 5433:5433
+          - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -61,8 +61,8 @@ jobs:
 
     - name: Setup Django Database Config
       run: |
-        echo "DATABASE_URL=postgres://${{ secrets.RESERVATIONS_DB_USER }}:${{ secrets.RESERVATIONS_DB_PASSWORD }}@postgres:5432/${{ secrets.RESERVATIONS_DB_NAME }}" >> .env
-        echo "DATABASE_URL=postgres://${{ secrets.COMMUNITY_DB_USER }}:${{ secrets.COMMUNITY_DB_PASSWORD }}@postgres:5433/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
+        echo "DATABASE_URL=postgres://${{ secrets.RESERVATIONS_DB_USER }}:${{ secrets.RESERVATIONS_DB_PASSWORD }}@postgres_reservations:5432/${{ secrets.RESERVATIONS_DB_NAME }}" >> .env
+        echo "DATABASE_URL=postgres://${{ secrets.COMMUNITY_DB_USER }}:${{ secrets.COMMUNITY_DB_PASSWORD }}@postgres_community:5433/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
 
     - name: Run User Management Tests
       run: |
