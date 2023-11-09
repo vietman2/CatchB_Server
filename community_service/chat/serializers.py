@@ -46,5 +46,5 @@ class ChatRoomCreateSerializer(serializers.ModelSerializer):
 
         if ChatRoom.objects.check_chatroom(user_uuid, other_uuid):
             raise serializers.ValidationError("Chatroom already exists")
-        
+
         return value

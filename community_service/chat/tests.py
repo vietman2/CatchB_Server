@@ -45,10 +45,6 @@ class ChatRoomAPITestCase(APITestCase):
                 }
             ]
         }
-        self.updated_data = {
-            'members': [self.user_uuid,self.other_uuid],
-            'name': 'new name'
-        }
 
     def test_chatroom_apis(self):
         response = self.client.post(self.url, self.data, format='json')
@@ -82,7 +78,11 @@ class ChatRoomAPITestCase(APITestCase):
         self.assertEqual(response.data['name'], 'user2')
 
         # test update
-        response = self.client.put(self.url + f'{chatroom.id}/?user_uuid={self.user_uuid}', data=self.updated_data, format='json')
+        updated_data = {
+            'members': [self.user_uuid,self.other_uuid],
+            'name': 'new name'
+        }
+        response = self.client.put(self.url + f'{chatroom.id}/?user_uuid={self.user_uuid}', data=updated_data, format='json')
         self.assertEqual(response.status_code, 200)
 
         # test delete
