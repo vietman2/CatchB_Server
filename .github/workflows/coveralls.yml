@@ -70,25 +70,29 @@ jobs:
       run: |
         cd user_management_service
         coverage run --source='.' manage.py test
-        coverage lcov
+        coverage lcov -o user_coverage.lcov
         cd ..
 
     - name: Run reservations tests
       run: |
         cd reservations_service
         coverage run --source='.' manage.py test
-        coverage lcov
+        coverage lcov -o reservations_coverage.lcov
         cd ..
 
     - name: Run community tests
       run: |
         cd community_service
         coverage run --source='.' manage.py test
-        coverage lcov
+        coverage lcov -o community_coverage.lcov
         cd ..
+
+    - name: Combine coverage reports
+      run: |
+        lcov -a user_management_service/user_coverage.lcov -a reservations_service/reservations_coverage.lcov -a community_service/community_coverage.lcov -o coverage.lcov
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./user_management_service/coverage.lcov
+        path-to-lcov: ./coverage.lcov
