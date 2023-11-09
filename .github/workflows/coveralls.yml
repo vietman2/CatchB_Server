@@ -71,7 +71,7 @@ jobs:
       run: |
         cd user_management_service
         coverage run --source='.' manage.py test
-        coverage lcov -o user_coverage.lcov
+        coverage lcov -o user_management_coverage.lcov
         cd ..
 
     - name: Run reservations tests
@@ -88,12 +88,9 @@ jobs:
         coverage lcov -o community_coverage.lcov
         cd ..
 
-    - name: Combine coverage reports
-      run: |
-        lcov -a user_management_service/user_coverage.lcov -a reservations_service/reservations_coverage.lcov -a community_service/community_coverage.lcov -o coverage.lcov
-
-    - name: Coveralls GitHub Action
+    - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./coverage.lcov
+        files: user_management_service/user_management_coverage.lcov reservations_service/reservations_coverage.lcov community_service/community_coverage.lcov
+        flag-name: community_service
