@@ -48,6 +48,7 @@ class PostTestCase(APITestCase):
         self.user_uuid = uuid.uuid4()
         self.forum1 = Forum.objects.create(forum_name="test_forum1")
         self.forum2 = Forum.objects.create(forum_name="test_forum2")
+        self.deleted_forum3 = Forum.objects.create(forum_name="test_forum3", is_deleted=True)
 
     def test_post(self):
         post1 = Post.objects.create(
@@ -85,6 +86,63 @@ class PostTestCase(APITestCase):
         self.assertEqual(Post.objects.get(id=post1.id).is_deleted, True)
         self.assertEqual(len(Post.objects.all()), 4)
 
+        create_data = {
+            "forum": self.forum1.id,
+            "author_uuid": self.user_uuid,
+            "title": "test_title5",
+            "content": "test_content5"
+        }
+        response = self.client.post(self.url, data=create_data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(Post.objects.all()), 5)
+
+        edit_data_title = {
+            "title": "new_title"
+        }
+        response = self.client.patch(self.url + f"{post1.id}/", data=edit_data_title)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["title"], "new_title")
+
+        edit_data_forum = {
+            "content": "new_content",
+        }
+        response = self.client.patch(self.url + f"{post1.id}/", data=edit_data_forum)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["content"], "new_content")
+
     def test_post_fail(self):
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 400)
+
+        no_forum_data = {
+            "author_uuid": self.user_uuid,
+            "title": "test_title5",
+            "content": "test_content5"
+        }
+        response = self.client.post(self.url, data=no_forum_data)
+        self.assertEqual(response.status_code, 400)
+
+        deleted_forum_data = {
+            "forum": self.deleted_forum3.id,
+            "author_uuid": self.user_uuid,
+            "title": "test_title5",
+            "content": "test_content5"
+        }
+        response = self.client.post(self.url, data=deleted_forum_data)
+        self.assertEqual(response.status_code, 400)
+
+        post = Post.objects.create(
+            forum=self.forum1,
+            author_uuid=self.user_uuid,
+            title="test_title1",
+            content="test_content1"
+        )
+
+        response = self.client.patch(self.url + f"{post.id}/", data={})
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.patch(self.url + f"{post.id}/", data={"forum": self.forum2.id})
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.patch(self.url + f"{post.id}/", data={"author_uuid": uuid.uuid4()})
         self.assertEqual(response.status_code, 400)
