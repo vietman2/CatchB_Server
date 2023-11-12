@@ -5,7 +5,7 @@ from .models import ChatRoom
 
 class ChatRoomAPITestCase(APITestCase):
     def setUp(self):
-        self.url = '/api/chatroom/'
+        self.url = '/api/chatrooms/'
         self.user_uuid = uuid.uuid4()
         self.other_uuid = uuid.uuid4()
         self.other2_uuid = uuid.uuid4()

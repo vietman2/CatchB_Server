@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 
 from .models import ChatRoom, ChatMessage
 
@@ -6,6 +7,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
 
+    @extend_schema_field(serializers.CharField())
     def get_last_message(self, obj):
         last_message = ChatMessage.objects.filter(dialog=obj).last()
         if last_message:
@@ -13,6 +15,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         else:
             return None
 
+    @extend_schema_field(serializers.CharField())
     def get_name(self, obj):
         request = self.context.get('request')
         user_uuid = request.query_params.get('user_uuid')
