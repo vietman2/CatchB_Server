@@ -51,7 +51,7 @@ class Post(models.Model):
 
     class Meta:
         db_table = 'post'
-        ordering = ['-created_at'] 
+        ordering = ['-created_at']
 
 class CommentManager(models.Manager):
     def create(self, post, author_uuid, content, anonymous=False):

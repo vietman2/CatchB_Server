@@ -12,8 +12,8 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         last_message = ChatMessage.objects.filter(dialog=obj).last()
         if last_message:
             return last_message.message
-        else:
-            return None
+
+        return None
 
     @extend_schema_field(serializers.CharField())
     def get_name(self, obj):
@@ -22,8 +22,8 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         if user_uuid:
             name = ChatRoom.objects.get_chatroom_name(obj.id, user_uuid)
             return name
-        else:
-            raise serializers.ValidationError("user_uuid is required")
+
+        raise serializers.ValidationError("user_uuid is required")
 
     class Meta:
         model = ChatRoom

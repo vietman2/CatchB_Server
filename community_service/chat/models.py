@@ -18,18 +18,18 @@ class ChatRoomManager(models.Manager):
             left_members__user_uuid=user_uuid
         ).order_by('-updated_at')
 
-    def get_chatroom_name(self, id, user_uuid):
+    def get_chatroom_name(self, chatroom_id, user_uuid):
         # get chatroom name
-        chatroom = self.get_queryset().get(id=id)
+        chatroom = self.get_queryset().get(id=chatroom_id)
         if chatroom.name:
             return chatroom.name
 
         # return the other user's name
         return chatroom.members.exclude(user_uuid=user_uuid).first().user_name
 
-    def delete_chatroom(self, id, user_uuid):
+    def delete_chatroom(self, chatroom_id, user_uuid):
         # get chatroom with id
-        chatroom = self.get_queryset().get(id=id)
+        chatroom = self.get_queryset().get(id=chatroom_id)
         # add user_uuid to left_members
         chatroom.left_members.add(user_uuid)
 
@@ -64,6 +64,9 @@ class ChatRoom(models.Model):
         db_table            = "chatroom"
         db_table_comment    = "채팅방"
 
+class ChatMessageManager(models.Manager):
+    pass
+
 class ChatMessage(models.Model):
     dialog      = models.ForeignKey(
         ChatRoom,
@@ -82,6 +85,8 @@ class ChatMessage(models.Model):
 
     deleted     = models.BooleanField(default=False, db_comment="채팅 메시지 삭제 여부")
     read        = models.BooleanField(default=False, db_comment="채팅 메시지 읽음 여부")
+
+    objects = ChatMessageManager()
 
     class Meta:
         db_table            = "chat_message"
