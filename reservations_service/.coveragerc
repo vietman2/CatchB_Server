@@ -2,6 +2,13 @@
 relative_files = True
 source = .
 branch = True
+omit = 
+    */migrations/*
+    manage.py
+    */admin.py
+    */settings.py
+    */wsgi.py
+    */asgi.py
 
 [report]
 show_missing=True
