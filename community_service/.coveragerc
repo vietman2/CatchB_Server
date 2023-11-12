@@ -4,10 +4,11 @@ source = .
 branch = True
 omit = 
     */migrations/*
+    */admin.py
     manage.py
-    */asgi.py
-    */wsgi.py
     */settings.py
+    */wsgi.py
+    */asgi.py
 
 [report]
 show_missing=True

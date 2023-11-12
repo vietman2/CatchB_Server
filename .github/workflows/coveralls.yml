@@ -13,15 +13,19 @@ jobs:
     env:
       USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
       RESERVATIONS_SECRET_KEY: ${{ secrets.RESERVATIONS_SECRET_KEY }}
+      COMMUNITY_SECRET_KEY: ${{ secrets.COMMUNITY_SECRET_KEY }}
       RESERVATIONS_DB_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
       RESERVATIONS_DB_USER: ${{ secrets.RESERVATIONS_DB_USER }}
       RESERVATIONS_DB_NAME: ${{ secrets.RESERVATIONS_DB_NAME }}
+      COMMUNITY_DB_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
+      COMMUNITY_DB_USER: ${{ secrets.COMMUNITY_DB_USER }}
+      COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.9]
     services:
-      postgres:
+      postgres_reservations:
         image: postgres:14
         env:
           POSTGRES_USER: ${{ secrets.RESERVATIONS_DB_USER }}
@@ -29,6 +33,16 @@ jobs:
           POSTGRES_DB: ${{ secrets.RESERVATIONS_DB_NAME }}
         ports:
           - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      postgres_community:
+        image: postgres:14
+        env:
+          POSTGRES_USER: ${{ secrets.COMMUNITY_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.COMMUNITY_DB_NAME }}
+        ports:
+          - 5433:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -45,28 +59,38 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         sudo apt-get install graphviz graphviz-dev
+        sudo apt-get install lcov
         pip install -r requirements.txt
 
     - name: Setup Django Database Config
       run: |
         echo "DATABASE_URL=postgres://${{ secrets.RESERVATIONS_DB_USER }}:${{ secrets.RESERVATIONS_DB_PASSWORD }}@postgres:5432/${{ secrets.RESERVATIONS_DB_NAME }}" >> .env
+        echo "DATABASE_URL=postgres://${{ secrets.COMMUNITY_DB_USER }}:${{ secrets.COMMUNITY_DB_PASSWORD }}@postgres:5432/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
 
     - name: Run user_management tests
       run: |
         cd user_management_service
         coverage run --source='.' manage.py test
-        coverage lcov
+        coverage lcov -o user_management_coverage.lcov
         cd ..
 
     - name: Run reservations tests
       run: |
         cd reservations_service
         coverage run --source='.' manage.py test
-        coverage lcov
+        coverage lcov -o reservations_coverage.lcov
         cd ..
 
-    - name: Coveralls GitHub Action
+    - name: Run community tests
+      run: |
+        cd community_service
+        coverage run --source='.' manage.py test
+        coverage lcov -o community_coverage.lcov
+        cd ..
+
+    - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./user_management_service/coverage.lcov
+        files: user_management_service/user_management_coverage.lcov reservations_service/reservations_coverage.lcov community_service/community_coverage.lcov
+        flag-name: community_service
