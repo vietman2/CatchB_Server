@@ -22,11 +22,14 @@ from drf_spectacular.views import (
     SpectacularSwaggerView as SSV,
 )
 
+from board.views import ForumViewSet, PostViewSet
 from chat.views import ChatRoomViewSet
 
 router = DefaultRouter()
 
-router.register(r'chatroom', ChatRoomViewSet)
+router.register(r'chatrooms', ChatRoomViewSet)
+router.register(r'forums', ForumViewSet)
+router.register(r'posts', PostViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
