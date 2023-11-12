@@ -40,7 +40,7 @@ class PostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("forum을 입력해주세요")
 
         return data
-    
+
     def validate_partial_update(self, data):
         ## forum and authod_uuid cannot be updated
         forum = data.get("forum")
@@ -48,10 +48,10 @@ class PostSerializer(serializers.ModelSerializer):
 
         if forum:
             raise serializers.ValidationError("forum은 수정할 수 없습니다")
-        
+
         if author_uuid:
             raise serializers.ValidationError("author_uuid는 수정할 수 없습니다")
-        
+
         title = data.get("title")
         content = data.get("content")
 
@@ -63,3 +63,43 @@ class PostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("삭제된 게시판입니다")
 
         return forum
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+class ReCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReComment
+        fields = '__all__'
+
+class PostReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostReport
+        fields = '__all__'
+
+class CommentReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentReport
+        fields = '__all__'
+
+class ReCommentReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReCommentReport
+        fields = '__all__'
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostLike
+        fields = '__all__'
+
+class CommentLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentLike
+        fields = '__all__'
+
+class ReCommentLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReCommentLike
+        fields = '__all__'

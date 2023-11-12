@@ -57,7 +57,7 @@ class Comment(models.Model):
     post            = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
     author_uuid     = models.UUIDField()
 
-    comment         = models.TextField()
+    content         = models.TextField()
     created_at      = models.DateTimeField(auto_now_add=True)
     updated_at      = models.DateTimeField(auto_now=True)
     anonymous       = models.BooleanField(default=False)
@@ -66,7 +66,7 @@ class ReComment(models.Model):
     comment         = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True)
     author_uuid     = models.UUIDField()
 
-    comment         = models.TextField()
+    content         = models.TextField()
     created_at      = models.DateTimeField(auto_now_add=True)
     updated_at      = models.DateTimeField(auto_now=True)
     anonymous       = models.BooleanField(default=False)
@@ -87,17 +87,39 @@ class Bookmark(models.Model):
     user_uuid       = models.UUIDField()
     post            = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
 
+class ReportReason(models.TextChoices):
+    SPAM            = 'SP', '스팸'
+    ADULT           = 'AD', '성인물'
+    VIOLENCE        = 'VI', '폭력적인 내용'
+    ILLEGAL         = 'IL', '불법적인 내용'
+    OTHER           = 'OT', '기타'
+
 class PostReport(models.Model):
     post            = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
     report_user_uuid= models.UUIDField()
     report_content  = models.TextField()
+    report_reason   = models.CharField(
+        max_length=2,
+        choices=ReportReason.choices,
+        default=ReportReason.OTHER
+    )
 
 class CommentReport(models.Model):
     comment         = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True)
     report_user_uuid= models.UUIDField()
     report_content  = models.TextField()
+    report_reason   = models.CharField(
+        max_length=2,
+        choices=ReportReason.choices,
+        default=ReportReason.OTHER
+    )
 
 class ReCommentReport(models.Model):
     recomment       = models.ForeignKey(ReComment, on_delete=models.SET_NULL, null=True)
     report_user_uuid= models.UUIDField()
     report_content  = models.TextField()
+    report_reason   = models.CharField(
+        max_length=2,
+        choices=ReportReason.choices,
+        default=ReportReason.OTHER
+    )

@@ -2,10 +2,16 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
+from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 
-from .models import Forum, Post
-from .serializers import ForumSerializer, ForumListSerializer, PostSerializer
+from .models import Forum, Post, Comment, ReComment
+from .serializers import (
+    ForumSerializer, ForumListSerializer, PostSerializer,
+    CommentSerializer, ReCommentSerializer,
+    PostLikeSerializer, CommentLikeSerializer, ReCommentLikeSerializer,
+    PostReportSerializer, CommentReportSerializer, ReCommentReportSerializer
+)
 
 class ForumViewSet(ModelViewSet):
     queryset = Forum.objects.all()
@@ -91,3 +97,79 @@ class PostViewSet(ModelViewSet):
 
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(summary="게시글 신고", tags=["게시글"])
+    @action(detail=True, methods=["post"])
+    def report(self, request, *args, **kwargs):
+        serializer = PostReportSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
+
+    @extend_schema(summary="게시글 좋아요", tags=["게시글"])
+    @action(detail=True, methods=["post"])
+    def like(self, request, *args, **kwargs):
+        serializer = PostLikeSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(data={"message": "좋아요되었습니다"}, status=status.HTTP_200_OK)
+
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    http_method_names = ['post']
+
+    @extend_schema(summary="댓글 신고", tags=["댓글"])
+    @action(detail=True, methods=["post"])
+    def report(self, request, *args, **kwargs):
+        serializer = CommentReportSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
+    
+    @extend_schema(summary="댓글 좋아요", tags=["댓글"])
+    @action(detail=True, methods=["post"])
+    def like(self, request, *args, **kwargs):
+        serializer = CommentLikeSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(data={"message": "좋아요되었습니다"}, status=status.HTTP_200_OK)
+
+class ReCommentViewSet(ModelViewSet):
+    queryset = ReComment.objects.all()
+    serializer_class = ReCommentSerializer
+    http_method_names = ['post']
+
+    @extend_schema(summary="대댓글 신고", tags=["대댓글"])
+    @action(detail=True, methods=["post"])
+    def report(self, request, *args, **kwargs):
+        serializer = ReCommentReportSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
+    
+    @extend_schema(summary="대댓글 좋아요", tags=["대댓글"])
+    @action(detail=True, methods=["post"])
+    def like(self, request, *args, **kwargs):
+        serializer = ReCommentLikeSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(data={"message": "좋아요되었습니다"}, status=status.HTTP_200_OK)
