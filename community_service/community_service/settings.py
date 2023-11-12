@@ -83,7 +83,7 @@ DATABASES = {
         'USER': config("COMMUNITY_DB_USER"),
         'PASSWORD': config("COMMUNITY_DB_PASSWORD"),
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 
