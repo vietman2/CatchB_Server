@@ -58,7 +58,7 @@ class PostViewSet(ModelViewSet):
         forum_id = request.query_params.get("forum_id")
 
         if not forum_id:
-            return Response(data={"message": "forum_id를 입력해주세요"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message": "게시판을 입력해주세요"}, status=status.HTTP_400_BAD_REQUEST)
 
         queryset = Post.objects.get_list(forum_id)
         serializer = PostSerializer(queryset, many=True)
@@ -100,24 +100,26 @@ class PostViewSet(ModelViewSet):
 
     @extend_schema(summary="게시글 신고", tags=["게시글"])
     @action(detail=True, methods=["post"])
+    # pylint: disable=W0613
     def report(self, request, *args, **kwargs):
         serializer = PostReportSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
 
     @extend_schema(summary="게시글 좋아요", tags=["게시글"])
     @action(detail=True, methods=["post"])
+    # pylint: disable=W0613
     def like(self, request, *args, **kwargs):
         serializer = PostLikeSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         return Response(data={"message": "좋아요되었습니다"}, status=status.HTTP_200_OK)
 
 class CommentViewSet(ModelViewSet):
@@ -127,6 +129,7 @@ class CommentViewSet(ModelViewSet):
 
     @extend_schema(summary="댓글 신고", tags=["댓글"])
     @action(detail=True, methods=["post"])
+    # pylint: disable=W0613
     def report(self, request, *args, **kwargs):
         serializer = CommentReportSerializer(data=request.data)
         try:
@@ -135,16 +138,17 @@ class CommentViewSet(ModelViewSet):
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
-    
+
     @extend_schema(summary="댓글 좋아요", tags=["댓글"])
     @action(detail=True, methods=["post"])
+    # pylint: disable=W0613
     def like(self, request, *args, **kwargs):
         serializer = CommentLikeSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         return Response(data={"message": "좋아요되었습니다"}, status=status.HTTP_200_OK)
 
 class ReCommentViewSet(ModelViewSet):
@@ -154,22 +158,24 @@ class ReCommentViewSet(ModelViewSet):
 
     @extend_schema(summary="대댓글 신고", tags=["대댓글"])
     @action(detail=True, methods=["post"])
+    # pylint: disable=W0613
     def report(self, request, *args, **kwargs):
         serializer = ReCommentReportSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
-    
+
     @extend_schema(summary="대댓글 좋아요", tags=["대댓글"])
     @action(detail=True, methods=["post"])
+    # pylint: disable=W0613
     def like(self, request, *args, **kwargs):
         serializer = ReCommentLikeSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         return Response(data={"message": "좋아요되었습니다"}, status=status.HTTP_200_OK)

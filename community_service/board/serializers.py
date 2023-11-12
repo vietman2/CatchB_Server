@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Forum, Post, Comment, ReComment, PostLike, CommentLike,
-    ReCommentLike, Bookmark, PostReport, CommentReport, ReCommentReport
+    ReCommentLike, PostReport, CommentReport, ReCommentReport #, Bookmark
 )
 
 class ForumListSerializer(serializers.ModelSerializer):
