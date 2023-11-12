@@ -22,6 +22,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+    # pylint: disable=W0222
     async def receive(self, text_data, bytes_data=None):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
