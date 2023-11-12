@@ -53,6 +53,17 @@ class Post(models.Model):
         db_table = 'post'
         ordering = ['-created_at'] 
 
+class CommentManager(models.Manager):
+    def create(self, post, author_uuid, content, anonymous=False):
+        comment = super().create(
+            post=post,
+            author_uuid=author_uuid,
+            content=content,
+            anonymous=anonymous
+        )
+
+        return comment
+
 class Comment(models.Model):
     post            = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
     author_uuid     = models.UUIDField()
@@ -62,11 +73,22 @@ class Comment(models.Model):
     updated_at      = models.DateTimeField(auto_now=True)
     anonymous       = models.BooleanField(default=False)
 
-    #objects = CommentManager()
+    objects = CommentManager()
 
     class Meta:
         db_table = 'comment'
         ordering = ['created_at']
+
+class ReCommentManager(models.Manager):
+    def create(self, comment, author_uuid, content, anonymous=False):
+        recomment = super().create(
+            comment=comment,
+            author_uuid=author_uuid,
+            content=content,
+            anonymous=anonymous
+        )
+
+        return recomment
 
 class ReComment(models.Model):
     comment         = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True)
@@ -77,7 +99,7 @@ class ReComment(models.Model):
     updated_at      = models.DateTimeField(auto_now=True)
     anonymous       = models.BooleanField(default=False)
 
-    #objects = ReCommentManager()
+    objects = ReCommentManager()
 
     class Meta:
         db_table = 'recomment'

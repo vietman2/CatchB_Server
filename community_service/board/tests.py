@@ -157,6 +157,11 @@ class ReportLikeTestCase(APITestCase):
             title="test_title1",
             content="test_content1"
         )
+        self.data = {
+            "report_user_uuid": self.user_uuid,
+            "report_content": "test_report_content",
+            "report_reason": ReportReason.OTHER
+        }
         self.comment1 = Comment.objects.create(
             post=self.post1,
             author_uuid=self.user_uuid,
@@ -167,11 +172,6 @@ class ReportLikeTestCase(APITestCase):
             author_uuid=self.user_uuid,
             content="test_recomment1"
         )
-        self.data = {
-            "report_user_uuid": self.user_uuid,
-            "report_content": "test_report_content",
-            "report_reason": ReportReason.OTHER
-        }
 
     def test_report(self):
         post_report_data = {
