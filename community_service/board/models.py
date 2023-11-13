@@ -1,5 +1,10 @@
 from django.db import models
 
+class ForumCategory(models.TextChoices):
+    RECRUITMENT  = "RECRUIT", "모집"
+    INFORMATION = "INFO", "정보"
+    FREE        = "FREE", "자유"
+
 class ForumManager(models.Manager):
     def delete_forum(self, forum):
         forum.is_deleted = True
@@ -12,6 +17,12 @@ class ForumManager(models.Manager):
 
 class Forum(models.Model):
     forum_name      = models.CharField(max_length=100, unique=True)
+    category        = models.CharField(
+        choices=ForumCategory.choices,
+        max_length=10,
+        default=ForumCategory.FREE,
+        editable=False
+    )
     created_at      = models.DateTimeField(auto_now_add=True, editable=False)
     allow_anonymous = models.BooleanField(default=False, editable=False)
     is_deleted      = models.BooleanField(default=False)
