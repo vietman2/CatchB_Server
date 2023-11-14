@@ -7,6 +7,11 @@ class ForumTestCase(APITestCase):
     def setUp(self):
         self.url = "/api/forums/"
 
+    def test_init_forums(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 5)
+
     def test_forum(self):
         Forum.objects.create(forum_name="test_forum1")
         Forum.objects.create(forum_name="test_forum2")
@@ -20,16 +25,16 @@ class ForumTestCase(APITestCase):
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 5)
+        self.assertEqual(len(response.data), 10)
 
         response = self.client.delete(self.url + "5/")
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Forum.objects.get(id=5).is_deleted, True)
-        self.assertEqual(len(Forum.objects.all()), 5)
+        self.assertEqual(len(Forum.objects.all()), 10)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 4)
+        self.assertEqual(len(response.data), 9)
 
     def test_forum_failure(self):
         Forum.objects.create(forum_name="test_forum1")
