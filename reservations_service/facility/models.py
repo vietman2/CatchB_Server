@@ -59,11 +59,11 @@ class Address(models.Model):
         verbose_name_plural = "주소"
 
 class Stars(models.IntegerChoices):
-        ONE     = 1, "1"
-        TWO     = 2, "2"
-        THREE   = 3, "3"
-        FOUR    = 4, "4"
-        FIVE    = 5, "5"
+    ONE     = 1, "1"
+    TWO     = 2, "2"
+    THREE   = 3, "3"
+    FOUR    = 4, "4"
+    FIVE    = 5, "5"
 
 class FacilityReview(models.Model):
     facility    = models.UUIDField(null=False, blank=False, db_comment="시설 고유번호")

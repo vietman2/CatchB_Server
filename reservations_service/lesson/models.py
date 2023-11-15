@@ -56,11 +56,11 @@ class LessonSession(models.Model):
         verbose_name_plural = "레슨"
 
 class Stars(models.IntegerChoices):
-        ONE     = 1, "1"
-        TWO     = 2, "2"
-        THREE   = 3, "3"
-        FOUR    = 4, "4"
-        FIVE    = 5, "5"
+    ONE     = 1, "1"
+    TWO     = 2, "2"
+    THREE   = 3, "3"
+    FOUR    = 4, "4"
+    FIVE    = 5, "5"
 
 class LessonReview(models.Model):
     ## 리뷰는 사용자가 시설에 대해 남긴다
