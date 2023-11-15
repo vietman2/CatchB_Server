@@ -32,14 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
-    'daphne',
-
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
 
     'board.apps.BoardConfig',
-    'chat.apps.ChatConfig',
 
     'rest_framework',
     'django_extensions',
