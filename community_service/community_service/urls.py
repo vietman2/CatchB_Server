@@ -23,11 +23,9 @@ from drf_spectacular.views import (
 )
 
 from board.views import ForumViewSet, PostViewSet, CommentViewSet, ReCommentViewSet
-from chat.views import ChatRoomViewSet
 
 router = DefaultRouter()
 
-router.register(r'chatrooms', ChatRoomViewSet)
 router.register(r'forums', ForumViewSet)
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
