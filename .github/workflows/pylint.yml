@@ -39,7 +39,7 @@ jobs:
       run: |
         source test/bin/activate
         DJANGO_SETTINGS_MODULE=api_gateway.settings pylint **/*.py --load-plugins pylint_django
-        DJANGO_SETTINGS_MODULE=calendar.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=calendar_service.settings pylint **/*.py --load-plugins pylint_django
         DJANGO_SETTINGS_MODULE=community_service.settings pylint **/*.py --load-plugins pylint_django
         DJANGO_SETTINGS_MODULE=payments_service.settings pylint **/*.py --load-plugins pylint_django
         DJANGO_SETTINGS_MODULE=products_service.settings pylint **/*.py --load-plugins pylint_django
