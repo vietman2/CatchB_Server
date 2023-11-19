@@ -30,13 +30,13 @@ class LessonProductViewSet(ModelViewSet):
 
         serializer = LessonProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     @extend_schema(summary="레슨 상품 상세 조회", tags=["레슨"])
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = LessonProductSerializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     @extend_schema(summary="레슨 상품 등록", tags=["레슨"])
     def create(self, request, *args, **kwargs):
         serializer = LessonProductSerializer(data=request.data)
@@ -47,7 +47,7 @@ class LessonProductViewSet(ModelViewSet):
 
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     @extend_schema(summary="레슨 상품 수정", tags=["레슨"])
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -60,7 +60,7 @@ class LessonProductViewSet(ModelViewSet):
 
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     @extend_schema(summary="레슨 상품 삭제", tags=["레슨"])
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

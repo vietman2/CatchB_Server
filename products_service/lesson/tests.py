@@ -33,7 +33,7 @@ class LessonTestCase(TestCase):
         response = self.client.post(self.url, data=self.data, format="json")
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(LessonProduct.objects.all()), 3)
-        id = response.data["id"]
+        id = response.data["id"]    #pylint: disable=W0622
 
         response = self.client.get(f"{self.url}{id}/")
         self.assertEqual(response.status_code, 200)
@@ -74,7 +74,7 @@ class LessonTestCase(TestCase):
 
     def test_lesson_product_fail(self):
         response = self.client.post(self.url, data=self.data, format="json")
-        id = response.data["id"]
+        id = response.data["id"]    #pylint: disable=W0622
 
         response = self.client.put(f"{self.url}{id}/", data=self.data)
         self.assertEqual(response.status_code, 405)
