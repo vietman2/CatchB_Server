@@ -1,4 +1,4 @@
-from .base import *
+from .base import * # pylint: disable=W0401
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

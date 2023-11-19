@@ -1,6 +1,4 @@
-import requests
 from django.conf import settings
-from django.http import HttpResponse, JsonResponse
 
 def service(url):
     if "/calendar" in url:
