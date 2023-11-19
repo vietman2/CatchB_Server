@@ -9,6 +9,8 @@ class LessonProduct(models.Model):
 
     num_sessions    = models.IntegerField(null=False, db_comment="세션 수")
 
+    deleted         = models.BooleanField(default=False, db_comment="삭제 여부")
+
     objects = models.Manager()
 
     class Meta:
