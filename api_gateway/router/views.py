@@ -16,8 +16,9 @@ def service(url):
 
 def router(request):
     request_url = request.path
-    request_method = request.method
-    request_headers = request.headers
-    request_body = request.body
+    #request_method = request.method
+    #request_headers = request.headers
+    #request_body = request.body
 
-    service_url = service(request_url)
+    #service_url = service(request_url)
+    service(request_url)
