@@ -140,7 +140,10 @@ class UserViewSet(ModelViewSet):
 
         serializer.save()
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        data = {
+            "message": "회원가입이 완료되었습니다. 로그인해주세요."
+        }
+        return Response(data=data, status=status.HTTP_201_CREATED, headers=headers)
 
     @extend_schema(summary="비밀번호 변경", tags=["회원 관리"])
     @action(
