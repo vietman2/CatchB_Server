@@ -9,6 +9,8 @@ class LessonProduct(models.Model):
 
     num_sessions    = models.IntegerField(null=False, db_comment="세션 수")
 
+    objects = models.Manager()
+
     class Meta:
         db_table = "lesson_product"
         verbose_name = "레슨 상품"

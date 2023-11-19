@@ -5,7 +5,7 @@ from .models import Facility, Address
 class FacilitySimpleSerializer(serializers.ModelSerializer):
     """
         목록 조회용 시설 정보
-    """ 
+    """
     class Meta:
         model = Facility
         fields = [
@@ -22,7 +22,7 @@ class FacilitySimpleSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     """
         주소 정보
-    """ 
+    """
     class Meta:
         model = Address
         fields = [

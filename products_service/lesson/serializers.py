@@ -5,7 +5,7 @@ from .models import LessonProduct
 class LessonProductSerializer(serializers.ModelSerializer):
     """
         레슨 상품 정보
-    """ 
+    """
     class Meta:
         model = LessonProduct
         fields = [

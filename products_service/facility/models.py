@@ -27,6 +27,8 @@ class Facility(models.Model):
 
     is_confirmed = models.BooleanField(default=False, db_comment="시설 승인 여부")
 
+    objects = models.Manager()
+
     class Meta:
         db_table = "facility"
         verbose_name = "시설"

@@ -20,6 +20,8 @@ class CoachReview(models.Model):
         blank=False
     )
 
+    objects = models.Manager()
+
     class Meta:
         db_table = "coach_review"
         indexes = [
@@ -75,4 +77,3 @@ class FacilityLike(models.Model):
         ]
         verbose_name = "시설 좋아요"
         verbose_name_plural = "시설 좋아요"
-
