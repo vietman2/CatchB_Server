@@ -1,5 +1,5 @@
 from django.test import TestCase
 
-class Tests(TestCase):
-    def test_1(self):
+class placeholder(TestCase):
+    def test_placeholder(self):
         self.assertEqual(1, 1)

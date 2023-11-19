@@ -2,9 +2,9 @@ name: Coveralls
 
 on:
   push:
-    branches: [ "main", "dev", "staging" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "main", "dev", "staging" ]
+    branches: [ "dev" ]
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -12,11 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
-      RESERVATIONS_SECRET_KEY: ${{ secrets.RESERVATIONS_SECRET_KEY }}
+      PAYMENTS_SECRET_KEY: ${{ secrets.PAYMENTS_SECRET_KEY }}
+      PRODUCTS_SECRET_KEY: ${{ secrets.PRODUCTS_SECRET_KEY }}
       COMMUNITY_SECRET_KEY: ${{ secrets.COMMUNITY_SECRET_KEY }}
-      RESERVATIONS_DB_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
-      RESERVATIONS_DB_USER: ${{ secrets.RESERVATIONS_DB_USER }}
-      RESERVATIONS_DB_NAME: ${{ secrets.RESERVATIONS_DB_NAME }}
+      CALENDAR_SECRET_KEY: ${{ secrets.CALENDAR_SECRET_KEY }}
+      API_GATEWAY_SECRET_KEY: ${{ secrets.API_GATEWAY_SECRET_KEY }}
+      PRODUCTS_DB_PASSWORD: ${{ secrets.PRODUCTS_DB_PASSWORD }}
+      PRODUCTS_DB_USER: ${{ secrets.PRODUCTS_DB_USER }}
+      PRODUCTS_DB_NAME: ${{ secrets.PRODUCTS_DB_NAME }}
       COMMUNITY_DB_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
       COMMUNITY_DB_USER: ${{ secrets.COMMUNITY_DB_USER }}
       COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
@@ -25,12 +28,12 @@ jobs:
       matrix:
         python-version: [3.9]
     services:
-      postgres_reservations:
+      postgres_products:
         image: postgres:14
         env:
-          POSTGRES_USER: ${{ secrets.RESERVATIONS_DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.RESERVATIONS_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.PRODUCTS_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.PRODUCTS_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.PRODUCTS_DB_NAME }}
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -64,7 +67,7 @@ jobs:
 
     - name: Setup Django Database Config
       run: |
-        echo "DATABASE_URL=postgres://${{ secrets.RESERVATIONS_DB_USER }}:${{ secrets.RESERVATIONS_DB_PASSWORD }}@postgres:5432/${{ secrets.RESERVATIONS_DB_NAME }}" >> .env
+        echo "DATABASE_URL=postgres://${{ secrets.PRODUCTS_DB_USER }}:${{ secrets.PRODUCTS_DB_PASSWORD }}@postgres:5432/${{ secrets.PRODUCTS_DB_NAME }}" >> .env
         echo "DATABASE_URL=postgres://${{ secrets.COMMUNITY_DB_USER }}:${{ secrets.COMMUNITY_DB_PASSWORD }}@postgres:5432/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
 
     - name: Run user_management tests
@@ -74,11 +77,11 @@ jobs:
         coverage lcov -o user_management_coverage.lcov
         cd ..
 
-    - name: Run reservations tests
+    - name: Run products tests
       run: |
-        cd reservations_service
+        cd products_service
         coverage run --source='.' manage.py test
-        coverage lcov -o reservations_coverage.lcov
+        coverage lcov -o products_coverage.lcov
         cd ..
 
     - name: Run community tests
@@ -92,5 +95,5 @@ jobs:
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        files: user_management_service/user_management_coverage.lcov reservations_service/reservations_coverage.lcov community_service/community_coverage.lcov
+        files: user_management_service/user_management_coverage.lcov products_service/products_coverage.lcov community_service/community_coverage.lcov
         flag-name: community_service

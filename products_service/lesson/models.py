@@ -8,13 +8,30 @@ class LessonProduct(models.Model):
     main_coach      = models.UUIDField(null=False, db_comment="코치 고유번호")
 
     num_sessions    = models.IntegerField(null=False, db_comment="세션 수")
-    num_finished    = models.IntegerField(default=0, null=False, db_comment="완료된 세션 수")
-    num_booked      = models.IntegerField(default=0, null=False, db_comment="예약된 세션 수")
+
+    objects = models.Manager()
 
     class Meta:
         db_table = "lesson_product"
         verbose_name = "레슨 상품"
         verbose_name_plural = "레슨 상품"
+
+class LessonPurchase(models.Model):
+    product         = models.ForeignKey(
+        "LessonProduct",
+        on_delete=models.DO_NOTHING,
+        db_comment="레슨 상품 고유번호",
+    )
+    sub_coaches     = models.JSONField(null=True, db_comment="보조 코치 고유번호 배열")
+    user            = models.UUIDField(null=False, db_comment="사용자 고유번호")
+
+    num_finished    = models.IntegerField(default=0, null=False, db_comment="완료된 세션 수")
+    num_booked      = models.IntegerField(default=0, null=False, db_comment="예약된 세션 수")
+
+    class Meta:
+        db_table = "lesson_purchase"
+        verbose_name = "레슨 구매"
+        verbose_name_plural = "레슨 구매"
 
 class Status(models.TextChoices):
     PENDING     = "PE", "대기중"
@@ -29,13 +46,11 @@ class LessonSession(models.Model):
         editable=False,
         db_comment="세션 고유번호"
     )
-    product         = models.ForeignKey(
-        "LessonProduct",
+    purchase        = models.ForeignKey(
+        "LessonPurchase",
         on_delete=models.DO_NOTHING,
-        db_comment="레슨 상품 고유번호",
+        db_comment="레슨 구매 고유번호",
     )
-    sub_coaches     = models.JSONField(null=True, db_comment="보조 코치 고유번호 배열")
-    reserved_user   = models.UUIDField(null=False, db_comment="사용자 고유번호")
 
     ## 팀이면 팀 정보
 
@@ -54,33 +69,3 @@ class LessonSession(models.Model):
         db_table = "lesson"
         verbose_name = "레슨"
         verbose_name_plural = "레슨"
-
-class Stars(models.IntegerChoices):
-    ONE     = 1, "1"
-    TWO     = 2, "2"
-    THREE   = 3, "3"
-    FOUR    = 4, "4"
-    FIVE    = 5, "5"
-
-class LessonReview(models.Model):
-    ## 리뷰는 사용자가 시설에 대해 남긴다
-    lesson      = models.UUIDField(null=False, blank=False, db_comment="레슨 고유번호")
-    user        = models.UUIDField(null=False, blank=False, db_comment="사용자 고유번호")
-    content     = models.TextField(null=False, blank=False, db_comment="내용")
-    content_open= models.BooleanField(default=False, db_comment="내용 공개 여부")
-    images      = models.JSONField(null=True, blank=True, db_comment="이미지 URL 배열")
-    stars       = models.IntegerField(
-        choices=Stars.choices,
-        db_comment="별점",
-        null=False,
-        blank=False
-    )
-
-    class Meta:
-        db_table = "lesson_review"
-        indexes = [
-            #TODO: 코치에 대한 인덱스 추가
-            models.Index(fields=["user"], name="lesson_review_user_index"),
-        ]
-        verbose_name = "레슨 리뷰"
-        verbose_name_plural = "레슨 리뷰"

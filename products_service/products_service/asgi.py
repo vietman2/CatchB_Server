@@ -1,5 +1,5 @@
 """
-ASGI config for reservations_service project.
+ASGI config for products_service project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'reservations_service.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'products_service.settings')
 
 application = get_asgi_application()

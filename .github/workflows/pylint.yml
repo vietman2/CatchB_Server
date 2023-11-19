@@ -7,11 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       USER_MANAGEMENT_SECRET_KEY: ${{ secrets.USER_MANAGEMENT_SECRET_KEY }}
-      RESERVATIONS_SECRET_KEY: ${{ secrets.RESERVATIONS_SECRET_KEY }}
+      PAYMENTS_SECRET_KEY: ${{ secrets.PAYMENTS_SECRET_KEY }}
+      PRODUCTS_SECRET_KEY: ${{ secrets.PRODUCTS_SECRET_KEY }}
       COMMUNITY_SECRET_KEY: ${{ secrets.COMMUNITY_SECRET_KEY }}
-      RESERVATIONS_DB_PASSWORD: ${{ secrets.RESERVATIONS_DB_PASSWORD }}
-      RESERVATIONS_DB_USER: ${{ secrets.RESERVATIONS_DB_USER }}
-      RESERVATIONS_DB_NAME: ${{ secrets.RESERVATIONS_DB_NAME }}
+      CALENDAR_SECRET_KEY: ${{ secrets.CALENDAR_SECRET_KEY }}
+      API_GATEWAY_SECRET_KEY: ${{ secrets.API_GATEWAY_SECRET_KEY }}
+      PRODUCTS_DB_PASSWORD: ${{ secrets.PRODUCTS_DB_PASSWORD }}
+      PRODUCTS_DB_USER: ${{ secrets.PRODUCTS_DB_USER }}
+      PRODUCTS_DB_NAME: ${{ secrets.PRODUCTS_DB_NAME }}
       COMMUNITY_DB_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
       COMMUNITY_DB_USER: ${{ secrets.COMMUNITY_DB_USER }}
       COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
@@ -35,8 +38,10 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         source test/bin/activate
+        DJANGO_SETTINGS_MODULE=api_gateway.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=calendar_service.settings pylint **/*.py --load-plugins pylint_django
         DJANGO_SETTINGS_MODULE=community_service.settings pylint **/*.py --load-plugins pylint_django
         DJANGO_SETTINGS_MODULE=payments_service.settings pylint **/*.py --load-plugins pylint_django
-        DJANGO_SETTINGS_MODULE=reservations_service.settings pylint **/*.py --load-plugins pylint_django
+        DJANGO_SETTINGS_MODULE=products_service.settings pylint **/*.py --load-plugins pylint_django
         DJANGO_SETTINGS_MODULE=user_management_service.settings pylint **/*.py --load-plugins pylint_django
         pylint $(git ls-files '*.py')
