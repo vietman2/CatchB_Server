@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'router.apps.RouterConfig',
 
     'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
