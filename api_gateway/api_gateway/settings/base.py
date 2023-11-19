@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
 
-    'router.apps.RouterConfig',
+    'users.apps.UsersConfig',
 
     'rest_framework',
     'drf_spectacular',
