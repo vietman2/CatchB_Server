@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from .models import CoachReview
+#from .serializers import CoachReviewSerializer
+
+class CoachReviewViewSet(ModelViewSet):
+    queryset = CoachReview.objects.all()
+    #serializer_class = CoachReviewSerializer
+    permission_classes = [IsAuthenticated]
