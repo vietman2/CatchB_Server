@@ -1,1 +1,1 @@
-from settings.local import *
+from api_gateway.settings.local import *
