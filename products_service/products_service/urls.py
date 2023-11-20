@@ -23,10 +23,12 @@ from drf_spectacular.views import (
 )
 
 from facility.views import FacilityViewSet
+from lesson.views import LessonProductViewSet
 
 router = DefaultRouter()
 
-router.register(r'facility', FacilityViewSet)
+router.register(r'facilities', FacilityViewSet)
+router.register(r'lessons', LessonProductViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
