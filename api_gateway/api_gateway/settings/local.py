@@ -14,11 +14,11 @@ DATABASES = {
 }
 
 SERVICE_URLS = {
-    'calendar_service': 'http://localhost:8001',
-    'community_service': 'http://localhost:8002',
-    'payments_service': 'http://localhost:8003',
-    'products_service': 'http://localhost:8004',
-    'user_management_service': 'http://localhost:8005',
+    'calendar_service':         'http://localhost:8001',
+    'community_service':        'http://localhost:8002',
+    'payments_service':         'http://localhost:8003',
+    'products_service':         'http://localhost:8004',
+    'user_management_service':  'http://localhost:8005',
 }
 
 CORS_ALLOWED_ALL_ORIGINS = True
