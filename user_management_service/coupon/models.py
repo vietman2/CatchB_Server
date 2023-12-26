@@ -4,11 +4,11 @@ from django.utils.translation import gettext_lazy as _
 class CouponStatus(models.TextChoices):
     ACTIVE      = 'ACTIVE', "사용 가능"
     USED        = 'USED', "사용 완료"
-    EXPIRED     = 'EXPIRED', "쿠폰 만료"
+    EXPIRED     = 'EXPIRED', "기한 만료"
 
 class CouponType(models.TextChoices):
-    PERCENTAGE  = 'PERCENTAGE', "할인율"
-    AMOUNT      = 'AMOUNT', "할인액"
+    PERCENTAGE  = 'PERCENTAGE', "비율 할인"
+    AMOUNT      = 'AMOUNT', "금액 할인"
 
 class Coupon(models.Model):
     user            = models.ForeignKey(

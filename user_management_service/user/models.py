@@ -1,15 +1,17 @@
 import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
 from .enums import ExperienceTierChoices, RegisterRouteChoices
+from .validators import CustomUsernameValidator
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username_validator = UnicodeUsernameValidator()
+    username_validator = CustomUsernameValidator()
+    min_length_validator = MinLengthValidator(4)
 
     uuid            = models.UUIDField(
         primary_key=True,
@@ -18,17 +20,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         editable=False
     )
     username        = models.CharField(
-        max_length=150,
+        max_length=20,
         unique=True,
         db_comment='아이디',
-        help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
-        validators=[username_validator],
+        help_text='Required. 4~20. Letters, digits and @/./+/-/_ only.',
+        validators=[username_validator, min_length_validator],
         error_messages={
             'unique': _("A user with that username already exists."),
         }
     )
-    first_name      = models.CharField(max_length=150, db_comment='이름')
-    last_name       = models.CharField(max_length=150, db_comment='성')
+    first_name      = models.CharField(max_length=50, db_comment='이름')
+    last_name       = models.CharField(max_length=50, db_comment='성')
     email           = models.EmailField(unique=True, db_comment='이메일')
     phone_number    = PhoneNumberField(unique=True, db_comment='전화번호')
 
