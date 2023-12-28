@@ -36,10 +36,10 @@ class LessonPurchase(models.Model):
         verbose_name_plural = "레슨 구매"
 
 class Status(models.TextChoices):
-    PENDING     = "PE", "대기중"
-    CONFIRMED   = "CO", "예약승인됨"
-    CANCELED    = "CA", "취소됨"
-    FINISHED    = "FI", "완료됨"
+    PENDING     = "PE", "대기"
+    CONFIRMED   = "CO", "확정"
+    CANCELLED    = "CA", "취소"
+    FINISHED    = "FI", "완료"
 
 class LessonSession(models.Model):
     uuid            = models.UUIDField(
