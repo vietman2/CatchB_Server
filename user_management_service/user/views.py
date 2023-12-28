@@ -11,7 +11,7 @@ from drf_spectacular.utils import extend_schema
 from dj_rest_auth.views import LoginView, LogoutView
 
 from .serializers import (
-    UserRegisterSerializer, UserProfileSerializer, UserSerializer,
+    UserRegisterSerializer, UserSerializer,
     PasswordChangeSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer,
 )
 from .models import CustomUser
@@ -25,7 +25,7 @@ sensitive_post_parameters_m = method_decorator(
 
 class UserViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated,]
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
@@ -105,7 +105,7 @@ class UserViewSet(ModelViewSet):
 
             serializer.save()
         else:
-            serializer = UserProfileSerializer(user.user_profile, data=request.data, partial=True)
+            serializer = UserSerializer(user.user_profile, data=request.data, partial=True)
             try:
                 serializer.is_valid(raise_exception=True)
             except ValidationError as e:
@@ -116,7 +116,7 @@ class UserViewSet(ModelViewSet):
             serializer.save()
         # return using user_profile serializer
         user_profile = user.user_profile
-        serializer = UserProfileSerializer(user_profile)
+        serializer = UserSerializer(user_profile)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
