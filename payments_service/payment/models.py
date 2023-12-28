@@ -1,9 +1,10 @@
 from django.db import models
 
 class Status(models.TextChoices):
-    PENDING     = 'PENDING', '대기'
-    COMPLETED   = 'COMPLETED', '완료'
-    FAILED      = 'FAILED', '실패'
+    PENDING     = 'PEN', '대기'
+    COMPLETED   = 'COM', '완료'
+    CANCELLED   = 'CAN', '취소'
+    FAILED      = 'FAL', '실패'
 
 class PaymentMethod(models.TextChoices):
     CREDIT_CARD     = 'CREDIT_CARD', '신용카드'
