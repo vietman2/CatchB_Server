@@ -87,18 +87,18 @@ class UserSerializer(ModelSerializer):
 
     def validate_username(self, value):
         raise serializers.ValidationError("username은 수정할 수 없습니다.")
-    
+
     def get_user_type(self, obj):
         ## Coach 인스턴스가 존재하면 코치
         if hasattr(obj, "coach"):
             return "coach"
-        elif hasattr(obj, "facility_owner"):
+        if hasattr(obj, "facility_owner"):
             return "facility_owner"
-        else:
-            ## TODO: Temporary. Remove this later
-            if obj.username == "exampleadmin":
-                return "facility_owner"
-            return "normal_user"
+
+        ## TODO: Temporary. Remove this later
+        if obj.username == "exampleadmin":
+            return "facility_owner"
+        return "normal_user"
 
 class CoachProfileSerializer(ModelSerializer):
     """

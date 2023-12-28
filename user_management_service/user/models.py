@@ -33,7 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     date_joined     = models.DateTimeField(auto_now_add=True, db_comment='가입일')
 
-    ####################################################################################################
+    ############################################################################################
 
     nickname = models.CharField(max_length=150, db_comment='닉네임', null=True, blank=True)
     birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
@@ -55,7 +55,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default=RegisterRouteChoices.UNDEFINED
     )
 
-    ####################################################################################################
+    ############################################################################################
 
     is_superuser    = models.BooleanField(
         default=False,
@@ -107,6 +107,8 @@ class Coach(models.Model):
 
     is_approved = models.BooleanField(default=False, db_comment='코치 승인 여부')
 
+    objects = models.Manager()
+
     class Meta:
         db_table = 'coach'
         verbose_name = _('coach')
@@ -124,6 +126,8 @@ class FacilityOwner(models.Model):
     facility_name = models.CharField(max_length=150, db_comment='시설명')
     facility_address = models.CharField(max_length=150, db_comment='시설 주소')
     facility_phone_number = PhoneNumberField(db_comment='시설 전화번호')
+
+    objects = models.Manager()
 
     class Meta:
         db_table = 'facility_owner'
