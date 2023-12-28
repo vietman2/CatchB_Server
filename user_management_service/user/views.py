@@ -41,14 +41,13 @@ class UserViewSet(ModelViewSet):
             }, status=status.HTTP_403_FORBIDDEN)
 
         user = CustomUser.objects.get(uuid=kwargs['pk'])
-        user_profile = user.user_profile
 
         if not IsActive().has_object_permission(request, self, self.get_object()):
             return Response(data={
                 "errors": "비활성화된 계정입니다.",
             }, status=status.HTTP_403_FORBIDDEN)
 
-        serializer = self.get_serializer(user_profile)
+        serializer = self.get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(summary="회원 정보 리스트 조회", tags=["회원 관리"])
@@ -94,29 +93,17 @@ class UserViewSet(ModelViewSet):
 
         user = self.get_object()
 
-        if 'user' in request.data:
-            serializer = UserSerializer(user, data=request.data['user'], partial=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-            except ValidationError as e:
-                return Response(data={
-                    "errors": e.detail,
-                }, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            return Response(data={
+                "errors": e.detail,
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-            serializer.save()
-        else:
-            serializer = UserSerializer(user.user_profile, data=request.data, partial=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-            except ValidationError as e:
-                return Response(data={
-                    "errors": e.detail,
-                }, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
 
-            serializer.save()
-        # return using user_profile serializer
-        user_profile = user.user_profile
-        serializer = UserSerializer(user_profile)
+        serializer = UserSerializer(user)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
