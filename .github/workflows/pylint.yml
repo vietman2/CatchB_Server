@@ -17,12 +17,10 @@ jobs:
       COMMUNITY_SECRET_KEY: ${{ secrets.COMMUNITY_SECRET_KEY }}
       CALENDAR_SECRET_KEY: ${{ secrets.CALENDAR_SECRET_KEY }}
       API_GATEWAY_SECRET_KEY: ${{ secrets.API_GATEWAY_SECRET_KEY }}
-      PRODUCTS_DB_PASSWORD: ${{ secrets.PRODUCTS_DB_PASSWORD }}
-      PRODUCTS_DB_USER: ${{ secrets.PRODUCTS_DB_USER }}
       PRODUCTS_DB_NAME: ${{ secrets.PRODUCTS_DB_NAME }}
-      COMMUNITY_DB_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
-      COMMUNITY_DB_USER: ${{ secrets.COMMUNITY_DB_USER }}
       COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_USER: ${{ secrets.DB_USER }}
     strategy:
       matrix:
         python-version: ["3.9"]

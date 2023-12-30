@@ -10,7 +10,7 @@ from drf_spectacular.utils import extend_schema_field
 from allauth.account.forms import default_token_generator
 from allauth.account.utils import url_str_to_user_pk as uid_decoder
 
-from .models import CustomUser, UserProfile, Coach
+from .models import CustomUser, Coach
 
 class UserRegisterSerializer(ModelSerializer):
     """
@@ -55,6 +55,9 @@ class UserRegisterSerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     phone_number = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
+    experience_tier = serializers.CharField(source="get_experience_tier_display")
+    register_route = serializers.CharField(source="get_register_route_display")
+    user_type = serializers.SerializerMethodField()
 
     @extend_schema_field(serializers.CharField())
     def get_phone_number(self, obj):
@@ -75,33 +78,27 @@ class UserSerializer(ModelSerializer):
             "email",
             "phone_number",
             "date_joined",
+            "birth_date",
+            "gender",
+            "experience_tier",
+            "register_route",
+            "user_type",
         ]
 
     def validate_username(self, value):
         raise serializers.ValidationError("username은 수정할 수 없습니다.")
 
-class UserProfileSerializer(ModelSerializer):
-    """
-    유저 프로필 시리얼라이저: 유저가 자신의 프로필을 조회하거나 수정할 때 사용
-    """
-    user = UserSerializer()
-    experience_tier = serializers.CharField(source="get_experience_tier_display")
-    register_route = serializers.CharField(source="get_register_route_display")
+    def get_user_type(self, obj):
+        ## Coach 인스턴스가 존재하면 코치
+        if hasattr(obj, "coach"):
+            return "coach"
+        if hasattr(obj, "facility_owner"):
+            return "facility_owner"
 
-    class Meta:
-        model = UserProfile
-        fields = [
-            "user",
-            "nickname",
-            "birth_date",
-            "gender",
-            "experience_tier",
-            "register_route",
-        ]
-        depth = 1
-
-    def validate_register_route(self, value):
-        raise serializers.ValidationError("register_route는 수정할 수 없습니다.")
+        ## TODO: Temporary. Remove this later
+        if obj.username == "exampleadmin":
+            return "facility_owner"
+        return "normal_user"
 
 class CoachProfileSerializer(ModelSerializer):
     """

@@ -1,4 +1,4 @@
-name: Coveralls
+name: Tests (Coveralls)
 
 on:
   push:
@@ -17,12 +17,10 @@ jobs:
       COMMUNITY_SECRET_KEY: ${{ secrets.COMMUNITY_SECRET_KEY }}
       CALENDAR_SECRET_KEY: ${{ secrets.CALENDAR_SECRET_KEY }}
       API_GATEWAY_SECRET_KEY: ${{ secrets.API_GATEWAY_SECRET_KEY }}
-      PRODUCTS_DB_PASSWORD: ${{ secrets.PRODUCTS_DB_PASSWORD }}
-      PRODUCTS_DB_USER: ${{ secrets.PRODUCTS_DB_USER }}
       PRODUCTS_DB_NAME: ${{ secrets.PRODUCTS_DB_NAME }}
-      COMMUNITY_DB_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
-      COMMUNITY_DB_USER: ${{ secrets.COMMUNITY_DB_USER }}
       COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_USER: ${{ secrets.DB_USER }}
     strategy:
       max-parallel: 4
       matrix:
@@ -31,8 +29,8 @@ jobs:
       postgres_products:
         image: postgres:14
         env:
-          POSTGRES_USER: ${{ secrets.PRODUCTS_DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.PRODUCTS_DB_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.PRODUCTS_DB_NAME }}
         ports:
           - 5432:5432
@@ -41,8 +39,8 @@ jobs:
       postgres_community:
         image: postgres:14
         env:
-          POSTGRES_USER: ${{ secrets.COMMUNITY_DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.COMMUNITY_DB_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.COMMUNITY_DB_NAME }}
         ports:
           - 5433:5432
@@ -67,8 +65,8 @@ jobs:
 
     - name: Setup Django Database Config
       run: |
-        echo "DATABASE_URL=postgres://${{ secrets.PRODUCTS_DB_USER }}:${{ secrets.PRODUCTS_DB_PASSWORD }}@postgres:5432/${{ secrets.PRODUCTS_DB_NAME }}" >> .env
-        echo "DATABASE_URL=postgres://${{ secrets.COMMUNITY_DB_USER }}:${{ secrets.COMMUNITY_DB_PASSWORD }}@postgres:5432/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
+        echo "DATABASE_URL=postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.PRODUCTS_DB_NAME }}" >> .env
+        echo "DATABASE_URL=postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
 
     - name: Run user_management tests
       run: |

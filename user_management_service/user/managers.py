@@ -1,4 +1,3 @@
-from django.apps import apps
 from django.contrib.auth.base_user import BaseUserManager
 
 class UserManager(BaseUserManager):
@@ -8,13 +7,6 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save(using=self._db)
-
-        UserProfile = apps.get_model('user', 'UserProfile')
-
-        ## UserProfile 생성
-        UserProfile.objects.create(
-            user=user,
-        )
 
         return user
 

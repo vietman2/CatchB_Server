@@ -1,15 +1,17 @@
 import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
 from .enums import ExperienceTierChoices, RegisterRouteChoices
+from .validators import CustomUsernameValidator
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username_validator = UnicodeUsernameValidator()
+    username_validator = CustomUsernameValidator()
+    min_length_validator = MinLengthValidator(4)
 
     uuid            = models.UUIDField(
         primary_key=True,
@@ -18,21 +20,42 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         editable=False
     )
     username        = models.CharField(
-        max_length=150,
+        max_length=20,
         unique=True,
         db_comment='아이디',
-        help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
-        validators=[username_validator],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        }
+        help_text='Required. 4~20. Letters, digits and @/./+/-/_ only.',
+        validators=[username_validator, min_length_validator],
     )
-    first_name      = models.CharField(max_length=150, db_comment='이름')
-    last_name       = models.CharField(max_length=150, db_comment='성')
+    first_name      = models.CharField(max_length=50, db_comment='이름')
+    last_name       = models.CharField(max_length=50, db_comment='성')
     email           = models.EmailField(unique=True, db_comment='이메일')
     phone_number    = PhoneNumberField(unique=True, db_comment='전화번호')
 
     date_joined     = models.DateTimeField(auto_now_add=True, db_comment='가입일')
+
+    ############################################################################################
+
+    nickname = models.CharField(max_length=150, db_comment='닉네임', null=True, blank=True)
+    birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
+    gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
+
+    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
+    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
+    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
+
+    experience_tier = models.IntegerField(
+        choices=ExperienceTierChoices.choices,
+        db_comment='야구 경험 등급',
+        default=ExperienceTierChoices.UNDEFINED
+    )
+
+    register_route = models.IntegerField(
+        choices=RegisterRouteChoices.choices,
+        db_comment='가입 경로',
+        default=RegisterRouteChoices.UNDEFINED
+    )
+
+    ############################################################################################
 
     is_superuser    = models.BooleanField(
         default=False,
@@ -59,46 +82,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.last_name} {self.first_name}"
 
     class Meta:
         db_table = 'user'
         verbose_name = _('user')
         verbose_name_plural = _('users')
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        parent_link=True,
-        related_name='user_profile'
-    )
-
-    nickname = models.CharField(max_length=150, db_comment='닉네임', null=True, blank=True)
-    birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
-    gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
-
-    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
-    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
-    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
-
-    experience_tier = models.IntegerField(
-        choices=ExperienceTierChoices.choices,
-        db_comment='야구 경험 등급',
-        default=ExperienceTierChoices.BEGINNER
-    )
-
-    register_route = models.IntegerField(
-        choices=RegisterRouteChoices.choices,
-        db_comment='가입 경로',
-        default=RegisterRouteChoices.CATCHB
-    )
-
-    class Meta:
-        db_table = 'user_profile'
-        verbose_name = _('user_profile')
-        verbose_name_plural = _('user_profiles')
 
 class Coach(models.Model):
     user = models.OneToOneField(
@@ -118,6 +107,8 @@ class Coach(models.Model):
 
     is_approved = models.BooleanField(default=False, db_comment='코치 승인 여부')
 
+    objects = models.Manager()
+
     class Meta:
         db_table = 'coach'
         verbose_name = _('coach')
@@ -135,6 +126,8 @@ class FacilityOwner(models.Model):
     facility_name = models.CharField(max_length=150, db_comment='시설명')
     facility_address = models.CharField(max_length=150, db_comment='시설 주소')
     facility_phone_number = PhoneNumberField(db_comment='시설 전화번호')
+
+    objects = models.Manager()
 
     class Meta:
         db_table = 'facility_owner'

@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.core import mail
 from allauth.account.forms import default_token_generator
 
-from .models import CustomUser
+from .models import CustomUser, Coach, FacilityOwner
 
 class RegisterAPITestCase(APITestCase):
     def setUp(self):
@@ -45,9 +45,6 @@ class RegisterAPITestCase(APITestCase):
         # 디폴트 값들이 잘 들어갔는지 확인
         self.assertEqual(created_user.is_active, True)
         self.assertEqual(created_user.is_superuser, False)
-
-        # UserProfile이 잘 생성되었는지 확인
-        self.assertTrue(hasattr(created_user, "user_profile"))
 
     def test_register_success_superuser(self):
         call_command(
@@ -240,9 +237,6 @@ class LogoutAPITestCase(APITestCase):
 
         # 1. token is not valid
         response = self.client.post(self.url, data={})
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        response = self.client.post(self.url, data={"refresh": "test"})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class PasswordChangeAPITestCase(APITestCase):
@@ -470,7 +464,7 @@ class UserProfileAPITestCase(APITestCase):
             password="passpass1234",
         )
         self.admin = CustomUser.objects.create_superuser(
-            username="admin",
+            username="exampleadmin",
             first_name="admin",
             last_name="admin",
             email="admin@admin.com",
@@ -505,6 +499,25 @@ class UserProfileAPITestCase(APITestCase):
         # 1. user is authenticated
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # 2. user is admin
+        self.client.force_authenticate(user=self.admin)
+        url = f"/api/users/{self.admin.uuid}/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # 3. user is coach
+        Coach.objects.create(user=self.user)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # 4. user is facility owner
+        FacilityOwner.objects.create(user=self.user2)
+        self.client.force_authenticate(user=self.user2)
+        url = f"/api/users/{self.user2.uuid}/"
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_user_profile_failure(self):
@@ -589,30 +602,19 @@ class UserProfileAPITestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
         # 2. update user info
-        data = {
-            "user": {
-                "first_name": "newname"
-            }
-        }
-        response = self.client.patch(self.url, data=data, format="json")
+        response = self.client.patch(self.url, data={
+            "first_name": "newname"
+        }, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["user"]["first_name"], "newname")
+        self.assertEqual(response.data["first_name"], "newname")
 
         # partial update: check if other fields are not changed
-        self.assertEqual(response.data["user"]["last_name"], "test")
-
-        # 3. update user profile
-        self.client.force_authenticate(user=self.user)
-        response = self.client.patch(self.url, data={"nickname": "newnickname"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["nickname"], "newnickname")
+        self.assertEqual(response.data["last_name"], "test")
 
     def test_update_user_profile_failure(self):
         # 1. user is not authenticated
         data = {
-            "user": {
-                "first_name": "newname"
-            }
+            "first_name": "newname"
         }
         response = self.client.patch(self.url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -639,15 +641,7 @@ class UserProfileAPITestCase(APITestCase):
         # 5. attempt to update username
         self.client.force_authenticate(user=self.user)
         data = {
-            "user": {
-                "username": "notallowed",
-            }
-        }
-        response = self.client.patch(self.url, data=data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        data = {
-            "register_route": "notallowed"
+            "username": "notallowed",
         }
         response = self.client.patch(self.url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

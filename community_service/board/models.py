@@ -1,7 +1,7 @@
 from django.db import models
 
 class ForumCategory(models.TextChoices):
-    RECRUITMENT  = "RECRUIT", "모집"
+    RECRUITMENT  = "RECR", "모집"
     INFORMATION = "INFO", "정보"
     FREE        = "FREE", "자유"
 
@@ -133,8 +133,9 @@ class Bookmark(models.Model):
     post            = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
 
 class ReportReason(models.TextChoices):
+    AD              = 'AD', '광고'
     SPAM            = 'SP', '스팸'
-    ADULT           = 'AD', '성인물'
+    ADULT           = 'AV', '성인물'
     VIOLENCE        = 'VI', '폭력적인 내용'
     ILLEGAL         = 'IL', '불법적인 내용'
     OTHER           = 'OT', '기타'
