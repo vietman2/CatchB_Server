@@ -8,11 +8,12 @@ user_service_url = settings.SERVICE_URLS['user_management_service']
 
 def get_response(request, url, method):
     try:
-        response = requests.request(    #pylint: disable=#W3101
+        response = requests.request(
             method=method,
             url=url,
             headers=request.headers,
             data=request.body,
+            timeout=10,
         )
 
         return Response(
