@@ -3,6 +3,7 @@ from django.conf import settings
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 user_service_url = settings.SERVICE_URLS['user_management_service']
 
@@ -32,11 +33,23 @@ def signup(request):
 
     return get_response(request, REQUEST_URL, 'POST')
 
-@require_POST
+@api_view(['POST'])
 def login(request):
     REQUEST_URL = f'{user_service_url}/api/login/'
 
     return get_response(request, REQUEST_URL, 'POST')
+
+@api_view(['POST'])
+def refresh_token(request):
+    REQUEST_URL = f'{user_service_url}/api/token/refresh/'
+
+    return get_response(request, REQUEST_URL, 'POST')
+
+@api_view(['GET'])
+def get_user_profile(request, uuid):
+    REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
+
+    return get_response(request, REQUEST_URL, 'GET')
 
 @require_POST
 def logout(request):
