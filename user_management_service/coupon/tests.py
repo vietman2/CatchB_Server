@@ -1,8 +1,8 @@
 from rest_framework.test import APITestCase
 
+from user.models import CustomUser
 from .models import CouponClass
 from .enums import CouponIssuerType, CouponType
-from user.models import CustomUser
 
 class CouponTestCase(APITestCase):
     def setUp(self):

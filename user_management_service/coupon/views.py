@@ -5,9 +5,9 @@ from rest_framework.serializers import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
 
+from user.permissions import IsNormalUser
 from .models import Coupon
 from .serializers import CouponSerializer, CouponClassCreateSerializer
-from user.permissions import IsNormalUser
 
 class CouponViewSet(ModelViewSet):
     queryset = Coupon.objects.all()
@@ -18,24 +18,24 @@ class CouponViewSet(ModelViewSet):
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
     @extend_schema(exclude=True)
-    def get(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
     @extend_schema(summary="쿠폰 조회", tags=["쿠폰"])
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = CouponSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     @extend_schema(summary="쿠폰 생성", tags=["쿠폰"])
     def create(self, request, *args, **kwargs):
         if IsNormalUser().has_permission(request, self):
-                return Response(
-                    status=status.HTTP_403_FORBIDDEN,
-                    data={"message": "권한이 없습니다. 쿠폰 생성은 시설 관리자와 코치만 가능합니다."}
-                )
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "권한이 없습니다. 쿠폰 생성은 시설 관리자와 코치만 가능합니다."}
+            )
 
         serializer = CouponClassCreateSerializer(data=request.data)
 

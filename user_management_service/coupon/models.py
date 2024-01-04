@@ -25,6 +25,8 @@ class Coupon(models.Model):
     valid_until     = models.DateTimeField(null=True)
     used_at         = models.DateTimeField(null=True)
 
+    objects = models.Manager()
+
     class Meta:
         db_table = 'coupon'
         verbose_name = _('coupon')
@@ -73,6 +75,8 @@ class CouponClass(models.Model):
         default=CouponType.PERCENTAGE
     )
     discount_value      = models.IntegerField()
+
+    objects = models.Manager()
 
     class Meta:
         db_table = 'coupon_class'
