@@ -17,7 +17,7 @@ class PointsTestCase(APITestCase):
             password="passpass1234",
         )
         self.user_uuid = self.user.uuid
-        self.initialPoints = Points.objects.create(
+        self.initial_points = Points.objects.create(
             user=self.user,
             points=1000,
             used_points=0,
@@ -58,7 +58,7 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["points"], 2500)
 
-        response = self.client.get(self.url + str(self.initialPoints.id) + "/")
+        response = self.client.get(self.url + str(self.initial_points.id) + "/")
         self.assertEqual(response.status_code, 200)
 
         response = self.client.patch(self.url + "use/", {
@@ -74,7 +74,7 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["points"], 2000)
 
-        response = self.client.get(self.url + str(self.initialPoints.id) + "/")
+        response = self.client.get(self.url + str(self.initial_points.id) + "/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["remaining_points"], 500)
         self.assertEqual(response.data["used_points"], 500)
@@ -125,7 +125,7 @@ class PointsTestCase(APITestCase):
             "user_uuid": self.user_uuid
         })
 
-        response = self.client.get(self.url + str(self.initialPoints.id) + "/")
+        response = self.client.get(self.url + str(self.initial_points.id) + "/")
         self.assertEqual(response.status_code, 403)
 
         response = self.client.patch(self.url + "use/", {
