@@ -51,7 +51,7 @@ def get_user_profile(request, uuid):
 
     return get_response(request, REQUEST_URL, 'GET')
 
-@require_POST
+@api_view(['POST'])
 def logout(request):
     REQUEST_URL = f'{user_service_url}/api/logout/'
 
