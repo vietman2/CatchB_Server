@@ -39,7 +39,7 @@ class LogoutView(APIView):
         return get_response(request, REQUEST_URL, 'POST')
 
 class UserView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         uuid = request.query_params.get('uuid', None)
         REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
 
