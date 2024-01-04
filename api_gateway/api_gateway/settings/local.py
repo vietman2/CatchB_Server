@@ -4,7 +4,7 @@ from .base import * # pylint: disable=W0401,W0614
 DEBUG = True
 
 # allow only localhost
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 DATABASES = {
     'default': {
