@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.core import mail
 from allauth.account.forms import default_token_generator
 
-from .models import CustomUser, Coach, FacilityOwner
+from .models import CustomUser, Coach
 
 class RegisterAPITestCase(APITestCase):
     def setUp(self):
@@ -511,13 +511,6 @@ class UserProfileAPITestCase(APITestCase):
         Coach.objects.create(user=self.user)
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # 4. user is facility owner
-        FacilityOwner.objects.create(user=self.user2)
-        self.client.force_authenticate(user=self.user2)
-        url = f"/api/users/{self.user2.uuid}/"
-        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_user_profile_failure(self):

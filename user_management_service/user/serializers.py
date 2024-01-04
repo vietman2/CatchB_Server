@@ -92,12 +92,11 @@ class UserSerializer(ModelSerializer):
         ## Coach 인스턴스가 존재하면 코치
         if hasattr(obj, "coach"):
             return "coach"
-        if hasattr(obj, "facility_owner"):
+        if obj.is_facility_owner:
             return "facility_owner"
+        if obj.is_superuser:
+            return "admin"
 
-        ## TODO: Temporary. Remove this later
-        if obj.username == "exampleadmin":
-            return "facility_owner"
         return "normal_user"
 
 class CoachProfileSerializer(ModelSerializer):

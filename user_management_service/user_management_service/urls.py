@@ -30,11 +30,13 @@ from user.views import (
     PasswordResetView, PasswordResetConfirmView
 )
 from point.views import PointViewSet
+from coupon.views import CouponViewSet
 
 router = DefaultRouter()
 
 router.register(prefix=r'users', viewset=UserViewSet)
 router.register(prefix=r'points', viewset=PointViewSet)
+router.register(prefix=r'coupons', viewset=CouponViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),

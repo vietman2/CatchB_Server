@@ -1,4 +1,3 @@
-from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 
 from .models import Points
@@ -6,7 +5,7 @@ from .models import Points
 class UserTotalPointsSerializer(serializers.Serializer):
     points = serializers.IntegerField()
 
-class CreatePointsSerizlier(ModelSerializer):
+class CreatePointsSerizlier(serializers.ModelSerializer):
     class Meta:
         model = Points
         fields = [
@@ -29,7 +28,7 @@ class CreatePointsSerizlier(ModelSerializer):
         self.create(self.validated_data)
         return self.validated_data
 
-class UsePointsSerializer(ModelSerializer):
+class UsePointsSerializer(serializers.ModelSerializer):
     total_remaining_points = serializers.SerializerMethodField(read_only=True)
 
     def get_total_remaining_points(self, obj):
@@ -56,7 +55,7 @@ class UsePointsSerializer(ModelSerializer):
         self.update(self.validated_data)
         return self.validated_data
 
-class PointsDetailSerializer(ModelSerializer):
+class PointsDetailSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source="get_status_display")
     remaining_points = serializers.SerializerMethodField(read_only=True)
 

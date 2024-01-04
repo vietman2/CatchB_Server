@@ -69,6 +69,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         help_text='Designates whether this user should be treated as active. '
                     'Unselect this instead of deleting accounts.',
     )
+    is_facility_owner = models.BooleanField(
+        default=False,
+        db_comment='시설 소유자 여부'
+    )
 
     USERNAME_FIELD  = 'username'
     REQUIRED_FIELDS = [
@@ -113,26 +117,6 @@ class Coach(models.Model):
         db_table = 'coach'
         verbose_name = _('coach')
         verbose_name_plural = _('coaches')
-
-class FacilityOwner(models.Model):
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        parent_link=True,
-        related_name='facility_owner'
-    )
-
-    facility_name = models.CharField(max_length=150, db_comment='시설명')
-    facility_address = models.CharField(max_length=150, db_comment='시설 주소')
-    facility_phone_number = PhoneNumberField(db_comment='시설 전화번호')
-
-    objects = models.Manager()
-
-    class Meta:
-        db_table = 'facility_owner'
-        verbose_name = _('facility_owner')
-        verbose_name_plural = _('facility_owners')
 
 class Partner(models.Model):
     user = models.OneToOneField(
