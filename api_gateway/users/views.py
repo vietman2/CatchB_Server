@@ -1,7 +1,7 @@
 import requests
 from django.conf import settings
-from django.views.decorators.http import require_POST
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 user_service_url = settings.SERVICE_URLS['user_management_service']
@@ -26,20 +26,27 @@ def get_response(request, url, method):
             status=status.HTTP_502_BAD_GATEWAY,
         )
 
-@require_POST
-def signup(request):
-    REQUEST_URL = f'{user_service_url}/api/users/register/'
+class LoginView(APIView):
+    def post(self, request):
+        REQUEST_URL = f'{user_service_url}/api/login/'
 
-    return get_response(request, REQUEST_URL, 'POST')
+        return get_response(request, REQUEST_URL, 'POST')
 
-@require_POST
-def login(request):
-    REQUEST_URL = f'{user_service_url}/api/login/'
+class LogoutView(APIView):
+    def post(self, request):
+        REQUEST_URL = f'{user_service_url}/api/logout/'
 
-    return get_response(request, REQUEST_URL, 'POST')
+        return get_response(request, REQUEST_URL, 'POST')
 
-@require_POST
-def logout(request):
-    REQUEST_URL = f'{user_service_url}/api/logout/'
+class UserView(APIView):
+    def get(self, request):
+        uuid = request.query_params.get('uuid', None)
+        REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
 
-    return get_response(request, REQUEST_URL, 'POST')
+        return get_response(request, REQUEST_URL, 'GET')
+
+class TokenView(APIView):
+    def post(self, request):
+        REQUEST_URL = f'{user_service_url}/api/token/refresh/'
+
+        return get_response(request, REQUEST_URL, 'POST')
