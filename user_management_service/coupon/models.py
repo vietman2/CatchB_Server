@@ -8,8 +8,7 @@ from .enums import CouponStatus, CouponIssuerType, CouponType
 class Coupon(models.Model):
     user            = models.ForeignKey(
         'user.CustomUser',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.PROTECT,
         related_name='user_coupons'
     )
     coupon_class    = models.ForeignKey(
@@ -33,11 +32,11 @@ class Coupon(models.Model):
         unique_together = ('user', 'coupon_class')
 
 class CouponClass(models.Model):
-    def coupon_code_generator():
+    def coupon_code_generator():    # pylint: disable=E0211
         # generate a random xxxx-xxxx-xxxx-xxxx coupon code
         def generate_part():
             return ''.join(random.choices(string.digits + string.ascii_uppercase, k=4))
-        
+
         coupon_code = '-'.join([generate_part() for _ in range(4)])
 
         return coupon_code
@@ -57,8 +56,7 @@ class CouponClass(models.Model):
     )
     coupon_issuer       = models.ForeignKey(
         'user.CustomUser',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.PROTECT,
         related_name='coupon_issuer'
     )
 
