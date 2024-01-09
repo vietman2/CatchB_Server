@@ -2,6 +2,7 @@ import random
 import string
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
 from .enums import CouponStatus, CouponIssuerType, CouponType
 
@@ -16,22 +17,31 @@ class Coupon(models.Model):
         on_delete=models.PROTECT,
         related_name='coupon_class'
     )
-    issued_at       = models.DateTimeField(auto_now_add=True)
+    issued_at       = models.DateTimeField()
     status          = models.CharField(
         max_length=3,
         choices=CouponStatus.choices,
         default=CouponStatus.ACTIVE
     )
     valid_until     = models.DateTimeField(null=True)
-    used_at         = models.DateTimeField(null=True)
+    used_at         = models.DateTimeField(null=True, default=None)
 
     objects = models.Manager()
+
+    def clean(self):
+        if not self.coupon_class.multiple_use:
+            existing_coupons = Coupon.objects.filter(user=self.user, coupon_class=self.coupon_class)
+            if existing_coupons.exists():
+                raise ValidationError(_("이미 사용한 쿠폰입니다."))
+            
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'coupon'
         verbose_name = _('coupon')
         verbose_name_plural = _('coupons')
-        unique_together = ('user', 'coupon_class')
 
 class CouponClass(models.Model):
     def coupon_code_generator():    # pylint: disable=E0211
@@ -68,6 +78,7 @@ class CouponClass(models.Model):
 
     max_count           = models.IntegerField()
     current_count       = models.IntegerField(default=0)
+    multiple_use        = models.BooleanField(default=False)
 
     coupon_type         = models.CharField(
         max_length=4,
