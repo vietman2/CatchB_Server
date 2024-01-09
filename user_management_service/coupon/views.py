@@ -1,4 +1,5 @@
 import datetime
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -62,7 +63,8 @@ class CouponViewSet(ModelViewSet):
     @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated])
     def register(self, request, *args, **kwargs):
         coupon_code = request.data.get("coupon_code", None)
-        request_datetime = datetime.datetime.now()
+        now = datetime.datetime.now()
+        request_datetime = timezone.make_aware(now, timezone.get_current_timezone())
 
         if not coupon_code:
             return Response(
