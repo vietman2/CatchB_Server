@@ -14,7 +14,6 @@ python-decouple = "*"
 django-phonenumber-field = "*"
 djangorestframework-simplejwt = "*"
 phonenumbers = "*"
-pika = "*"
 celery = "*"
 
 [dev-packages]
