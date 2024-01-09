@@ -21,6 +21,8 @@ jobs:
       COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_USER: ${{ secrets.DB_USER }}
+      RABBITMQ_USER: ${{ secrets.RABBITMQ_USER }}
+      RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
     strategy:
       matrix:
         python-version: ["3.9"]
