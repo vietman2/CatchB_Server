@@ -193,3 +193,7 @@ CELERY_QUEUES = {
         'exchange_type': 'direct',
     }
 }
+
+# RABBITMQ
+RABBITMQ_USER = config("RABBITMQ_USER")
+RABBITMQ_PASSWORD = config("RABBITMQ_PASSWORD")
