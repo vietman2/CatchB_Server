@@ -35,6 +35,9 @@ class PointsTestCase(APITestCase):
         response = self.client.delete(self.url + "1/")
         self.assertEqual(response.status_code, 405)
 
+        response = self.client.get(self.url + "1/")
+        self.assertEqual(response.status_code, 405)
+
     def test_points_success(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(self.url, {
@@ -47,19 +50,16 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 201)
 
         response = self.client.get(self.url, {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 2)
 
         response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["points"], 2500)
-
-        response = self.client.get(self.url + str(self.initial_points.id) + "/")
-        self.assertEqual(response.status_code, 200)
 
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
@@ -69,16 +69,10 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.data["total_remaining_points"], 2000)
 
         response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["points"], 2000)
-
-        response = self.client.get(self.url + str(self.initial_points.id) + "/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["remaining_points"], 500)
-        self.assertEqual(response.data["used_points"], 500)
-        self.assertEqual(response.data["status"], "부분 사용")
 
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
@@ -88,7 +82,7 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.data["total_remaining_points"], 500)
 
         response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["points"], 500)
@@ -101,7 +95,7 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.data["total_remaining_points"], 0)
 
         response = self.client.get(self.url, {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
 
@@ -117,12 +111,12 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 403)
 
         response = self.client.get(self.url, {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 403)
 
         response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
 
         response = self.client.get(self.url + str(self.initial_points.id) + "/")
@@ -146,17 +140,14 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(self.url, {
-            "user_uuid": "invalid_uuid"
+            "uuid": "invalid_uuid"
         })
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(self.url + "total/", {
-            "user_uuid": "invalid_uuid"
+            "uuid": "invalid_uuid"
         })
         self.assertEqual(response.status_code, 400)
-
-        response = self.client.get(self.url + "invalid_id/")
-        self.assertEqual(response.status_code, 404)
 
         response = self.client.patch(self.url + "use/", {
             "user": "invalid_uuid",

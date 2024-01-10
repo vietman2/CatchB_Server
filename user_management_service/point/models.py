@@ -69,8 +69,10 @@ class Points(models.Model):
         null=True,
         related_name='user_points'
     )
+    title       = models.CharField(max_length=20, db_comment="포인트 제목")
+    description = models.CharField(max_length=100, db_comment="포인트 설명")
     points      = models.IntegerField(default=0, db_comment="적립 포인트")
-    used_points  = models.IntegerField(default=0, db_comment="사용 포인트")
+    used_points = models.IntegerField(default=0, db_comment="사용 포인트")
     created_at  = models.DateTimeField(auto_now_add=True)
     status      = models.CharField(
         max_length=10,
@@ -90,3 +92,6 @@ class Points(models.Model):
         verbose_name = _('points')
         verbose_name_plural = _('points')
         ordering = ['-created_at']
+
+class PointsUse(models.Model):
+    pass

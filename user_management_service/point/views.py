@@ -23,6 +23,10 @@ class PointViewSet(ModelViewSet):
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @extend_schema(summary="포인트 적립", tags=["포인트"])
     def create(self, request, *args, **kwargs):
@@ -76,7 +80,7 @@ class PointViewSet(ModelViewSet):
 
     @extend_schema(summary="포인트 적립 내역 조회", tags=["포인트"])
     def list(self, request, *args, **kwargs):
-        user_uuid = request.query_params.get("user_uuid")
+        user_uuid = request.query_params.get("uuid")
 
         if not user_uuid:
             return Response(
@@ -100,10 +104,6 @@ class PointViewSet(ModelViewSet):
             data=serializer.data
         )
 
-    @extend_schema(summary="포인트 적립 내역 상세 조회", tags=["포인트"])
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
     @extend_schema(summary="잔여 포인트 조회", tags=["포인트"])
     @action(
         detail=False,
@@ -112,7 +112,7 @@ class PointViewSet(ModelViewSet):
     )
     # pylint: disable=W0613
     def total(self, request, *args, **kwargs):
-        user_uuid = request.query_params.get("user_uuid")
+        user_uuid = request.query_params.get("uuid")
 
         if not user_uuid:
             return Response(
