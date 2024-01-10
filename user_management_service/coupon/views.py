@@ -67,7 +67,7 @@ class CouponViewSet(ModelViewSet):
 
     @extend_schema(summary="쿠폰 등록", tags=["쿠폰"])
     @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated])
-    def register(self, request, *args, **kwargs):
+    def register(self, request):
         coupon_code = request.data.get("coupon_code", None)
         now = datetime.datetime.now()
         request_datetime = timezone.make_aware(now, timezone.get_current_timezone())
@@ -91,7 +91,7 @@ class CouponViewSet(ModelViewSet):
                 status=status.HTTP_202_ACCEPTED,
                 data={"message": "일단 오케이.", "task_id": task.id}
             )
-        except CouponClass.DoesNotExist:    # pylint: disable=#E1101
+        except CouponClass.DoesNotExist:    # pylint: disable=E1101
             return Response(
                 status=status.HTTP_404_NOT_FOUND,
                 data={"message": "존재하지 않는 쿠폰번호입니다."}
@@ -99,7 +99,7 @@ class CouponViewSet(ModelViewSet):
 
     @extend_schema(summary="쿠폰 상태 확인", tags=["쿠폰"])
     @action(detail=False, methods=["get"], url_path="status", permission_classes=[IsAuthenticated])
-    def check_status(self, request, *args, **kwargs):
+    def check_status(self, request):
         task_id = request.query_params.get("task_id", None)
         if not task_id:
             return Response(
@@ -114,8 +114,8 @@ class CouponViewSet(ModelViewSet):
                 status=status.HTTP_200_OK,
                 data={"message": "쿠폰이 생성되었습니다."}
             )
-        else:
-            return Response(
-                status=status.HTTP_202_ACCEPTED,
-                data={"message": "쿠폰 생성 중입니다."}
-            )
+
+        return Response(
+            status=status.HTTP_202_ACCEPTED,
+            data={"message": "쿠폰 생성 중입니다."}
+        )
