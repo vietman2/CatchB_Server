@@ -72,8 +72,8 @@ class CouponClass(models.Model):
         related_name='coupon_issuer'
     )
 
-    issue_valid_days    = models.IntegerField()
-    use_valid_days      = models.IntegerField()
+    issue_valid_days    = models.IntegerField(default=365)
+    use_valid_days      = models.IntegerField(default=365)
     registered_at       = models.DateTimeField(auto_now_add=True)
 
     max_count           = models.IntegerField()
