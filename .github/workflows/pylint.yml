@@ -26,6 +26,16 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    services:
+      rabbitmq:
+        image: rabbitmq:3.9
+        env:
+          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USER }}
+          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
+        ports:
+          - 5672:5672
+        options: --health-cmd "rabbitmq-diagnostics -q check_running"
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
