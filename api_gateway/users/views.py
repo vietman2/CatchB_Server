@@ -69,3 +69,9 @@ class CouponView(APIView):
         REQUEST_URL = f'{user_service_url}/api/coupons/'
 
         return get_response(request, REQUEST_URL, 'GET', request.query_params)
+
+class PointsView(APIView):
+    def get(self, request):
+        REQUEST_URL = f'{user_service_url}/api/points/'
+
+        return get_response(request, REQUEST_URL, 'GET', request.query_params)
