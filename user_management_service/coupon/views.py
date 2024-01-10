@@ -13,6 +13,7 @@ from user.permissions import IsNormalUser
 from .models import Coupon, CouponClass
 from .serializers import CouponSerializer, CouponClassCreateSerializer
 from .tasks import process_register
+from .enums import CouponStatus
 
 class CouponViewSet(ModelViewSet):
     queryset = Coupon.objects.all()
@@ -28,11 +29,16 @@ class CouponViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @extend_schema(summary="쿠폰 조회", tags=["쿠폰"])
+    @extend_schema(summary="쿠폰 리스트 조회", tags=["쿠폰"])
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = CouponSerializer(queryset, many=True)
-        return Response(serializer.data)
+        # return coupons that the user has
+        coupons = Coupon.objects.filter(user=request.user, status=CouponStatus.ACTIVE)
+        serializer = CouponSerializer(coupons, many=True)
+
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
 
     @extend_schema(summary="쿠폰 생성", tags=["쿠폰"])
     def create(self, request, *args, **kwargs):

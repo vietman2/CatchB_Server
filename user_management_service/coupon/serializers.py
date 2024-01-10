@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import CouponClass
+from .models import CouponClass, Coupon
 
 class CouponClassSerializer(serializers.ModelSerializer):
     coupon_issuer_type = serializers.CharField(source="get_coupon_issuer_type_display")
@@ -38,6 +38,6 @@ class CouponSerializer(serializers.ModelSerializer):
     coupon_class = CouponClassSerializer()
 
     class Meta:
-        model = CouponClass
+        model = Coupon
         fields = '__all__'
         depth = 1
