@@ -87,13 +87,21 @@ class CouponAPITestCase(APITestCase):
     def test_coupon_register_success(self):
         self.client.force_authenticate(user=self.user)
 
-        response = self.client.post(self.url + "register/", {"coupon_code": self.sample_coupon_class.code}, format="json")
+        response = self.client.post(
+            self.url + "register/",
+            {"coupon_code": self.sample_coupon_class.code},
+            format="json"
+        )
         self.assertEqual(response.status_code, 202)
 
     def test_coupon_register_failure(self):
         self.client.force_authenticate(user=self.user)
 
-        response = self.client.post(self.url + "register/", {"coupon_code": "1234567890"}, format="json")
+        response = self.client.post(
+            self.url + "register/",
+            {"coupon_code": "1234567890"},
+            format="json"
+        )
         self.assertEqual(response.status_code, 404)
 
         response = self.client.post(self.url + "register/", {"coupon_code": ""}, format="json")
@@ -152,7 +160,7 @@ class CouponRegisterWorkerTestCase(APITestCase):
         )
 
     @mock.patch("coupon.tasks.process_register.delay")
-    def test_register_worker(self, mock_process_register):
+    def test_register_worker(self, mock_process_register):  # pylint: disable=W0613
         request_datetime = datetime.datetime.now()
         aware_datetime = timezone.make_aware(request_datetime)
 

@@ -33,7 +33,7 @@ class Coupon(models.Model):
             existing_coupons = Coupon.objects.filter(user=self.user, coupon_class=self.coupon_class)
             if existing_coupons.exists():
                 raise ValidationError(_("이미 사용한 쿠폰입니다."))
-            
+
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)

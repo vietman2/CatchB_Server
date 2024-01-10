@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
-from celery import shared_task
 from datetime import timedelta
+from celery import shared_task
 from django.db import IntegrityError
 
 from user.models import CustomUser
@@ -51,15 +51,9 @@ def process_register(user_uuid, coupon_code, request_datetime):
             "status": "success",
             "message": "쿠폰이 생성되었습니다."
         }
-    
+
     except IntegrityError:
         return {
             "status": "error",
             "message": "이미 등록된 쿠폰입니다."
-        }
-
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": e
         }

@@ -91,7 +91,7 @@ class CouponViewSet(ModelViewSet):
                 status=status.HTTP_202_ACCEPTED,
                 data={"message": "일단 오케이.", "task_id": task.id}
             )
-        except CouponClass.DoesNotExist:
+        except CouponClass.DoesNotExist:    # pylint: disable=#E1101
             return Response(
                 status=status.HTTP_404_NOT_FOUND,
                 data={"message": "존재하지 않는 쿠폰번호입니다."}
