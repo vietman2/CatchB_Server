@@ -6,13 +6,14 @@ from rest_framework.response import Response
 
 user_service_url = settings.SERVICE_URLS['user_management_service']
 
-def get_response(request, url, method):
+def get_response(request, url, method, query_params=None):
     try:
         response = requests.request(
             method=method,
             url=url,
             headers=request.headers,
             data=request.body,
+            params=query_params,
             timeout=10,
         )
 
@@ -50,3 +51,21 @@ class TokenView(APIView):
         REQUEST_URL = f'{user_service_url}/api/token/refresh/'
 
         return get_response(request, REQUEST_URL, 'POST')
+
+class CouponRegisterView(APIView):
+    def post(self, request):
+        REQUEST_URL = f'{user_service_url}/api/coupons/register/'
+
+        return get_response(request, REQUEST_URL, 'POST')
+
+class CouponStatusCheckView(APIView):
+    def get(self, request):
+        REQUEST_URL = f'{user_service_url}/api/coupons/status/'
+
+        return get_response(request, REQUEST_URL, 'GET', request.query_params)
+
+class CouponView(APIView):
+    def get(self, request):
+        REQUEST_URL = f'{user_service_url}/api/coupons/'
+
+        return get_response(request, REQUEST_URL, 'GET', request.query_params)

@@ -21,9 +21,21 @@ jobs:
       COMMUNITY_DB_NAME: ${{ secrets.COMMUNITY_DB_NAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_USER: ${{ secrets.DB_USER }}
+      RABBITMQ_USER: ${{ secrets.RABBITMQ_USER }}
+      RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
     strategy:
       matrix:
         python-version: ["3.9"]
+    services:
+      rabbitmq:
+        image: rabbitmq:3.9
+        env:
+          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USER }}
+          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
+        ports:
+          - 5672:5672
+        options: --health-cmd "rabbitmq-diagnostics -q check_running"
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
