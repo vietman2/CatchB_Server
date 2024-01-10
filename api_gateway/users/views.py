@@ -63,3 +63,9 @@ class CouponStatusCheckView(APIView):
         REQUEST_URL = f'{user_service_url}/api/coupons/status/'
 
         return get_response(request, REQUEST_URL, 'GET', request.query_params)
+
+class CouponView(APIView):
+    def get(self, request):
+        REQUEST_URL = f'{user_service_url}/api/coupons/'
+
+        return get_response(request, REQUEST_URL, 'GET', request.query_params)
