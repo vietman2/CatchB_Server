@@ -58,6 +58,8 @@ class UserSerializer(ModelSerializer):
     experience_tier = serializers.CharField(source="get_experience_tier_display")
     register_route = serializers.CharField(source="get_register_route_display")
     user_type = serializers.SerializerMethodField()
+    num_coupons = serializers.SerializerMethodField()
+    total_points = serializers.SerializerMethodField()
 
     @extend_schema_field(serializers.CharField())
     def get_phone_number(self, obj):
@@ -66,6 +68,20 @@ class UserSerializer(ModelSerializer):
     @extend_schema_field(serializers.CharField())
     def get_full_name(self, obj):
         return obj.full_name
+
+    @extend_schema_field(serializers.IntegerField())
+    def get_num_coupons(self, obj):
+        return obj.user_coupons.count()
+
+    @extend_schema_field(serializers.CharField())
+    def get_total_points(self, obj):
+        points = obj.user_points.all()
+        total_points = 0
+        for point_obj in points:
+            total_points += point_obj.remaining_points
+
+        # format: , every 3 digits
+        return format(total_points, ',')
 
     class Meta:
         model = CustomUser
@@ -83,6 +99,8 @@ class UserSerializer(ModelSerializer):
             "experience_tier",
             "register_route",
             "user_type",
+            'num_coupons',
+            'total_points',
         ]
 
     def validate_username(self, value):

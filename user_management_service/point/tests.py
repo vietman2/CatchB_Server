@@ -3,7 +3,8 @@ from rest_framework.test import APITestCase
 
 
 from user.models import CustomUser
-from .models import Points, PointStatus
+from .models import UserPoints
+from .enums import PointStatus
 
 class PointsTestCase(APITestCase):
     def setUp(self):
@@ -17,13 +18,12 @@ class PointsTestCase(APITestCase):
             password="passpass1234",
         )
         self.user_uuid = self.user.uuid
-        self.initial_points = Points.objects.create(
+        self.initial_points = UserPoints.objects.earn_points(
             user=self.user,
             points=1000,
-            used_points=0,
-            status=PointStatus.ACTIVE,
-            valid_until=datetime.datetime.now().astimezone(datetime.timezone.utc) + \
-                datetime.timedelta(days=30),
+            valid_days=10,
+            title="test",
+            description="test",
         )
 
     def test_unallowed_methods(self):
@@ -35,75 +35,52 @@ class PointsTestCase(APITestCase):
         response = self.client.delete(self.url + "1/")
         self.assertEqual(response.status_code, 405)
 
+        response = self.client.get(self.url + "1/")
+        self.assertEqual(response.status_code, 405)
+
     def test_points_success(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.post(self.url, {
-            "user": self.user_uuid,
-            "points": 1500,
-            "used_points": 0,
-            "status": PointStatus.ACTIVE,
-            "valid_until": datetime.datetime.now() + datetime.timedelta(days=30),
-        }, format="json")
-        self.assertEqual(response.status_code, 201)
-
         response = self.client.get(self.url, {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 2)
 
-        response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["points"], 2500)
+        response = self.client.post(self.url, {
+            "user": self.user_uuid,
+            "points": 500,
+            "valid_days": 5,
+            "title": "test",
+            "description": "test",
+        }, format="json")
+        self.assertEqual(response.status_code, 201)
 
-        response = self.client.get(self.url + str(self.initial_points.id) + "/")
+        response = self.client.patch(self.url + "use/", {
+            "user": self.user_uuid,
+            "points": 200,
+            "title": "test",
+            "description": "test",
+        }, format="json")
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["total_remaining_points"], 1300)
 
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
             "points": 500,
+            "title": "test",
+            "description": "test",
         }, format="json")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["total_remaining_points"], 2000)
-
-        response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["points"], 2000)
-
-        response = self.client.get(self.url + str(self.initial_points.id) + "/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["remaining_points"], 500)
-        self.assertEqual(response.data["used_points"], 500)
-        self.assertEqual(response.data["status"], "부분 사용")
+        self.assertEqual(response.data["total_remaining_points"], 800)
 
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
-            "points": 1500,
-        }, format="json")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["total_remaining_points"], 500)
-
-        response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["points"], 500)
-
-        response = self.client.patch(self.url + "use/", {
-            "user": self.user_uuid,
-            "points": 500,
+            "points": 800,
+            "title": "test",
+            "description": "test",
         }, format="json")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["total_remaining_points"], 0)
-
-        response = self.client.get(self.url, {
-            "user_uuid": self.user_uuid
-        })
-        self.assertEqual(response.status_code, 200)
 
     def test_points_failure_unauthorized(self):
         # not logged in
@@ -117,20 +94,15 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 403)
 
         response = self.client.get(self.url, {
-            "user_uuid": self.user_uuid
+            "uuid": self.user_uuid
         })
-        self.assertEqual(response.status_code, 403)
-
-        response = self.client.get(self.url + "total/", {
-            "user_uuid": self.user_uuid
-        })
-
-        response = self.client.get(self.url + str(self.initial_points.id) + "/")
         self.assertEqual(response.status_code, 403)
 
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
             "points": 500,
+            "title": "test",
+            "description": "test",
         }, format="json")
         self.assertEqual(response.status_code, 403)
 
@@ -146,21 +118,15 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(self.url, {
-            "user_uuid": "invalid_uuid"
+            "uuid": "invalid_uuid"
         })
         self.assertEqual(response.status_code, 400)
-
-        response = self.client.get(self.url + "total/", {
-            "user_uuid": "invalid_uuid"
-        })
-        self.assertEqual(response.status_code, 400)
-
-        response = self.client.get(self.url + "invalid_id/")
-        self.assertEqual(response.status_code, 404)
 
         response = self.client.patch(self.url + "use/", {
             "user": "invalid_uuid",
             "points": 500,
+            "title": "test",
+            "description": "test",
         }, format="json")
         self.assertEqual(response.status_code, 400)
 
@@ -178,6 +144,8 @@ class PointsTestCase(APITestCase):
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
             "points": -500,
+            "title": "test",
+            "description": "test",
         }, format="json")
         self.assertEqual(response.status_code, 400)
 
@@ -186,6 +154,8 @@ class PointsTestCase(APITestCase):
         response = self.client.patch(self.url + "use/", {
             "user": self.user_uuid,
             "points": 1500,
+            "title": "test",
+            "description": "test",
         }, format="json")
         self.assertEqual(response.status_code, 400)
 
@@ -194,5 +164,15 @@ class PointsTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.get(self.url + "total/")
+        response = self.client.get(self.url, {
+            "uuid": ""
+        })
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.patch(self.url + "use/", {
+            "user": "invalid_uuid",
+            "points": 500,
+            "title": "test",
+            "description": "test",
+        }, format="json")
         self.assertEqual(response.status_code, 400)
