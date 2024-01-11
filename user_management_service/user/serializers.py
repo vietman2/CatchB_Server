@@ -68,11 +68,11 @@ class UserSerializer(ModelSerializer):
     @extend_schema_field(serializers.CharField())
     def get_full_name(self, obj):
         return obj.full_name
-    
+
     @extend_schema_field(serializers.IntegerField())
     def get_num_coupons(self, obj):
         return obj.user_coupons.count()
-    
+
     @extend_schema_field(serializers.CharField())
     def get_total_points(self, obj):
         points = obj.user_points.all()

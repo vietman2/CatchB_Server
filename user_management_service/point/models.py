@@ -19,12 +19,14 @@ class PointsUseDetails(models.Model):
     points      = models.IntegerField(default=0, db_comment="사용 포인트")
     used_at     = models.DateTimeField(auto_now_add=True)
 
+    objects = models.Manager()
+
     class Meta:
         db_table = 'points_use_details'
         verbose_name = _('points use details')
         verbose_name_plural = _('points use details')
         ordering = ['-used_at']
-    
+
 class PointsEarnDetails(models.Model):
     user        = models.ForeignKey(
         'user.CustomUser',
@@ -37,6 +39,8 @@ class PointsEarnDetails(models.Model):
     points      = models.IntegerField(default=0, db_comment="적립 포인트")
     earned_at   = models.DateTimeField(auto_now_add=True)
     valid_days  = models.IntegerField(default=0, db_comment="유효기간 (일수))")
+
+    objects = models.Manager()
 
     class Meta:
         db_table = 'points_earn_details'
@@ -80,7 +84,7 @@ class PointsManager(models.Manager):
         # and move on to next point
         points = points.order_by('valid_until')
         for point in points:
-            if point.remaining_points == points_to_use:
+            if point.remaining_points == points_to_use: # pylint: disable=R1723
                 ## 해당 적립금을 모두 사용하고 끝
                 point.status = PointStatus.USED
                 point.used_points += points_to_use
@@ -109,6 +113,7 @@ class PointsManager(models.Manager):
 
     def earn_points(self, **kwargs):
         user_uuid = kwargs.get("user").uuid
+        valid_days = kwargs.get("valid_days")
         PointsEarnDetails.objects.create(
             user_id=user_uuid,
             title=kwargs.get("title"),
@@ -116,14 +121,16 @@ class PointsManager(models.Manager):
             points=kwargs.get("points"),
             valid_days=kwargs.get("valid_days")
         )
-        valid_until_raw = datetime.datetime.now() + datetime.timedelta(days=kwargs.get("valid_days"))
+        valid_until_raw = datetime.datetime.now() + datetime.timedelta(days=valid_days)
         valid_until = timezone.make_aware(valid_until_raw, timezone.get_current_timezone())
 
-        self.create(
+        obj = self.create(
             user_id=user_uuid,
             points=kwargs.get("points"),
             valid_until=valid_until
         )
+
+        return obj
 
 class UserPoints(models.Model):
     user        = models.ForeignKey(
