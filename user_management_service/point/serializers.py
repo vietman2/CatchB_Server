@@ -1,19 +1,22 @@
 from rest_framework import serializers
 
-from .models import Points
+from .models import UserPoints, PointsEarnDetails, PointsUseDetails
 
-class UserTotalPointsSerializer(serializers.Serializer):
-    points = serializers.IntegerField()
+class EarnPointsSerizlier(serializers.ModelSerializer):
+    total_remaining_points = serializers.SerializerMethodField(read_only=True)
 
-class CreatePointsSerizlier(serializers.ModelSerializer):
+    def get_total_remaining_points(self, obj):
+        return UserPoints.objects.total_points(obj["user"].uuid)
+
     class Meta:
-        model = Points
+        model = PointsEarnDetails
         fields = [
             "user",
             "points",
-            "created_at",
-            "status",
-            "valid_until",
+            "title",
+            "description",
+            "valid_days",
+            "total_remaining_points",
         ]
 
     def validate_points(self, value):
@@ -21,24 +24,23 @@ class CreatePointsSerizlier(serializers.ModelSerializer):
             raise serializers.ValidationError("point must be positive.")
         return value
 
-    def create(self, validated_data):
-        return Points.objects.create(**validated_data)
-
     def save(self, **kwargs):
-        self.create(self.validated_data)
+        UserPoints.objects.earn_points(**self.validated_data)
         return self.validated_data
 
 class UsePointsSerializer(serializers.ModelSerializer):
     total_remaining_points = serializers.SerializerMethodField(read_only=True)
 
     def get_total_remaining_points(self, obj):
-        return Points.objects.total_points(obj["user"].uuid)
+        return UserPoints.objects.total_points(obj["user"].uuid)
 
     class Meta:
-        model = Points
+        model = PointsUseDetails
         fields = [
             "user",
             "points",
+            "title",
+            "description",
             "total_remaining_points",
         ]
 
@@ -49,7 +51,7 @@ class UsePointsSerializer(serializers.ModelSerializer):
 
     # pylint: disable=W0221
     def update(self, validated_data):
-        Points.objects.use_points(**validated_data)
+        UserPoints.objects.use_points(**validated_data)
 
     def save(self, **kwargs):
         self.update(self.validated_data)
@@ -63,7 +65,7 @@ class PointsDetailSerializer(serializers.ModelSerializer):
         return obj.remaining_points
 
     class Meta:
-        model = Points
+        model = UserPoints
         fields = [
             "id",
             "user",
