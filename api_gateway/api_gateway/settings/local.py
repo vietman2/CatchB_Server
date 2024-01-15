@@ -4,7 +4,7 @@ from .base import * # pylint: disable=W0401,W0614
 DEBUG = True
 
 # allow only localhost
-ALLOWED_HOSTS = ['e85c-147-47-133-18.ngrok-free.app']
+ALLOWED_HOSTS = []
 
 DATABASES = {
     'default': {
