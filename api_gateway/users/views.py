@@ -21,6 +21,7 @@ def get_response(request, url, method, query_params=None):
             response.json(),
             status=response.status_code,
         )
+
     except requests.RequestException as e:
         return Response(
             {'message': str(e)},
