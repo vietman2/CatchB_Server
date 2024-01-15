@@ -19,18 +19,18 @@ class AddressView(APIView):
                 sigungu.append(data)
                 if ' ' not in data['name']:
                     continue
-                elif data['name'] in exceptions:
+                if data['name'] in exceptions:
                     continue
-                else:
-                    sido_name = data['name'].split(' ', 1)[0]
-                    sigungu_by_sido[sido_name].append(data['name'].split(' ', 1)[1])
+
+                sido_name = data['name'].split(' ', 1)[0]
+                sigungu_by_sido[sido_name].append(data['name'].split(' ', 1)[1])
 
         sido.append({'code': '3611000000', 'name': '세종특별자치시'})
         sigungu.append({'code': '3611000000', 'name': '세종특별자치시'})
 
         return sido, sigungu, sigungu_by_sido
 
-    def get(self, request):
+    def get(self, request): # pylint: disable=W0613
         base_url = 'https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes'
         url2 = base_url + '?regcode_pattern=*00000'
 
