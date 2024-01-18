@@ -52,7 +52,7 @@ class UserView(APIView):
         REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
 
         return get_response(request, REQUEST_URL, 'GET')
-    
+
     def delete(self, request):
         uuid = request.query_params.get('uuid', None)
         REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
