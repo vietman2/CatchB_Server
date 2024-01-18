@@ -565,6 +565,7 @@ class UserProfileAPITestCase(APITestCase):
         # instead of deleting, user is deactivated
         self.user.refresh_from_db()
         self.assertEqual(self.user.is_active, False)
+        self.assertNotEqual(self.user.deleted_at, None)
 
     def test_delete_user_profile_failure(self):
         # 1. user is not authenticated
