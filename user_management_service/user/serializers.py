@@ -96,6 +96,7 @@ class UserSerializer(ModelSerializer):
             "email",
             "phone_number",
             "date_joined",
+            'nickname',
             "birth_date",
             "gender",
             "experience_tier",
