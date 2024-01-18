@@ -27,7 +27,9 @@ class UserRegisterSerializer(ModelSerializer):
             "email",
             "phone_number",
             "password",
-            "password2"
+            "password2",
+            "gender",
+            "register_route"
         ]
         extra_kwargs = {
             "password": {"write_only": True},
@@ -36,7 +38,7 @@ class UserRegisterSerializer(ModelSerializer):
 
     def validate_passwords(self, value):
         if value["password"] != value["password2"]:
-            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+            raise serializers.ValidationError({"password": ["비밀번호가 일치하지 않습니다."]})
         return value
 
     def validate_password(self, value):
