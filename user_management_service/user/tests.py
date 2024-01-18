@@ -557,7 +557,7 @@ class UserProfileAPITestCase(APITestCase):
         # 1. user is authenticated
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # check if user is not deleted
         self.assertEqual(CustomUser.objects.count(), 3)
