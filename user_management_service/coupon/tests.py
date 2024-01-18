@@ -18,6 +18,7 @@ class CouponAPITestCase(APITestCase):
             email="test@test.com",
             phone_number="010-1234-5678",
             password="passpass1234",
+            is_active=True,
         )
         self.admin = CustomUser.objects.create_superuser(
             username="admin",
@@ -116,6 +117,7 @@ class CouponRegisterWorkerTestCase(APITestCase):
             email="email@email.com",
             phone_number="010-1234-5678",
             password="passpass1234",
+            is_active=True,
         )
         self.admin = CustomUser.objects.create_superuser(
             username="admin",

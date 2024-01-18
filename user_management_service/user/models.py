@@ -32,6 +32,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number    = PhoneNumberField(unique=True, db_comment='전화번호')
 
     date_joined     = models.DateTimeField(auto_now_add=True, db_comment='가입일')
+    deleted_at      = models.DateTimeField(db_comment='탈퇴일', null=True, blank=True)
 
     ############################################################################################
 
@@ -68,6 +69,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         db_comment='계정 활성화 여부',
         help_text='Designates whether this user should be treated as active. '
                     'Unselect this instead of deleting accounts.',
+    )
+    is_verified     = models.BooleanField(
+        default=False,
+        db_comment='전화번호 인증 여부'
     )
     is_facility_owner = models.BooleanField(
         default=False,

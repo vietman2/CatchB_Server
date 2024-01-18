@@ -77,7 +77,7 @@ class UserViewSet(ModelViewSet):
         CustomUser.objects.delete_user(user)
         user.save()
 
-        return Response(data={"message": "탈퇴되었습니다."}, status=status.HTTP_204_NO_CONTENT)
+        return Response(data={"message": "탈퇴되었습니다."}, status=status.HTTP_200_OK)
 
     @extend_schema(summary="회원 정보 수정", tags=["회원 관리"])
     def partial_update(self, request, *args, **kwargs):

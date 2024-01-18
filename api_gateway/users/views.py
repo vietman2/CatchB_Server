@@ -28,6 +28,12 @@ def get_response(request, url, method, query_params=None):
             status=status.HTTP_502_BAD_GATEWAY,
         )
 
+class SignUpView(APIView):
+    def post(self, request):
+        REQUEST_URL = f'{user_service_url}/api/users/register/'
+
+        return get_response(request, REQUEST_URL, 'POST')
+
 class LoginView(APIView):
     def post(self, request):
         REQUEST_URL = f'{user_service_url}/api/login/'
@@ -46,6 +52,12 @@ class UserView(APIView):
         REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
 
         return get_response(request, REQUEST_URL, 'GET')
+
+    def delete(self, request):
+        uuid = request.query_params.get('uuid', None)
+        REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
+
+        return get_response(request, REQUEST_URL, 'DELETE')
 
 class TokenView(APIView):
     def post(self, request):

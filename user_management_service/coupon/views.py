@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from celery.result import AsyncResult
 
-from user.permissions import IsNormalUser
+from user.permissions import IsAdmin, IsCoach, IsFacilityOwner
 from .models import Coupon, CouponClass
 from .serializers import CouponSerializer, CouponClassCreateSerializer
 from .tasks import process_register
@@ -42,7 +42,9 @@ class CouponViewSet(ModelViewSet):
 
     @extend_schema(summary="쿠폰 생성", tags=["쿠폰"])
     def create(self, request, *args, **kwargs):
-        if IsNormalUser().has_permission(request, self):
+        if not IsFacilityOwner().has_permission(request, self)\
+            and not IsCoach().has_permission(request, self)\
+            and not IsAdmin().has_permission(request, self):
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
                 data={"message": "권한이 없습니다. 쿠폰 생성은 시설 관리자와 코치만 가능합니다."}

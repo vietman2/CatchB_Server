@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 
 class UserManager(BaseUserManager):
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
 
     def delete_user(self, user):
         user.is_active = False
+        user.deleted_at = timezone.now()
         user.save(using=self._db)
 
         return user
