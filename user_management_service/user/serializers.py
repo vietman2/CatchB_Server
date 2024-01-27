@@ -167,7 +167,7 @@ class PasswordChangeSerializer(ModelSerializer):
 
     def validate(self, attrs):
         if attrs["new_password1"] != attrs["new_password2"]:
-            raise serializers.ValidationError("새로운 비밀번호가 일치하지 않습니다.")
+            raise serializers.ValidationError("비밀번호와 비밀번호 확인이 일치하지 않습니다.")
 
         if attrs["old_password"] == attrs["new_password1"]:
             raise serializers.ValidationError("새로운 비밀번호가 기존 비밀번호와 일치합니다.")
