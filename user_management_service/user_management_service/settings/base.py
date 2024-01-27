@@ -110,7 +110,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=120),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 
-    'ROTATE_REFRESH_TOKENS': False,     ## TODO: 나중에 True로 바꾸고 refresh token을 새로 발급받는 방식으로 바꾸기
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 
     'ALGORITHM': 'HS256',
