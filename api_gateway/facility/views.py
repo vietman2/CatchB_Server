@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 products_service_url = settings.SERVICE_URLS['products_service']
 
-def get_coordinates(self, address):
+def get_coordinates(address):
     naver_geocode_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode'
     headers = {
         'X-NCP-APIGW-API-KEY-ID': settings.NAVER_CLIENT_ID,
