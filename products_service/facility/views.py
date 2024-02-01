@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema
 from .models import Facility
 from .serializers import FacilitySimpleSerializer, FacilityCreateSerializer, AddressSerializer
 
-class FacilityViewSet(ModelViewSet):
+class FacilityViewSets(ModelViewSet):
     queryset = Facility.objects.all()
     serializer_class = FacilitySimpleSerializer
     http_method_names = ["get", "post", "put", "delete"]
@@ -46,11 +46,11 @@ class FacilityViewSet(ModelViewSet):
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
