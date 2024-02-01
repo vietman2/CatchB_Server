@@ -42,3 +42,15 @@ class FacilityViewSet(ModelViewSet):
             status=status.HTTP_201_CREATED,
             data={"message": "시설 등록 신청이 완료되었습니다."}
         )
+
+    @extend_schema(exclude=True)
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    @extend_schema(exclude=True)
+    def partial_update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    @extend_schema(exclude=True)
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
