@@ -73,6 +73,6 @@ class FacilityView(APIView):
         body = request.body
 
         address = request.data['address']['road_address_part1']
-        lat, lng = get_coordinates(self, address)
+        lat, lng = get_coordinates(address)
 
         return get_response(request.headers, body, REQUEST_URL, 'POST', {'lat': lat, 'lng': lng})
