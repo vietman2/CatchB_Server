@@ -22,12 +22,12 @@ from drf_spectacular.views import (
     SpectacularSwaggerView as SSV,
 )
 
-from facility import views
+from facility.views import FacilityViewSet
 from lesson.views import LessonProductViewSet
 
 router = DefaultRouter()
 
-router.register(r'facilities', views.FacilityViewSet)
+router.register(r'facilities', FacilityViewSet)
 router.register(r'lessons', LessonProductViewSet)
 
 urlpatterns = [
