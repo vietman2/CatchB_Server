@@ -10,20 +10,15 @@ class Facility(models.Model):
         editable=False,
         db_comment="시설 고유번호"
     )
-    name        = models.CharField(max_length=100, db_comment="시설 이름")
+    name        = models.CharField(max_length=30, db_comment="시설 이름")
     owner_uuid  = models.UUIDField(db_comment="시설 소유자 유저번호")
+    owner_name  = models.CharField(max_length=30, db_comment="시설 소유자 이름")
+    owner_phone = models.CharField(max_length=20, db_comment="시설 소유자 전화번호")
+    reg_code    = models.CharField(max_length=20, db_comment="시설 사업자 등록번호")
 
     ## 상세 정보: 시설 주소, 시설 전화번호
-    address     = models.ForeignKey("Address", on_delete=models.DO_NOTHING, db_comment="시설 주소")
+    address     = models.ForeignKey("Address", on_delete=models.PROTECT, db_comment="시설 주소")
     phone       = models.CharField(max_length=20, db_comment="시설 전화번호")
-
-    ## 공개 정보: 시설 이미지 (주소), 시설 해시태그, 시설 코치 고유번호 JSON
-    image_urls  = ArrayField(models.CharField(max_length=255), db_comment="시설 이미지 URL")
-    hashtags    = ArrayField(models.CharField(max_length=255), db_comment="시설 해시태그")
-    coaches     = ArrayField(models.UUIDField(), db_comment="시설 코치 고유번호 배열")
-
-    intro       = models.TextField(db_comment="시설 소개글")
-    description = models.TextField(db_comment="시설 설명")
 
     is_confirmed = models.BooleanField(default=False, db_comment="시설 승인 여부")
 
@@ -33,6 +28,25 @@ class Facility(models.Model):
         db_table = "facility"
         verbose_name = "시설"
         verbose_name_plural = "시설"
+
+class FacilityInfo(models.Model):
+    # 시설 정보
+    facility = models.ForeignKey("Facility", on_delete=models.CASCADE, db_comment="시설 고유번호")
+
+    ## 공개 정보: 시설 이미지 (주소), 시설 해시태그, 시설 코치 고유번호 JSON
+    image_urls  = ArrayField(models.CharField(max_length=255), db_comment="시설 이미지 URL")
+    hashtags    = ArrayField(models.CharField(max_length=255), db_comment="시설 해시태그")
+    coaches     = ArrayField(models.UUIDField(), db_comment="시설 코치 고유번호 배열")
+
+    intro       = models.TextField(db_comment="시설 소개글")
+    description = models.TextField(db_comment="시설 설명")
+
+    objects = models.Manager()
+
+    class Meta:
+        db_table = "facility_info"
+        verbose_name = "시설 정보"
+        verbose_name_plural = "시설 정보"
 
 class Address(models.Model):
     # 주소
@@ -50,6 +64,8 @@ class Address(models.Model):
     # 좌표
     longitude           = models.FloatField(db_comment="Longitude. 경도")
     latitude            = models.FloatField(db_comment="Latitude. 위도")
+
+    objects = models.Manager()
 
     class Meta:
         db_table = "address"
