@@ -26,4 +26,4 @@ class IsFacilityOwner(BasePermission):
 
 class IsCoach(BasePermission):
     def has_permission(self, request, view):
-        return CustomUser.objects.is_coach(request.user)
+        return request.user.is_coach

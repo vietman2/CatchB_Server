@@ -28,6 +28,3 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-
-    def is_coach(self, user):
-        return hasattr(user, 'coach')
