@@ -6,11 +6,22 @@ from dj_rest_auth.forms import AllAuthPasswordResetForm
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from drf_spectacular.utils import extend_schema_field
 from allauth.account.forms import default_token_generator
 from allauth.account.utils import url_str_to_user_pk as uid_decoder
 
-from .models import CustomUser, Coach
+from .models import CustomUser
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token["uuid"] = user.uuid
+        token["role"] = user.role
+
+        return token
 
 class UserRegisterSerializer(ModelSerializer):
     """
@@ -59,7 +70,7 @@ class UserSerializer(ModelSerializer):
     full_name = serializers.SerializerMethodField()
     experience_tier = serializers.CharField(source="get_experience_tier_display")
     register_route = serializers.CharField(source="get_register_route_display")
-    user_type = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
     num_coupons = serializers.SerializerMethodField()
     total_points = serializers.SerializerMethodField()
 
@@ -101,7 +112,7 @@ class UserSerializer(ModelSerializer):
             "gender",
             "experience_tier",
             "register_route",
-            "user_type",
+            "role",
             'num_coupons',
             'total_points',
         ]
@@ -109,30 +120,16 @@ class UserSerializer(ModelSerializer):
     def validate_username(self, value):
         raise serializers.ValidationError("username은 수정할 수 없습니다.")
 
-    def get_user_type(self, obj):
+    def get_role(self, obj):
         ## Coach 인스턴스가 존재하면 코치
         if hasattr(obj, "coach"):
-            return "coach"
+            return "C"
         if obj.is_facility_owner:
-            return "facility_owner"
+            return "F"
         if obj.is_superuser:
-            return "admin"
+            return "A"
 
-        return "normal_user"
-
-class CoachProfileSerializer(ModelSerializer):
-    """
-    코치 프로필 시리얼라이저: 코치가 자신의 프로필을 조회하거나 수정할 때 사용
-    """
-    class Meta:
-        model = Coach
-        fields = [
-            # "user",
-            # "profile",
-            "academic_background",
-            "baseball_career",
-            "coaching_career",
-        ]
+        return "N"
 
 class PasswordChangeSerializer(ModelSerializer):
     """
