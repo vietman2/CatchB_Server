@@ -6,15 +6,15 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
-dj-rest-auth = "*"
-django-allauth = "*"
 django-extensions = "*"
 drf-spectacular = "*"
 python-decouple = "*"
 django-phonenumber-field = "*"
-djangorestframework-simplejwt = "*"
 phonenumbers = "*"
 celery = "*"
+dj-rest-auth = "*"
+django-allauth = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 pylint = "*"

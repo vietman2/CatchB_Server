@@ -78,6 +78,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default=False,
         db_comment='시설 소유자 여부'
     )
+    is_coach = models.BooleanField(
+        default=False,
+        db_comment='코치 여부'
+    )
 
     USERNAME_FIELD  = 'username'
     REQUIRED_FIELDS = [
@@ -97,56 +101,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         db_table = 'user'
         verbose_name = _('user')
         verbose_name_plural = _('users')
-
-class Coach(models.Model):
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        parent_link=True,
-        related_name='coach'
-    )
-
-    # certification = models.FileField(db_comment='자격증', help_text='자격증을 첨부해주세요.')
-    academic_background = models.TextField(db_comment='학력', help_text='학력을 입력해주세요.')
-    baseball_career = models.TextField(db_comment='야구 경력', help_text='야구 경력을 입력해주세요.')
-    coaching_career = models.TextField(db_comment='코칭 경력', help_text='코칭 경력을 입력해주세요.')
-    # facility = models.TextField(db_comment="소속 시설")
-    # areas = models.TextField(db_comment="레슨 영역", help_text="레슨 영역: 타격, 투구, 수비, 주루, 트레이닝, 피지컬, 기타")
-
-    is_approved = models.BooleanField(default=False, db_comment='코치 승인 여부')
-
-    objects = models.Manager()
-
-    class Meta:
-        db_table = 'coach'
-        verbose_name = _('coach')
-        verbose_name_plural = _('coaches')
-
-class Partner(models.Model):
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        parent_link=True,
-        related_name='partner'
-    )
-
-    class Meta:
-        db_table = 'partner'
-        verbose_name = _('partner')
-        verbose_name_plural = _('partners')
-
-class Counselor(CustomUser):
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        parent_link=True,
-        related_name='counselor'
-    )
-
-    class Meta:
-        db_table = 'counselor'
-        verbose_name = _('counselor')
-        verbose_name_plural = _('counselors')

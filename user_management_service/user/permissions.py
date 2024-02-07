@@ -1,7 +1,5 @@
 from rest_framework.permissions import BasePermission
 
-from .models import CustomUser
-
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_superuser
@@ -26,4 +24,4 @@ class IsFacilityOwner(BasePermission):
 
 class IsCoach(BasePermission):
     def has_permission(self, request, view):
-        return CustomUser.objects.is_coach(request.user)
+        return request.user.is_coach
