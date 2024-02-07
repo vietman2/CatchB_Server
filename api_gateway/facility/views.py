@@ -37,7 +37,6 @@ def get_coordinates(address):
             status=status.HTTP_502_BAD_GATEWAY,
         )
 
-
 def get_response(headers, body, url, method, query_params=None):
     try:
         response = requests.request(
