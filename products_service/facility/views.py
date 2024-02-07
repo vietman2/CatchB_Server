@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema
 from .models import Facility
 from .serializers import FacilitySimpleSerializer, FacilityCreateSerializer, AddressSerializer
 
-class FacilityViewSets(ModelViewSet):
+class FacilityViewSet(ModelViewSet):
     queryset = Facility.objects.all()
     serializer_class = FacilitySimpleSerializer
     http_method_names = ["get", "post", "put", "delete"]

@@ -22,12 +22,12 @@ from drf_spectacular.views import (
     SpectacularSwaggerView as SSV,
 )
 
-from facility.views import FacilityViewSets
+from facility.views import FacilityViewSet      ## pylint: disable=no-name-in-module
 from lesson.views import LessonProductViewSet
 
 router = DefaultRouter()
 
-router.register(r'facilities', FacilityViewSets)
+router.register(r'facilities', FacilityViewSet)
 router.register(r'lessons', LessonProductViewSet)
 
 urlpatterns = [

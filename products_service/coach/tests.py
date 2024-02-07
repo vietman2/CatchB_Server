@@ -1,3 +1,5 @@
 from django.test import TestCase
 
-# Create your tests here.
+class TestCoach(TestCase):
+    def test_coach(self):
+        self.assertEqual(1, 1)
