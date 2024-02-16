@@ -373,12 +373,12 @@ class PasswordChangeAPITestCase(APITestCase):
 class PasswordResetAPITestCase(APITestCase):
     def setUp(self):
         self.reset_url = "/api/password/reset/"
-        self.email = "asdf@asdf.com",
+        self.email = "asdf@test.com"
         self.user = CustomUser.objects.create_user(
             username="test",
             first_name="test",
             last_name="test",
-            email=self.email,
+            email="asdf@test.com",
             phone_number="010-1234-5678",
             password="passpass1234",
         )
