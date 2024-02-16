@@ -51,20 +51,17 @@ class PointsEarnDetails(models.Model):
 class PointsManager(models.Manager):
     def total_points(self, user_uuid):
         # user_uuid dne
-        try:
-            CustomUser.objects.get(uuid=user_uuid)
-            # only active and partial points
-            points = self.filter(
-                user__uuid=user_uuid,
-                status__in=[PointStatus.ACTIVE, PointStatus.PARTIAL]
-            )
-            total_points = 0
-            for point in points:
-                total_points += point.remaining_points
+        CustomUser.objects.get(uuid=user_uuid)
+        # only active and partial points
+        points = self.filter(
+            user__uuid=user_uuid,
+            status__in=[PointStatus.ACTIVE, PointStatus.PARTIAL]
+        )
+        total_points = 0
+        for point in points:
+            total_points += point.remaining_points
 
-            return total_points
-        except ValidationError as e:
-            raise ValueError("유효한 user_uuid가 아닙니다.") from e
+        return total_points
 
     def use_points(self, **kwargs):
         user_uuid = kwargs.get("user").uuid
@@ -104,12 +101,14 @@ class PointsManager(models.Manager):
                 point.save()
                 continue
 
-        PointsUseDetails.objects.create(
+        details = PointsUseDetails.objects.create(
             user_id=user_uuid,
             title=kwargs.get("title"),
             description=kwargs.get("description"),
             points=kwargs.get("points")
         )
+
+        return details
 
     def earn_points(self, **kwargs):
         user_uuid = kwargs.get("user").uuid
