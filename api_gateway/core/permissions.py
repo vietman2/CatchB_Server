@@ -32,7 +32,7 @@ class IsFacilityOwner(BasePermission):
             return False
 
         role = user_info['role']
-        return role == 'F' or role == 'B'
+        return role in ['F', 'B']
 
 class IsCoach(BasePermission):
     def has_permission(self, request, view):
@@ -41,7 +41,7 @@ class IsCoach(BasePermission):
             return False
 
         role = user_info['role']
-        return role == 'C' or role == 'B'
+        return role in ['C', 'B']
 
 class IsSelf(BasePermission):
     def has_object_permission(self, request, view, obj):
