@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'facility.apps.FacilityConfig',
     'lesson.apps.LessonConfig',
     'user_feedback.apps.UserFeedbackConfig',
+    'region.apps.RegionConfig',
 
     'rest_framework',
     'drf_spectacular',

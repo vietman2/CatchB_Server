@@ -24,11 +24,13 @@ from drf_spectacular.views import (
 
 from facility.views import FacilityViewSet      ## pylint: disable=no-name-in-module
 from lesson.views import LessonProductViewSet
+from region.views import RegionViewSet
 
 router = DefaultRouter()
 
 router.register(r'facilities', FacilityViewSet)
 router.register(r'lessons', LessonProductViewSet)
+router.register(r'regions', RegionViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
