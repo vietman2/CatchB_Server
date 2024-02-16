@@ -14,7 +14,7 @@ from allauth.account.utils import url_str_to_user_pk as uid_decoder
 from .models import CustomUser
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def user_role(user):
+    def user_role(self, user):
         if user.is_coach:
             if user.is_facility_owner:
                 return "B"
@@ -30,7 +30,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        token["role"] = cls.user_role(user)
+        token["role"] = cls.user_role(cls, user)
 
         return token
 

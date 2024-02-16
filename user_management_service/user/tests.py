@@ -173,23 +173,23 @@ class LoginAPITestCase(APITestCase):
         # user is facility owner
         self.user.is_facility_owner = True
         self.user.save()
-        response = self.client.post(self.url, data=self.data)
+        self.client.post(self.url, data=self.data)
 
         # user is both
         self.user.is_coach = True
         self.user.save()
-        response = self.client.post(self.url, data=self.data)
+        self.client.post(self.url, data=self.data)
 
         # user is coach
         self.user.is_facility_owner = False
         self.user.save()
-        response = self.client.post(self.url, data=self.data)
+        self.client.post(self.url, data=self.data)
 
         # user is admin
         self.user.is_coach = False
         self.user.is_superuser = True
         self.user.save()
-        response = self.client.post(self.url, data=self.data)
+        self.client.post(self.url, data=self.data)
 
     def test_login_fail(self):
         # 1. username is not valid
