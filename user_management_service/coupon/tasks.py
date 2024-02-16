@@ -10,7 +10,7 @@ from .models import Coupon, CouponClass
 @shared_task(queue="coupon_queue")
 def process_register(user_uuid, coupon_code, request_datetime):
     """
-    쿠폰 다운로드 비동기 작업.
+    쿠폰 등록 비동기 작업.
     """
 
     def calculate_valid_until(coupon_class_obj, request_datetime):

@@ -14,12 +14,23 @@ from allauth.account.utils import url_str_to_user_pk as uid_decoder
 from .models import CustomUser
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def user_role(self, user):
+        if user.is_coach:
+            if user.is_facility_owner:
+                return "B"
+            return "C"
+        if user.is_facility_owner:
+            return "F"
+        if user.is_superuser:
+            return "A"
+
+        return "N"
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
 
-        token["uuid"] = user.uuid
-        token["role"] = user.role
+        token["role"] = cls.user_role(cls, user)
 
         return token
 
@@ -122,7 +133,9 @@ class UserSerializer(ModelSerializer):
 
     def get_role(self, obj):
         ## Coach 인스턴스가 존재하면 코치
-        if hasattr(obj, "coach"):
+        if obj.is_coach:
+            if obj.is_facility_owner:
+                return "B"
             return "C"
         if obj.is_facility_owner:
             return "F"

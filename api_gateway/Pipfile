@@ -10,6 +10,7 @@ djangorestframework = "*"
 drf-spectacular = "*"
 python-decouple = "*"
 requests = "*"
+pyjwt = "*"
 
 [dev-packages]
 coverage = "*"

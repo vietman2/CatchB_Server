@@ -1,5 +1,5 @@
 import datetime
-from unittest import mock
+from unittest.mock import patch
 from django.utils import timezone
 from rest_framework.test import APITestCase
 
@@ -75,11 +75,6 @@ class CouponAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_coupon_create_failure(self):
-        # normal user cannot create coupon class
-        self.client.force_authenticate(user=self.user)
-        response = self.client.post(self.url, self.create_coupon_class_data, format="json")
-        self.assertEqual(response.status_code, 403)
-
         # invalid data
         self.client.force_authenticate(user=self.admin)
         response = self.client.post(self.url, {}, format="json")
@@ -127,6 +122,7 @@ class CouponRegisterWorkerTestCase(APITestCase):
             phone_number="010-1234-4321",
             password="passpass1234",
         )
+        self.url = "/api/coupons/"
         self.sample_coupon_class = CouponClass.objects.create(
             coupon_name="test",
             coupon_description="test",
@@ -161,7 +157,7 @@ class CouponRegisterWorkerTestCase(APITestCase):
             discount_value=1000,
         )
 
-    @mock.patch("coupon.tasks.process_register.delay")
+    @patch("coupon.tasks.process_register.delay")
     def test_register_worker(self, mock_process_register):  # pylint: disable=W0613
         request_datetime = datetime.datetime.now()
         aware_datetime = timezone.make_aware(request_datetime)
@@ -178,8 +174,21 @@ class CouponRegisterWorkerTestCase(APITestCase):
             request_datetime=aware_datetime
         )
 
-        process_register(
-            user_uuid=self.user.pk,
-            coupon_code=self.sample_coupon_class3.code,
-            request_datetime=aware_datetime
-        )
+    @patch("celery.result.AsyncResult.ready")
+    def test_coupon_status_check_success(self, mock_ready):  # pylint: disable=W0613
+        self.client.force_authenticate(user=self.user)
+
+        mock_ready.return_value = True
+        response = self.client.get(self.url + "status/", {"task_id": "task_id"})
+        self.assertEqual(response.status_code, 200)
+
+        mock_ready.return_value = False
+        response = self.client.get(self.url + "status/", {"task_id": "task_id"})
+        self.assertEqual(response.status_code, 202)
+
+    def test_coupon_status_check_failure(self):
+        self.client.force_authenticate(user=self.user)
+
+        # no task id
+        response = self.client.get(self.url + "status/", {"task_id": ""})
+        self.assertEqual(response.status_code, 400)

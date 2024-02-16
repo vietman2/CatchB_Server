@@ -15,7 +15,7 @@ from .serializers import (
     PasswordChangeSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer,
 )
 from .models import CustomUser
-from .permissions import IsAdmin, IsSelf, IsActive
+from .permissions import IsActive
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters(
@@ -35,11 +35,6 @@ class UserViewSet(ModelViewSet):
 
     @extend_schema(summary="본인 회원 정보 조회", tags=["회원 관리"])
     def retrieve(self, request, *args, **kwargs):
-        if not IsSelf().has_object_permission(request, self, kwargs['pk']):
-            return Response(data={
-                "errors": "본인만 조회할 수 있습니다.",
-            }, status=status.HTTP_403_FORBIDDEN)
-
         user = CustomUser.objects.get(uuid=kwargs['pk'])
 
         if not IsActive().has_object_permission(request, self, self.get_object()):
@@ -48,26 +43,17 @@ class UserViewSet(ModelViewSet):
             }, status=status.HTTP_403_FORBIDDEN)
 
         serializer = self.get_serializer(user)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(summary="회원 정보 리스트 조회", tags=["회원 관리"])
     def list(self, request, *args, **kwargs):
-        if not IsAdmin().has_permission(request, self):
-            return Response(data={
-                "errors": "관리자만 조회할 수 있습니다.",
-            }, status=status.HTTP_403_FORBIDDEN)
-
         queryset = self.get_queryset()
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(summary="회원 탈퇴", tags=["회원 관리"])
     def destroy(self, request, *args, **kwargs):
-        if not IsSelf().has_object_permission(request, self, kwargs['pk']):
-            return Response(data={
-                "errors": "본인만 탈퇴할 수 있습니다.",
-            }, status=status.HTTP_403_FORBIDDEN)
-
         if not IsActive().has_object_permission(request, self, self.get_object()):
             return Response(data={
                 "errors": "이미 탈퇴한 계정입니다.",
@@ -81,11 +67,6 @@ class UserViewSet(ModelViewSet):
 
     @extend_schema(summary="회원 정보 수정", tags=["회원 관리"])
     def partial_update(self, request, *args, **kwargs):
-        if not IsSelf().has_object_permission(request, self, kwargs['pk']):
-            return Response(data={
-                "errors": "본인만 수정할 수 있습니다.",
-            }, status=status.HTTP_403_FORBIDDEN)
-
         if not IsActive().has_object_permission(request, self, self.get_object()):
             return Response(data={
                 "errors": "비활성화된 계정입니다.",

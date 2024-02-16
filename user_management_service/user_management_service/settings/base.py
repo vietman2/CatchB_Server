@@ -92,6 +92,7 @@ REST_AUTH = {
     'JWT_AUTH_RETURN_EXPIRATION': True,
 
     'USER_DETAILS_SERIALIZER': 'user.serializers.UserSerializer',
+    'JWT_TOKEN_CLAIMS_SERIALIZER': 'user.serializers.MyTokenObtainPairSerializer',
 }
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
@@ -125,7 +126,6 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_OBTAIN_PAIR_SERIALIZER': 'user.serializers.MyTokenObtainPairSerializer',
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
@@ -171,7 +171,6 @@ TIME_ZONE = 'Asia/Seoul'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

@@ -82,6 +82,15 @@ class PointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["total_remaining_points"], 0)
 
+        response = self.client.patch(self.url + "use/", {
+            "user": self.user_uuid,
+            "points": 0,
+            "title": "test",
+            "description": "test",
+        }, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["total_remaining_points"], 0)
+
     def test_points_failure_unauthorized(self):
         # not logged in
         response = self.client.post(self.url, {

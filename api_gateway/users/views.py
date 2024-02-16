@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from core.permissions import IsSelf
+
 user_service_url = settings.SERVICE_URLS['user_management_service']
 
 def get_response(request, url, method, query_params=None):
@@ -53,14 +55,28 @@ class PasswordChangeView(APIView):
         return get_response(request, REQUEST_URL, 'POST')
 
 class UserView(APIView):
+    ## TODO: List 조회 구현 시 관리자만 가능하도록 권한 설정
+    ## TODO: Partial Update 구현 시 본인만 가능하도록 권한 설정
     def get(self, request):
         uuid = request.query_params.get('uuid', None)
+        if not IsSelf.has_object_permission(None, request, None, uuid):
+            return Response(
+                {'message': '권한이 없습니다.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
 
         return get_response(request, REQUEST_URL, 'GET')
 
     def delete(self, request):
         uuid = request.query_params.get('uuid', None)
+        if not IsSelf.has_object_permission(None, request, None, uuid):
+            return Response(
+                {'message': '권한이 없습니다.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         REQUEST_URL = f'{user_service_url}/api/users/{uuid}/'
 
         return get_response(request, REQUEST_URL, 'DELETE')
@@ -84,6 +100,7 @@ class CouponStatusCheckView(APIView):
         return get_response(request, REQUEST_URL, 'GET', request.query_params)
 
 class CouponView(APIView):
+    ## TODO: 쿠폰 생성은 관리자, 코치, 시설주만 가능하도록 권한 설정
     def get(self, request):
         REQUEST_URL = f'{user_service_url}/api/coupons/'
 
