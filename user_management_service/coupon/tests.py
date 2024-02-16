@@ -1,11 +1,10 @@
 import datetime
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from django.utils import timezone
 from rest_framework.test import APITestCase
-from celery.result import AsyncResult
 
 from user.models import CustomUser
-from .models import Coupon, CouponClass
+from .models import CouponClass
 from .enums import CouponIssuerType, CouponType
 from .tasks import process_register
 

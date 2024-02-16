@@ -2,7 +2,6 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.core.management import call_command
 from django.core import mail
-from django.test import TestCase
 from allauth.account.forms import default_token_generator
 
 from .models import CustomUser
