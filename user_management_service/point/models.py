@@ -6,9 +6,11 @@ from django.utils.translation import gettext_lazy as _
 from user.models import CustomUser
 from .enums import PointStatus
 
+
+
 class PointsUseDetails(models.Model):
     user        = models.ForeignKey(
-        'user.CustomUser',
+        CustomUser,
         on_delete=models.SET_NULL,
         null=True,
         related_name='user_points_use'
@@ -28,7 +30,7 @@ class PointsUseDetails(models.Model):
 
 class PointsEarnDetails(models.Model):
     user        = models.ForeignKey(
-        'user.CustomUser',
+        CustomUser,
         on_delete=models.SET_NULL,
         null=True,
         related_name='user_points_earn'
@@ -98,7 +100,6 @@ class PointsManager(models.Manager):
                 point.status = PointStatus.USED
                 point.used_points += point.remaining_points
                 point.save()
-                continue
 
         details = PointsUseDetails.objects.create(
             user_id=user_uuid,
@@ -132,7 +133,7 @@ class PointsManager(models.Manager):
 
 class UserPoints(models.Model):
     user        = models.ForeignKey(
-        'user.CustomUser',
+        CustomUser,
         on_delete=models.SET_NULL,
         null=True,
         related_name='user_points'
