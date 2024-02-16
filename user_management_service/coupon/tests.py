@@ -123,6 +123,7 @@ class CouponRegisterWorkerTestCase(APITestCase):
             phone_number="010-1234-4321",
             password="passpass1234",
         )
+        self.url = "/api/coupons/"
         self.sample_coupon_class = CouponClass.objects.create(
             coupon_name="test",
             coupon_description="test",
@@ -174,29 +175,21 @@ class CouponRegisterWorkerTestCase(APITestCase):
             request_datetime=aware_datetime
         )
 
-        process_register(
-            user_uuid=self.user.pk,
-            coupon_code=self.sample_coupon_class3.code,
-            request_datetime=aware_datetime
-        )
-
     @patch("celery.result.AsyncResult.ready")
     def test_coupon_status_check_success(self, mock_ready):  # pylint: disable=W0613
         self.client.force_authenticate(user=self.user)
-        url = "/api/coupons/"
 
         mock_ready.return_value = True
-        response = self.client.get(url + "status/", {"task_id": "task_id"})
+        response = self.client.get(self.url + "status/", {"task_id": "task_id"})
         self.assertEqual(response.status_code, 200)
 
         mock_ready.return_value = False
-        response = self.client.get(url + "status/", {"task_id": "task_id"})
+        response = self.client.get(self.url + "status/", {"task_id": "task_id"})
         self.assertEqual(response.status_code, 202)
 
     def test_coupon_status_check_failure(self):
         self.client.force_authenticate(user=self.user)
-        url = "/api/coupons/"
 
         # no task id
-        response = self.client.get(url + "status/", {"task_id": ""})
+        response = self.client.get(self.url + "status/", {"task_id": ""})
         self.assertEqual(response.status_code, 400)
