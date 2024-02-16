@@ -154,108 +154,110 @@ class PostTestCase(APITestCase):
 
 class ReportLikeTestCase(APITestCase):
     def setUp(self):
-        self.user_uuid = uuid.uuid4()
-        self.forum1 = Forum.objects.create(forum_name="test_forum1")
+        self.uuid = uuid.uuid4()
         self.post1 = Post.objects.create(
-            forum=self.forum1,
-            author_uuid=self.user_uuid,
+            forum=Forum.objects.create(forum_name="test_forum1"),
+            author_uuid=self.uuid,
             title="test_title1",
             content="test_content1"
         )
-        self.data = {
-            "report_user_uuid": self.user_uuid,
-            "report_content": "test_report_content",
-            "report_reason": ReportReason.OTHER
-        }
         self.comment1 = Comment.objects.create(
             post=self.post1,
-            author_uuid=self.user_uuid,
+            author_uuid=self.uuid,
             content="test_comment1"
         )
         self.recomment1 = ReComment.objects.create(
             comment=self.comment1,
-            author_uuid=self.user_uuid,
+            author_uuid=self.uuid,
             content="test_recomment1"
         )
+        self.post_url = "/api/posts/"
+        self.comment_url = "/api/comments/"
+        self.recomment_url = "/api/recomments/"
 
     def test_report(self):
+        data = {
+            "report_user_uuid": self.uuid,
+            "report_content": "test_report_content",
+            "report_reason": ReportReason.OTHER
+        }
         post_report_data = {
             "post": self.post1.id,
-            **self.data
+            **data
         }
         response = self.client.post(
-            "/api/posts/"+ f"{self.post1.id}/report/",
+            f"{self.post_url}{self.post1.id}/report/",
             data=post_report_data
         )
         self.assertEqual(response.status_code, 200)
 
         comment_report_data = {
             "comment": self.comment1.id,
-            **self.data
+            **data
         }
         response = self.client.post(
-            "/api/comments/"+ f"{self.comment1.id}/report/",
+            f"{self.comment_url}{self.comment1.id}/report/",
             data=comment_report_data
         )
         self.assertEqual(response.status_code, 200)
 
         recomment_report_data = {
             "recomment": self.recomment1.id,
-            **self.data
+            **data
         }
         response = self.client.post(
-            "/api/recomments/"+ f"{self.recomment1.id}/report/",
+            f"{self.recomment_url}{self.recomment1.id}/report/",
             data=recomment_report_data
         )
         self.assertEqual(response.status_code, 200)
 
     def test_report_fail(self):
-        response = self.client.post("/api/posts/"+ f"{self.post1.id}/report/", data={})
+        response = self.client.post(f"{self.post_url}{self.post1.id}/report/", data={})
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.post("/api/comments/"+ f"{self.comment1.id}/report/", data={})
+        response = self.client.post(f"{self.comment_url}{self.comment1.id}/report/", data={})
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.post("/api/recomments/"+ f"{self.recomment1.id}/report/", data={})
+        response = self.client.post(f"{self.recomment_url}{self.recomment1.id}/report/", data={})
         self.assertEqual(response.status_code, 400)
 
     def test_like(self):
         post_like_data = {
             "post": self.post1.id,
-            "like_user_uuid": self.user_uuid
+            "like_user_uuid": self.uuid
         }
         response = self.client.post(
-            "/api/posts/"+ f"{self.post1.id}/like/",
+            f"{self.post_url}{self.post1.id}/like/",
             data=post_like_data
         )
         self.assertEqual(response.status_code, 200)
 
         comment_like_data = {
             "comment": self.comment1.id,
-            "like_user_uuid": self.user_uuid
+            "like_user_uuid": self.uuid
         }
         response = self.client.post(
-            "/api/comments/"+ f"{self.comment1.id}/like/",
+            f"{self.comment_url}{self.comment1.id}/like/",
             data=comment_like_data
         )
         self.assertEqual(response.status_code, 200)
 
         recomment_like_data = {
             "recomment": self.recomment1.id,
-            "like_user_uuid": self.user_uuid
+            "like_user_uuid": self.uuid
         }
         response = self.client.post(
-            "/api/recomments/"+ f"{self.recomment1.id}/like/",
+            f"{self.recomment_url}{self.recomment1.id}/like/",
             data=recomment_like_data
         )
         self.assertEqual(response.status_code, 200)
 
     def test_like_fail(self):
-        response = self.client.post("/api/posts/"+ f"{self.post1.id}/like/", data={})
+        response = self.client.post(f"{self.post_url}{self.post1.id}/like/", data={})
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.post("/api/comments/"+ f"{self.comment1.id}/like/", data={})
+        response = self.client.post(f"{self.comment_url}{self.comment1.id}/like/", data={})
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.post("/api/recomments/"+ f"{self.recomment1.id}/like/", data={})
+        response = self.client.post(f"{self.recomment_url}{self.recomment1.id}/like/", data={})
         self.assertEqual(response.status_code, 400)

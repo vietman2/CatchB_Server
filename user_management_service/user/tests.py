@@ -142,7 +142,7 @@ class LoginAPITestCase(APITestCase):
             username="test",
             first_name="test",
             last_name="test",
-            email="test@test.com",
+            email="email@test.com",
             phone_number="010-1234-5678",
             password="passpass1234",
         )
@@ -226,7 +226,7 @@ class LogoutAPITestCase(APITestCase):
             username="test",
             first_name="test",
             last_name="test",
-            email="test@test.com",
+            email="test@email.com",
             phone_number="010-1234-5678",
             password="passpass1234",
         )
@@ -254,7 +254,7 @@ class LogoutAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_logout_fail(self):
-        response = self.client.post(self.url, data=self.data)
+        self.client.post(self.url, data=self.data)
 
         # 1. token is not valid
         response = self.client.post(self.url, data={})
@@ -271,7 +271,7 @@ class PasswordChangeAPITestCase(APITestCase):
             username="test",
             first_name="test",
             last_name="test",
-            email="test@test.com",
+            email="example@test.com",
             phone_number="010-1234-5678",
             password="passpass1234",
         )
@@ -336,7 +336,7 @@ class PasswordChangeAPITestCase(APITestCase):
         # 4. new password is not valid (too short)
         self.change_data["new_password1"] = "test"
         self.change_data["new_password2"] = "test"
-        response = self.client.post(self.url, data=self.change_data)
+        self.client.post(self.url, data=self.change_data)
 
         # 5. empty fields
         response = self.client.post(self.url, data={})
@@ -373,11 +373,12 @@ class PasswordChangeAPITestCase(APITestCase):
 class PasswordResetAPITestCase(APITestCase):
     def setUp(self):
         self.reset_url = "/api/password/reset/"
+        self.email = "asdf@test.com"
         self.user = CustomUser.objects.create_user(
             username="test",
             first_name="test",
             last_name="test",
-            email="test@test.com",
+            email="asdf@test.com",
             phone_number="010-1234-5678",
             password="passpass1234",
         )
@@ -397,7 +398,7 @@ class PasswordResetAPITestCase(APITestCase):
 
     def test_password_reset_success(self):
         # 1. password is reset
-        response = self.client.post(self.reset_url, data={"email": "test@test.com"})
+        response = self.client.post(self.reset_url, data={"email": self.email})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # 2. email is sent
@@ -438,12 +439,12 @@ class PasswordResetAPITestCase(APITestCase):
         # 4. user is not active
         self.user.is_active = False
         self.user.save()
-        response = self.client.post(self.reset_url, data={"email": "test@test.com"})
+        response = self.client.post(self.reset_url, data={"email": self.email})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_password_reset_confirm_fail(self):
         # reset first
-        self.client.post(self.reset_url, data={"email": "test@test.com"})
+        self.client.post(self.reset_url, data={"email": self.email})
         self.assertEqual(len(mail.outbox), 1)
         url = mail.outbox[0].body.split("http://testserver")[1].split("\n")[0]
         token = url.split("/")[6]
@@ -480,7 +481,7 @@ class UserProfileAPITestCase(APITestCase):
             username="test",
             first_name="test",
             last_name="test",
-            email="test@test.com",
+            email="profile@profile.com",
             phone_number="010-1234-5678",
             password="passpass1234",
         )
@@ -504,13 +505,14 @@ class UserProfileAPITestCase(APITestCase):
         self.url = f"/api/users/{self.uuid}/"
 
     def test_unallowed_methods(self):
+        url = "/api/users/"
         data = {'username': "test", "password": "passpass1234"}
-        response = self.client.post("/api/users/", data=data)
+        response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # login first for coverage
         self.client.force_authenticate(user=self.user)
-        response = self.client.post("/api/users/", data=data)
+        response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
         response = self.client.put(self.url)

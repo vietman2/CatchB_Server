@@ -92,15 +92,16 @@ class CouponAPITestCase(APITestCase):
 
     def test_coupon_register_failure(self):
         self.client.force_authenticate(user=self.user)
+        register_url = self.url + "register/"
 
         response = self.client.post(
-            self.url + "register/",
+            register_url,
             {"coupon_code": "1234567890"},
             format="json"
         )
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.post(self.url + "register/", {"coupon_code": ""}, format="json")
+        response = self.client.post(register_url, {"coupon_code": ""}, format="json")
         self.assertEqual(response.status_code, 400)
 
 class CouponRegisterWorkerTestCase(APITestCase):
@@ -177,13 +178,14 @@ class CouponRegisterWorkerTestCase(APITestCase):
     @patch("celery.result.AsyncResult.ready")
     def test_coupon_status_check_success(self, mock_ready):  # pylint: disable=W0613
         self.client.force_authenticate(user=self.user)
+        status_url = self.url + "status/"
 
         mock_ready.return_value = True
-        response = self.client.get(self.url + "status/", {"task_id": "task_id"})
+        response = self.client.get(status_url, {"task_id": "task_id"})
         self.assertEqual(response.status_code, 200)
 
         mock_ready.return_value = False
-        response = self.client.get(self.url + "status/", {"task_id": "task_id"})
+        response = self.client.get(status_url, {"task_id": "task_id"})
         self.assertEqual(response.status_code, 202)
 
     def test_coupon_status_check_failure(self):

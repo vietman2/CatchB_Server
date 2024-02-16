@@ -74,7 +74,7 @@ class LessonTestCase(TestCase):
 
     def test_lesson_product_fail(self):
         response = self.client.post(self.url, data=self.data, format="json")
-        id = response.data["id"]    #pylint: disable=W0622
+        lesson_id = response.data["id"]    #pylint: disable=W0622
 
         response = self.client.put(f"{self.url}{id}/", data=self.data)
         self.assertEqual(response.status_code, 405)
@@ -86,14 +86,14 @@ class LessonTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.patch(
-            f"{self.url}{id}/",
+            f"{self.url}{lesson_id}/",
             data={},
             content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
 
         response = self.client.patch(
-            f"{self.url}{id}/",
+            f"{self.url}{lesson_id}/",
             data={
                 "price": -1000
             },
