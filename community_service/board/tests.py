@@ -154,27 +154,26 @@ class PostTestCase(APITestCase):
 
 class ReportLikeTestCase(APITestCase):
     def setUp(self):
-        self.user_uuid = uuid.uuid4()
-        self.forum1 = Forum.objects.create(forum_name="test_forum1")
+        uuid = "uuid"
         self.post1 = Post.objects.create(
-            forum=self.forum1,
-            author_uuid=self.user_uuid,
+            forum=Forum.objects.create(forum_name="test_forum1"),
+            author_uuid=uuid,
             title="test_title1",
             content="test_content1"
         )
         self.data = {
-            "report_user_uuid": self.user_uuid,
+            "report_user_uuid": uuid,
             "report_content": "test_report_content",
             "report_reason": ReportReason.OTHER
         }
         self.comment1 = Comment.objects.create(
             post=self.post1,
-            author_uuid=self.user_uuid,
+            author_uuid=uuid,
             content="test_comment1"
         )
         self.recomment1 = ReComment.objects.create(
             comment=self.comment1,
-            author_uuid=self.user_uuid,
+            author_uuid=uuid,
             content="test_recomment1"
         )
         self.post_url = "/api/posts/"
@@ -223,9 +222,10 @@ class ReportLikeTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_like(self):
+        user_uuid = "uuid"
         post_like_data = {
             "post": self.post1.id,
-            "like_user_uuid": self.user_uuid
+            "like_user_uuid": user_uuid
         }
         response = self.client.post(
             f"{self.post_url}{self.post1.id}/like/",
@@ -235,7 +235,7 @@ class ReportLikeTestCase(APITestCase):
 
         comment_like_data = {
             "comment": self.comment1.id,
-            "like_user_uuid": self.user_uuid
+            "like_user_uuid": user_uuid
         }
         response = self.client.post(
             f"{self.comment_url}{self.comment1.id}/like/",
@@ -245,7 +245,7 @@ class ReportLikeTestCase(APITestCase):
 
         recomment_like_data = {
             "recomment": self.recomment1.id,
-            "like_user_uuid": self.user_uuid
+            "like_user_uuid": user_uuid
         }
         response = self.client.post(
             f"{self.recomment_url}{self.recomment1.id}/like/",
