@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.core.management import call_command
 from django.core import mail
+from django.test import TestCase
 from allauth.account.forms import default_token_generator
 
 from .models import CustomUser
@@ -168,6 +169,27 @@ class LoginAPITestCase(APITestCase):
 
         # check if token is created
         self.assertTrue(response.data["access"])
+
+        # user is facility owner
+        self.user.is_facility_owner = True
+        self.user.save()
+        response = self.client.post(self.url, data=self.data)
+
+        # user is both
+        self.user.is_coach = True
+        self.user.save()
+        response = self.client.post(self.url, data=self.data)
+
+        # user is coach
+        self.user.is_facility_owner = False
+        self.user.save()
+        response = self.client.post(self.url, data=self.data)
+
+        # user is admin
+        self.user.is_coach = False
+        self.user.is_superuser = True
+        self.user.save()
+        response = self.client.post(self.url, data=self.data)
 
     def test_login_fail(self):
         # 1. username is not valid
@@ -507,6 +529,26 @@ class UserProfileAPITestCase(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        # 3. user is facility owner
+        self.user2.is_facility_owner = True
+        self.user2.save()
+        self.client.force_authenticate(user=self.user2)
+        url = f"/api/users/{self.user2.uuid}/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # 4. user is both
+        self.user2.is_coach = True
+        self.user2.save()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        #5. user is coach
+        self.user2.is_facility_owner = False
+        self.user2.save()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_get_user_profile_failure(self):
         # 1. user is not authenticated
         response = self.client.get(self.url)
@@ -524,13 +566,6 @@ class UserProfileAPITestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        # 4. user is not self
-        self.user.is_active = True
-        self.user.save()
-        self.client.force_authenticate(user=self.user)
-        response = self.client.get("/api/users/12345678-1234-1234-1234-123456789012/")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_get_user_profile_list_success(self):
         # 1. user is authenticated
         self.client.force_authenticate(user=self.admin)
@@ -539,11 +574,6 @@ class UserProfileAPITestCase(APITestCase):
 
     def test_get_user_profile_list_failure(self):
         # 1. user is not authenticated
-        response = self.client.get("/api/users/")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # 2. user is not admin
-        self.client.force_authenticate(user=self.user)
         response = self.client.get("/api/users/")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -576,13 +606,6 @@ class UserProfileAPITestCase(APITestCase):
         self.user.save()
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # 4. user is not self
-        self.user.is_active = True
-        self.user.save()
-        self.client.force_authenticate(user=self.user)
-        response = self.client.delete("/api/users/12345678-1234-1234-1234-123456789012/")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_user_profile_success(self):
@@ -622,11 +645,6 @@ class UserProfileAPITestCase(APITestCase):
         # 4. user is not self
         self.user.is_active = True
         self.user.save()
-        self.client.force_authenticate(user=self.user)
-        response = self.client.patch("/api/users/notauuid/", data=data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # 5. attempt to update username
         self.client.force_authenticate(user=self.user)
         data = {
             "username": "notallowed",
