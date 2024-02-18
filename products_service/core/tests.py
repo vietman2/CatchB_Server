@@ -1,3 +1,5 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase
 
-# Create your tests here.
+class PlaceholderTest(APITestCase):
+    def test_placeholder(self):
+        self.assertEqual(1, 1)
