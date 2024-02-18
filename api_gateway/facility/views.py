@@ -1,3 +1,4 @@
+import json
 import requests
 from django.conf import settings
 from rest_framework import status
@@ -28,8 +29,10 @@ def get_coordinates(address):
 
         lat = response.json()['addresses'][0]['y']
         lng = response.json()['addresses'][0]['x']
+        jibun_address = response.json()['addresses'][0]['jibunAddress']
+        english_address = response.json()['addresses'][0]['englishAddress']
 
-        return lat, lng
+        return lat, lng, jibun_address, english_address
 
     except requests.RequestException as e:
         return Response(
@@ -61,17 +64,36 @@ def get_response(headers, body, url, method, query_params=None):
 
 class FacilityView(APIView):
     def post(self, request):
-        if request.data['address']['road_address_part1'] == '':
+        original_body = json.loads(request.body.decode('utf-8'))
+
+        if request.data['road_address_part1'] is "":
             return Response(
                 {'message': '주소를 입력해주세요.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        if request.data['road_address_part2'] is "":
+            return Response(
+                {'message': '상세 주소를 입력해주세요.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        query = request.data['road_address_part1']
+        lat, lng, jibun_address, english_address = get_coordinates(query)
+
+        modified_data = original_body
+
+        modified_data['latitude'] = lat
+        modified_data['longitude'] = lng
+        modified_data['jibun_address'] = jibun_address
+        modified_data['eng_address'] = english_address
 
         REQUEST_URL = f'{products_service_url}/api/facilities/'
 
-        body = request.body
+        modified_body = json.dumps(modified_data)
 
-        address = request.data['address']['road_address_part1']
-        lat, lng = get_coordinates(address)
-
-        return get_response(request.headers, body, REQUEST_URL, 'POST', {'lat': lat, 'lng': lng})
+        return get_response(
+            request.headers,
+            modified_body,
+            REQUEST_URL,
+            'POST'
+        )
