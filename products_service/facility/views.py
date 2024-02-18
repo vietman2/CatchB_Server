@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 from drf_spectacular.utils import extend_schema
 
+from region.models import Sigungu
 from .models import Facility
-from .serializers import FacilitySimpleSerializer, FacilityCreateSerializer, AddressSerializer
+from .serializers import FacilitySimpleSerializer, FacilityCreateSerializer
 
 class FacilityViewSet(ModelViewSet):
     queryset = Facility.objects.all()
@@ -18,25 +19,38 @@ class FacilityViewSet(ModelViewSet):
 
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
     def create(self, request, *args, **kwargs):
-        address_data = request.data['address']
-        address_data['latitude'] = request.query_params['lat']
-        address_data['longitude'] = request.query_params['lng']
+        sigungu = Sigungu.objects.get_sigungu_from_bcode(request.data['bcode'])
 
-        address_serializer = AddressSerializer(data=request.data['address'])
-        facility_serializer = FacilityCreateSerializer(data=request.data['facility'])
+        data = request.data
+        data['region'] = sigungu.pk
+
+        facility_serializer = FacilityCreateSerializer(data=data)
 
         try:
-            address_serializer.is_valid(raise_exception=True)
             facility_serializer.is_valid(raise_exception=True)
 
-            address = address_serializer.save()
-            facility_serializer.save(address=address)
+            facility_serializer.save()
         except ValidationError as e:
+            if "name" in e.detail:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": e.detail["name"][0]}
+                )
+            if "phone" in e.detail:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": e.detail["phone"][0]}
+                )
+            if "reg_code" in e.detail:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": e.detail["reg_code"][0]}
+                )
+
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"message": e.detail}
+                data={"message": "시설 등록 신청에 실패했습니다."}
             )
-
 
         return Response(
             status=status.HTTP_201_CREATED,
