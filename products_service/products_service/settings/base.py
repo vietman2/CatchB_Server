@@ -28,9 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
 
+    'coach.apps.CoachConfig',
     'facility.apps.FacilityConfig',
     'lesson.apps.LessonConfig',
-    'user_feedback.apps.UserFeedbackConfig',
     'region.apps.RegionConfig',
 
     'rest_framework',
