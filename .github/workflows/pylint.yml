@@ -24,6 +24,8 @@ jobs:
       DB_USER: ${{ secrets.DB_USER }}
       RABBITMQ_USER: ${{ secrets.RABBITMQ_USER }}
       RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
+      NAVER_API_KEY: ${{ secrets.NAVER_API_KEY }}
+      NAVER_API_KEY_ID: ${{ secrets.NAVER_API_KEY_ID }}
     strategy:
       matrix:
         python-version: ["3.9"]
