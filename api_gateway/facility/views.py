@@ -66,12 +66,12 @@ class FacilityView(APIView):
     def post(self, request):
         original_body = json.loads(request.body.decode('utf-8'))
 
-        if request.data['road_address_part1'] is "":
+        if request.data['road_address_part1'] == "":
             return Response(
                 {'message': '주소를 입력해주세요.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if request.data['road_address_part2'] is "":
+        if request.data['road_address_part2'] == "":
             return Response(
                 {'message': '상세 주소를 입력해주세요.'},
                 status=status.HTTP_400_BAD_REQUEST,

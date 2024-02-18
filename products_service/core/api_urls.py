@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from facility.views import FacilityViewSet
+from facility.views import FacilityViewSet      ## pylint: disable=no-name-in-module
 from lesson.views import LessonProductViewSet
 from region.views import RegionViewSet
 
