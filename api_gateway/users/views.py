@@ -57,8 +57,8 @@ class PasswordChangeView(APIView):
 class UserView(APIView):
     ## TODO: List 조회 구현 시 관리자만 가능하도록 권한 설정
     ## TODO: Partial Update 구현 시 본인만 가능하도록 권한 설정
-    def get(self, request):
-        uuid = request.query_params.get('uuid', None)
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.get('uuid', None)
         if not IsSelf.has_object_permission(None, request, None, uuid):
             return Response(
                 {'message': '권한이 없습니다.'},
