@@ -10,6 +10,7 @@ djangorestframework = "*"
 drf-spectacular = "*"
 python-decouple = "*"
 psycopg2-binary = "*"
+pillow = "*"
 
 [dev-packages]
 coverage = "*"
