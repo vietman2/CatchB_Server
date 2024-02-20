@@ -19,7 +19,7 @@ class SigunguManager(models.Manager):
             sigungu = self.get(sigungu_code=sigungu_code)
         # 2 exceptions: cannot convert to int, or no sigungu found
         except (ValueError, self.model.DoesNotExist):
-            sigungu = None
+            raise self.model.DoesNotExist
 
         return sigungu
 
