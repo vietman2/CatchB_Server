@@ -142,106 +142,103 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["facility"]
 
-    def convenience(self, list):
-        if 'Wi-Fi' in list:
+    def convenience(self, choices):
+        if 'Wi-Fi' in choices:
             self.validated_data['wifi'] = True
-        if '정수기 / 냉온수기' in list:
+        if '정수기 / 냉온수기' in choices:
             self.validated_data['water'] = True
-        if '주차가능 (무료)' in list:
+        if '주차가능 (무료)' in choices:
             self.validated_data['free_parking'] = True
-        if '주차가능 (유료)' in list:
+        if '주차가능 (유료)' in choices:
             self.validated_data['paid_parking'] = True
-        if '휴게공간' in list:
+        if '휴게공간' in choices:
             self.validated_data['resting_area'] = True
-        if '남녀화장실 구분' in list:
+        if '남녀화장실 구분' in choices:
             self.validated_data['separate_toilet'] = True
-        if '에어컨' in list:
+        if '에어컨' in choices:
             self.validated_data['air_conditioner'] = True
-        if '난방' in list:
+        if '난방' in choices:
             self.validated_data['heating'] = True
-        if '락커' in list:
+        if '락커' in choices:
             self.validated_data['locker'] = True
-        if '탈의실' in list:
+        if '탈의실' in choices:
             self.validated_data['changing_room'] = True
-        if '샤워실' in list:
+        if '샤워실' in choices:
             self.validated_data['shower'] = True
-        if '사우나' in list:
+        if '사우나' in choices:
             self.validated_data['sauna'] = True
-        if '금연시설' in list:
+        if '금연시설' in choices:
             self.validated_data['no_smoking'] = True
-        if '흡연실' in list:
+        if '흡연실' in choices:
             self.validated_data['smoking_room'] = True
-        if '어린이 놀이시설' in list:
+        if '어린이 놀이시설' in choices:
             self.validated_data['kids_room'] = True
-        if '노키즈존' in list:
+        if '노키즈존' in choices:
             self.validated_data['no_kids'] = True
-        if '자판기' in list:
+        if '자판기' in choices:
             self.validated_data['vending_machine'] = True
-        if '프로샵' in list:
+        if '프로샵' in choices:
             self.validated_data['proshop'] = True
 
-        return list
-
-    def equipment(self, list):
-        if "나무배트" in list:
+    def equipment(self, choices):
+        if "나무배트" in choices:
             self.validated_data['wood_bats'] = True
-        if "알루미늄배트" in list:
+        if "알루미늄배트" in choices:
             self.validated_data['aluminium_bats'] = True
-        if "글러브 대여" in list:
+        if "글러브 대여" in choices:
             self.validated_data['gloves'] = True
-        if "포수장비 대여" in list:
+        if "포수장비 대여" in choices:
             self.validated_data['catcher_gear'] = True
-        if "피칭머신" in list:
+        if "피칭머신" in choices:
             self.validated_data['pitching_machine'] = True
-        if "배팅티" in list:
+        if "배팅티" in choices:
             self.validated_data['batting_tee'] = True
-        if "헬멧 대여" in list:
+        if "헬멧 대여" in choices:
             self.validated_data['helmets'] = True
-        if "스피드건" in list:
+        if "스피드건" in choices:
             self.validated_data['speed_gun'] = True
-        if "영상분석" in list:
+        if "영상분석" in choices:
             self.validated_data['video_analysis'] = True
-        if "모니터" in list:
+        if "모니터" in choices:
             self.validated_data['monitor'] = True
-        if "스피커" in list:
+        if "스피커" in choices:
             self.validated_data['speaker'] = True
-        if "헬스기구" in list:
+        if "헬스기구" in choices:
             self.validated_data['fitness'] = True
 
-    def others(self, list):
-        if "단체 수업 가능" in list:
+    def others(self, choices):
+        if "단체 수업 가능" in choices:
             self.validated_data['group_lesson'] = True
-        if "개인 코치 영업 가능" in list:
+        if "개인 코치 영업 가능" in choices:
             self.validated_data['private_lesson'] = True
-        if "스파이크 착용 가능" in list:
+        if "스파이크 착용 가능" in choices:
             self.validated_data['cleats_allowed'] = True
-        if "야외 시설" in list:
+        if "야외 시설" in choices:
             self.validated_data['outdoor'] = True
-        if "반려동물 출입가능" in list:
+        if "반려동물 출입가능" in choices:
             self.validated_data['pets_allowed'] = True
-        if "휠체어 출입가능" in list:
+        if "휠체어 출입가능" in choices:
             self.validated_data['wheelchair'] = True
 
-    def custom_equipment(self, list):
+    def custom_equipment(self, choices):
         custom = []
-        for item in list:
+        for item in choices:
             custom.append(item)
 
         self.validated_data['custom_equipment'] = custom
 
-    def upload_images(self, list, uuid):
+    def upload_images(self, choices, uuid):
         images = []
-        for image in list:
+        for image in choices:
             save_path = f"facility_images/{uuid}/{image.name}"
             path = default_storage.save(save_path, image)
             images.append(path)
 
         self.validated_data['images'] = images
 
-    def save(self, facility, **kwargs):
-        self.validated_data['facility'] = facility
+    def save(self, **kwargs):
         facility_info = FacilityInfo.objects.create(
             **self.validated_data
         )
-        
+
         return facility_info
