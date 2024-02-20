@@ -74,25 +74,30 @@ class FacilityInfo(models.Model):
     smoking_room    = models.BooleanField(default=False, db_comment="흡연실")
     kids_room       = models.BooleanField(default=False, db_comment="키즈룸")
     no_kids         = models.BooleanField(default=False, db_comment="노키즈존")
+    vending_machine     = models.BooleanField(default=False, db_comment="자판기")
+    proshop             = models.BooleanField(default=False, db_comment="프로샵")
 
     ## 시설 정보3: 구비 시설
-    num_mounds       = models.PositiveIntegerField(db_comment="마운드 수")
-    num_plates       = models.PositiveIntegerField(db_comment="타석 수")
-    wood_bats        = models.BooleanField(default=False, db_comment="목재배트")
-    aluminium_bats   = models.BooleanField(default=False, db_comment="알루미늄배트")
-    glove            = models.BooleanField(default=False, db_comment="글러브")
-    catcher_gear     = models.BooleanField(default=False, db_comment="캐쳐장비")
-    pitching_machine = models.BooleanField(default=False, db_comment="피칭머신")
-    batting_tee      = models.BooleanField(default=False, db_comment="배팅티")
-    helmets          = models.BooleanField(default=False, db_comment="헬멧")
-    speed_gun        = models.BooleanField(default=False, db_comment="스피드건")
-    video_analysis   = models.BooleanField(default=False, db_comment="영상분석")
-    monitor          = models.BooleanField(default=False, db_comment="모니터")
-    speaker          = models.BooleanField(default=False, db_comment="스피커")
-    fitness          = models.BooleanField(default=False, db_comment="피트니스")
-    vending_machine  = models.BooleanField(default=False, db_comment="자판기")
-    proshop          = models.BooleanField(default=False, db_comment="프로샵")
+    num_mounds          = models.PositiveIntegerField(db_comment="마운드 수")
+    num_plates          = models.PositiveIntegerField(db_comment="타석 수")
+    wood_bats           = models.BooleanField(default=False, db_comment="목재배트")
+    aluminium_bats      = models.BooleanField(default=False, db_comment="알루미늄배트")
+    gloves              = models.BooleanField(default=False, db_comment="글러브")
+    catcher_gear        = models.BooleanField(default=False, db_comment="캐쳐장비")
+    pitching_machine    = models.BooleanField(default=False, db_comment="피칭머신")
+    batting_tee         = models.BooleanField(default=False, db_comment="배팅티")
+    helmets             = models.BooleanField(default=False, db_comment="헬멧")
+    speed_gun           = models.BooleanField(default=False, db_comment="스피드건")
+    video_analysis      = models.BooleanField(default=False, db_comment="영상분석")
+    monitor             = models.BooleanField(default=False, db_comment="모니터")
+    speaker             = models.BooleanField(default=False, db_comment="스피커")
+    fitness             = models.BooleanField(default=False, db_comment="피트니스")
     ## 커스텀 array field
+    custom_equipment    = ArrayField(
+        models.CharField(max_length=30),
+        default=list,
+        db_comment="커스텀 장비"
+    )
 
     ## 시설 정보4: 기타
     group_lesson    = models.BooleanField(default=False, db_comment="그룹레슨")
@@ -103,8 +108,10 @@ class FacilityInfo(models.Model):
     wheelchair      = models.BooleanField(default=False, db_comment="휠체어")
 
     ## 공개 정보: 시설 이미지 (주소)
-    images      = ArrayField(models.ImageField(upload_to="facility_images"), db_comment="시설 이미지", blank=True, null=True)
-
+    images          = ArrayField(
+        models.ImageField(upload_to="facility_images"),
+        db_comment="시설 이미지",
+    )
 
     objects = models.Manager()
 
