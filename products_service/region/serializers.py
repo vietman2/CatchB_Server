@@ -19,5 +19,5 @@ class SigunguSerializer(serializers.ModelSerializer):
         return str(obj.sigungu_code)
 
     def get_name(self, obj):
-        sido = obj.sido_code.sido_name
+        sido = obj.sido.sido_name
         return f"{sido} {obj.sigungu_name}"

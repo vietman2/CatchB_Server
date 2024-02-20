@@ -22,7 +22,7 @@ class RegionViewSet(ModelViewSet):
         sigungu_by_sido = {}
 
         for sigungu in sigungu_list:
-            sido_name = sigungu.sido_code.sido_name
+            sido_name = sigungu.sido.sido_name
             if sido_name not in sigungu_by_sido:
                 sigungu_by_sido[sido_name] = []
             sigungu_by_sido[sido_name].append(sigungu.sigungu_name)
