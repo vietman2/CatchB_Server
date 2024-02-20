@@ -14,12 +14,8 @@ class Sido(models.Model):
 class SigunguManager(models.Manager):
     def get_sigungu_from_bcode(self, bcode):
         ## leave the first 5 digits and replace the rest with 0s
-        try:
-            sigungu_code = int(bcode[:5] + "00000")
-            sigungu = self.get(sigungu_code=sigungu_code)
-        # 2 exceptions: cannot convert to int, or no sigungu found
-        except (ValueError, self.model.DoesNotExist):
-            raise self.model.DoesNotExist
+        sigungu_code = int(bcode[:5] + "00000")
+        sigungu = self.get(sigungu_code=sigungu_code)
 
         return sigungu
 

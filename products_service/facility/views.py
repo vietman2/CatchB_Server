@@ -1,4 +1,5 @@
 from django.utils.datastructures import MultiValueDictKeyError
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -55,7 +56,20 @@ class FacilityViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "시설 등록 신청에 실패했습니다."}
             )
-        except (Sigungu.DoesNotExist, MultiValueDictKeyError):
+        except ObjectDoesNotExist:
+            # ObjectDoesNotExist: sigungu does not exist
+            # MultiValueDictKeyError: bcode does not exist
+            # ValueError: invalid bcode: cannot convert to int
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"message": "존재하지 않는 지역코드입니다."}
+            )
+        except MultiValueDictKeyError:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"message": "지역 코드를 입력해주세요."}
+            )
+        except ValueError:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "올바른 지역 코드를 입력해주세요."}
@@ -101,13 +115,15 @@ class FacilityViewSet(ModelViewSet):
                 raise ValidationError("이미 등록된 시설 정보입니다.")
             facility_info_serializer.is_valid(raise_exception=True)
 
-            facility_info_serializer.convenience(list=request.POST.getlist('convenience'))
-            facility_info_serializer.equipment(list=request.POST.getlist('equipment'))
-            facility_info_serializer.others(list=request.POST.getlist('others'))
-            facility_info_serializer.custom_equipment(list=request.POST.getlist('custom'))
+            facility_info_serializer.convenience(request.POST.getlist('convenience'))
+            facility_info_serializer.equipment(request.POST.getlist('equipment'))
+            facility_info_serializer.others(request.POST.getlist('others'))
+            facility_info_serializer.custom_equipment(request.POST.getlist('custom'))
             facility_info_serializer.upload_images(request.FILES.getlist('images'), facility.uuid)
 
-            facility_info_serializer.save(facility=facility)
+            facility_info_serializer.validated_data['facility'] = facility
+
+            facility_info_serializer.save()
         except ValidationError as e:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,

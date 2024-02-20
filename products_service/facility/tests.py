@@ -89,36 +89,41 @@ class FacilityAPITestCase(APITestCase):
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        # 3. no name
+        # 3. invalid bcode
+        self.data["bcode"] = "asdfasdfas"
+        response = self.client.post(self.url, self.data)
+        self.assertEqual(response.status_code, 400)
+
+        # 4. no name
         self.data["bcode"] = "1111000000"
         del self.data["name"]
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        # 4. no phone
+        # 5. no phone
         self.data["name"] = "테스트 시설"
         del self.data["phone"]
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        # 5. no reg_code
+        # 6. no reg_code
         self.data["phone"] = "010-1234-5678"
         del self.data["reg_code"]
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        # 6. wrong reg_code
+        # 7. wrong reg_code
         self.data["reg_code"] = "0123456789"
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        # 7. other errors
+        # 8. other errors
         self.data["reg_code"] = "012-34-56789"
         del self.data["latitude"]
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        # 8. already existing reg_code
+        # 9. already existing reg_code
         self.data["latitude"] = 37.123456
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 201)
@@ -138,7 +143,7 @@ class FacilityAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 201)
 
         FacilityInfo.objects.get().delete()
-        
+
         response = self.client.post(info_url, self.info_data_blank, format="multipart")
         self.assertEqual(response.status_code, 201)
 
