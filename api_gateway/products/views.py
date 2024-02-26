@@ -108,3 +108,14 @@ class FacilityInfoView(APIView):
             REQUEST_URL,
             'POST'
         )
+
+class RegionView(APIView):
+    def get(self, request):
+        REQUEST_URL = f'{products_service_url}/api/regions/'
+
+        return get_response(
+            request.headers,
+            request.body,
+            REQUEST_URL,
+            'GET'
+        )
