@@ -28,8 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
 
-    'users.apps.UsersConfig',
-
     'rest_framework',
 ]
 
