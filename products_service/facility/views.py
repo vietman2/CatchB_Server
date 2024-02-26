@@ -106,7 +106,7 @@ class FacilityViewSet(ModelViewSet):
 
     @action(detail=True, methods=["post"])
     @extend_schema(summary="시설 정보 입력", tags=["시설"])
-    def info(self, request, *args, **kwargs):
+    def info(self, request):
         facility = self.get_object()
         facility_info_serializer = FacilityInfoCreateSerializer(data=request.data)
 
