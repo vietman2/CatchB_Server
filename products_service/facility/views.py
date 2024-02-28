@@ -28,7 +28,7 @@ class FacilityViewSet(ModelViewSet):
         try:
             sigungu = Sigungu.objects.get_sigungu_from_bcode(request.data['bcode'])
 
-            data = request.POST.copy()
+            data = request.data.copy()
             data['region'] = sigungu.pk
 
             facility_serializer = FacilityCreateSerializer(data=data)
