@@ -5,6 +5,9 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from core.permissions import IsLoggedIn
+from core.views import get_response
+
 products_service_url = settings.SERVICE_URLS['products_service']
 
 def get_coordinates(address):
@@ -40,30 +43,14 @@ def get_coordinates(address):
             status=status.HTTP_502_BAD_GATEWAY,
         )
 
-def get_response(headers, body, url, method, query_params=None):
-    try:
-        response = requests.request(
-            method=method,
-            url=url,
-            headers=headers,
-            data=body,
-            params=query_params,
-            timeout=10,
-        )
-
-        return Response(
-            response.json(),
-            status=response.status_code,
-        )
-
-    except requests.RequestException as e:
-        return Response(
-            {'message': str(e)},
-            status=status.HTTP_502_BAD_GATEWAY,
-        )
-
 class FacilityView(APIView):
     def post(self, request):
+        if not IsLoggedIn().has_permission(request, self):
+            return Response(
+                {'message': '로그인이 필요합니다.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
         original_body = json.loads(request.body.decode('utf-8'))
 
         if request.data['road_address_part1'] == "":
@@ -100,6 +87,12 @@ class FacilityView(APIView):
 
 class FacilityInfoView(APIView):
     def post(self, request, uuid):
+        if not IsLoggedIn().has_permission(request, self):
+            return Response(
+                {'message': '로그인이 필요합니다.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
         REQUEST_URL = f'{products_service_url}/api/facilities/{uuid}/info/'
 
         return get_response(
