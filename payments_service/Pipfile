@@ -9,6 +9,7 @@ django-extensions = "*"
 djangorestframework = "*"
 drf-spectacular = "*"
 python-decouple = "*"
+pillow = "*"
 
 [dev-packages]
 coverage = "*"
