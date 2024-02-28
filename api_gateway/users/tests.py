@@ -1,7 +1,7 @@
 import requests_mock
 from rest_framework.test import APITestCase
 
-class TestPlaceholder(APITestCase):
+class UsersAPITests(APITestCase):
     def setUp(self):
         self.user_server = 'http://localhost:8005'
 
