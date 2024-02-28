@@ -17,6 +17,11 @@ def get_user_info(request):
     decoded = jwt.decode(access, key, algorithms='HS256')
     return decoded
 
+class IsLoggedIn(BasePermission):
+    def has_permission(self, request, view):
+        user_info = get_user_info(request)
+        return user_info is not None
+
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         user_info = get_user_info(request)
