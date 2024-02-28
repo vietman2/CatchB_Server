@@ -10,8 +10,5 @@ class BankViewSet(ModelViewSet):
     serializer_class = BankListSerializer
     http_method_names = ["get"]
 
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-    
     def retrieve(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

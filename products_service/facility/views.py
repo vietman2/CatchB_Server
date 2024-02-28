@@ -24,7 +24,7 @@ class FacilityViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
-    def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):     ## pylint: disable=R0911
         try:
             sigungu = Sigungu.objects.get_sigungu_from_bcode(request.data['bcode'])
 
@@ -80,7 +80,7 @@ class FacilityViewSet(ModelViewSet):
             data={"message": "시설 등록 신청이 완료되었습니다.", "uuid": facility.uuid}
         )
 
-    def custom_error_message(self, e):
+    def custom_error_message(self, e):      ## pylint: disable=R0911
         if "num_mounds" in e.detail:
             return e.detail["num_mounds"][0]
         if "num_plates" in e.detail:

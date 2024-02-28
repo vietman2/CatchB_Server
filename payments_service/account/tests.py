@@ -1,22 +1,25 @@
 from rest_framework.test import APITestCase
 
 class BankListAPITestCase(APITestCase):
+    def setUp(self):
+        self.url = "/api/banks/"
+
     def test_unallowed_methods(self):
-        response = self.client.post("/api/banks/")
+        response = self.client.post(self.url)
         self.assertEqual(response.status_code, 405)
 
-        response = self.client.put("/api/banks/")
+        response = self.client.put(self.url + "1/")
         self.assertEqual(response.status_code, 405)
 
-        response = self.client.patch("/api/banks/")
+        response = self.client.patch(self.url + "1/")
         self.assertEqual(response.status_code, 405)
 
-        response = self.client.delete("/api/banks/")
+        response = self.client.delete(self.url + "1/")
         self.assertEqual(response.status_code, 405)
 
-        response = self.client.get("/api/banks/1/")
+        response = self.client.get(self.url + "1/")
         self.assertEqual(response.status_code, 405)
 
     def test_get_list(self):
-        response = self.client.get("/api/banks/")
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)

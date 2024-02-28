@@ -142,7 +142,7 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["facility"]
 
-    def convenience(self, choices):
+    def convenience(self, choices):     ## pylint: disable=R0912
         if 'Wi-Fi' in choices:
             self.validated_data['wifi'] = True
         if '정수기 / 냉온수기' in choices:
