@@ -61,7 +61,6 @@ class FacilityViewSet(ModelViewSet):
                 )
 
         def handle_error(e):
-            print(e.detail)
             if "name" in e.detail:
                 return Response(
                     status=status.HTTP_400_BAD_REQUEST,
@@ -118,33 +117,34 @@ class FacilityViewSet(ModelViewSet):
             data={"message": "시설 등록 신청이 완료되었습니다.", "uuid": facility.uuid}
         )
 
+    def custom_error_message(self, e):      ## pylint: disable=R0911
+        if "num_mounds" in e.detail:
+            return e.detail["num_mounds"][0]
+        if "num_plates" in e.detail:
+            return e.detail["num_plates"][0]
+        if "sunday_close" in e.detail:
+            return e.detail["sunday_close"][0]
+        if "sunday_open" in e.detail:
+            return e.detail["sunday_open"][0]
+        if "saturday_close" in e.detail:
+            return e.detail["saturday_close"][0]
+        if "saturday_open" in e.detail:
+            return e.detail["saturday_open"][0]
+        if "weekday_close" in e.detail:
+            return e.detail["weekday_close"][0]
+        if "weekday_open" in e.detail:
+            return e.detail["weekday_open"][0]
+        if "intro" in e.detail:
+            return e.detail["intro"][0]
+        if "images" in e.detail:
+            return "아카데미를 소개하는 이미지를 최소 1장 업로드 해주세요."
+
+        return "시설 정보 입력에 실패했습니다."
+
+
     @action(detail=True, methods=["post"])
     @extend_schema(summary="시설 정보 입력", tags=["시설"])
-    def info(self, request):
-        def custom_error_message(self, e):      ## pylint: disable=R0911
-            if "num_mounds" in e.detail:
-                return e.detail["num_mounds"][0]
-            if "num_plates" in e.detail:
-                return e.detail["num_plates"][0]
-            if "sunday_close" in e.detail:
-                return e.detail["sunday_close"][0]
-            if "sunday_open" in e.detail:
-                return e.detail["sunday_open"][0]
-            if "saturday_close" in e.detail:
-                return e.detail["saturday_close"][0]
-            if "saturday_open" in e.detail:
-                return e.detail["saturday_open"][0]
-            if "weekday_close" in e.detail:
-                return e.detail["weekday_close"][0]
-            if "weekday_open" in e.detail:
-                return e.detail["weekday_open"][0]
-            if "intro" in e.detail:
-                return e.detail["intro"][0]
-            if "images" in e.detail:
-                return "아카데미를 소개하는 이미지를 최소 1장 업로드 해주세요."
-
-            return "시설 정보 입력에 실패했습니다."
-
+    def info(self, request, *args, **kwargs):
         facility = self.get_object()
         facility_info_serializer = FacilityInfoCreateSerializer(data=request.data)
 
@@ -165,7 +165,7 @@ class FacilityViewSet(ModelViewSet):
         except ValidationError as e:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"message": custom_error_message(e)}
+                data={"message": self.custom_error_message(e)}
             )
 
         return Response(
