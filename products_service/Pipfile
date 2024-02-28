@@ -11,6 +11,7 @@ drf-spectacular = "*"
 python-decouple = "*"
 psycopg2-binary = "*"
 pillow = "*"
+requests = "*"
 
 [dev-packages]
 coverage = "*"
