@@ -65,7 +65,7 @@ class FacilityAPITestCase(APITestCase):
             "custom": [],
             "images": [self.generate_photo_file()],
         }
-    """
+
     def test_facility_list(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -115,7 +115,7 @@ class FacilityAPITestCase(APITestCase):
 
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
-    """
+
     def test_facility_info_create_success_full(self):
         self.data["bcode"] = "1111000000"
         response = self.client.post(self.url, self.data)

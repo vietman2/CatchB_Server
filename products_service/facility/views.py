@@ -26,7 +26,7 @@ class FacilityViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
-    def create(self, request, *args, **kwargs):     ## pylint: disable=R0911
+    def create(self, request, *args, **kwargs):     ## pylint: disable=R0914, W0613
         def get_coordinates(address):
             naver_geocode_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode'
             headers = {
