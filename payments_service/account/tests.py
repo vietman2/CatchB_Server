@@ -1,7 +1,5 @@
 from rest_framework.test import APITestCase
 
-from account.models import Bank
-
 class BankListAPITestCase(APITestCase):
     def test_unallowed_methods(self):
         response = self.client.post("/api/banks/")
