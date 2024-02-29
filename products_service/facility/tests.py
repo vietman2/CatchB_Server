@@ -1,5 +1,6 @@
 from io import BytesIO
 from PIL import Image
+from unittest.mock import patch
 from rest_framework.test import APITestCase
 
 from .models import FacilityInfo
@@ -70,12 +71,17 @@ class FacilityAPITestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_facility_create_success(self):
+    @patch("facility.views.get_coordinates")
+    def test_facility_create_success(self, mock_get_coordinates):
         self.data["bcode"] = "1111000000"
+
+        mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 201)
 
-    def test_facility_create_failure(self):
+    @patch("facility.views.get_coordinates")
+    def test_facility_create_failure(self, mock_get_coordinates):
+        mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
         # 1. no bcode
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
@@ -113,11 +119,11 @@ class FacilityAPITestCase(APITestCase):
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
-
-    def test_facility_info_create_success_full(self):
+    @patch("facility.views.get_coordinates")
+    def test_facility_info_create_success_full(self, mock_get_coordinates):
         self.data["bcode"] = "1111000000"
+
+        mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 201)
 
@@ -132,7 +138,9 @@ class FacilityAPITestCase(APITestCase):
         response = self.client.post(info_url, self.info_data_blank, format="multipart")
         self.assertEqual(response.status_code, 201)
 
-    def test_facility_info_create_failure_already_exists(self):
+    @patch("facility.views.get_coordinates")
+    def test_facility_info_create_failure_already_exists(self, mock_get_coordinates):
+        mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
         self.data["bcode"] = "1111000000"
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 201)
@@ -146,7 +154,9 @@ class FacilityAPITestCase(APITestCase):
         response = self.client.post(info_url, self.info_data_full, format="multipart")
         self.assertEqual(response.status_code, 400)
 
-    def test_facility_info_create_failure(self):
+    @patch("facility.views.get_coordinates")
+    def test_facility_info_create_failure(self, mock_get_coordinates):
+        mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
         self.data["bcode"] = "1111000000"
         response = self.client.post(self.url, self.data)
 

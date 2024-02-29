@@ -16,6 +16,39 @@ from .serializers import (
     FacilityInfoCreateSerializer
 )
 
+def get_coordinates(address):
+    naver_geocode_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode'
+    headers = {
+        'X-NCP-APIGW-API-KEY-ID': settings.NAVER_CLIENT_ID,
+        'X-NCP-APIGW-API-KEY': settings.NAVER_CLIENT_SECRET,
+        'Accept': 'application/json',
+    }
+    params = {
+        'query': address,
+    }
+
+    try:
+        response = requests.request(
+                method='GET',
+                url=naver_geocode_url,
+                headers=headers,
+                params=params,
+                timeout=10,
+            )
+
+        lat = response.json()['addresses'][0]['y']
+        lng = response.json()['addresses'][0]['x']
+        jibun_address = response.json()['addresses'][0]['jibunAddress']
+        english_address = response.json()['addresses'][0]['englishAddress']
+
+        return lat, lng, jibun_address, english_address
+
+    except requests.RequestException as e:
+        return Response(
+            {'message': str(e)},
+            status=status.HTTP_502_BAD_GATEWAY,
+        )
+
 class FacilityViewSet(ModelViewSet):
     queryset = Facility.objects.all()
     serializer_class = FacilitySimpleSerializer
@@ -27,39 +60,6 @@ class FacilityViewSet(ModelViewSet):
 
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
     def create(self, request, *args, **kwargs):     ## pylint: disable=R0914, W0613
-        def get_coordinates(address):
-            naver_geocode_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode'
-            headers = {
-                'X-NCP-APIGW-API-KEY-ID': settings.NAVER_CLIENT_ID,
-                'X-NCP-APIGW-API-KEY': settings.NAVER_CLIENT_SECRET,
-                'Accept': 'application/json',
-            }
-            params = {
-                'query': address,
-            }
-
-            try:
-                response = requests.request(
-                        method='GET',
-                        url=naver_geocode_url,
-                        headers=headers,
-                        params=params,
-                        timeout=10,
-                    )
-
-                lat = response.json()['addresses'][0]['y']
-                lng = response.json()['addresses'][0]['x']
-                jibun_address = response.json()['addresses'][0]['jibunAddress']
-                english_address = response.json()['addresses'][0]['englishAddress']
-
-                return lat, lng, jibun_address, english_address
-
-            except requests.RequestException as e:
-                return Response(
-                    {'message': str(e)},
-                    status=status.HTTP_502_BAD_GATEWAY,
-                )
-
         def handle_error(e):
             if "name" in e.detail:
                 return Response(
