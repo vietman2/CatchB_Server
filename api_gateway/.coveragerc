@@ -1,0 +1,13 @@
+[run]
+relative_files = True
+source = .
+branch = True
+omit = 
+    */migrations/*
+    manage.py
+    */asgi.py
+    */wsgi.py
+    */settings.py
+
+[report]
+show_missing=True

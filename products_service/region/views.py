@@ -16,41 +16,23 @@ class RegionViewSet(ModelViewSet):
         sido_list = Sido.objects.all()
         sido_serializer = SidoSerializer(sido_list, many=True)
 
-        sigungu_list = Sigungu.objects.all()
-        sigungu_serializer = SigunguSerializer(sigungu_list, many=True)
+        sigungu = {}
+        for sido in sido_list:
+            sido_label = sido.label
+            if sido_label not in sigungu:
+                sigungu[sido_label] = []
 
-        sigungu_by_sido = {}
-
-        for sigungu in sigungu_list:
-            sido_name = sigungu.sido_code.sido_name
-            if sido_name not in sigungu_by_sido:
-                sigungu_by_sido[sido_name] = []
-            sigungu_by_sido[sido_name].append(sigungu.sigungu_name)
+            sigungu_list = Sigungu.objects.filter(sido=sido)
+            sigungu_serializer = SigunguSerializer(sigungu_list, many=True)
+            sigungu[sido_label] = sigungu_serializer.data
 
         return Response(
             status=status.HTTP_200_OK,
             data={
                 "sido": sido_serializer.data,
-                "sigungu": sigungu_serializer.data,
-                "sigungu_by_sido": sigungu_by_sido,
+                "sigungu": sigungu,
             }
         )
-
-    @extend_schema(exclude=True)
-    def create(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    @extend_schema(exclude=True)
-    def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    @extend_schema(exclude=True)
-    def partial_update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    @extend_schema(exclude=True)
-    def destroy(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @extend_schema(exclude=True)
     def retrieve(self, request, *args, **kwargs):

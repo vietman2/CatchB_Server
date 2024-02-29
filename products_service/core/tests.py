@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
 
-class Test(APITestCase):
-    def test(self):
+class PlaceholderTest(APITestCase):
+    def test_placeholder(self):
         self.assertEqual(1, 1)
