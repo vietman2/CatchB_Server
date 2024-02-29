@@ -1,6 +1,6 @@
 from io import BytesIO
-from PIL import Image
 from unittest.mock import patch
+from PIL import Image
 from rest_framework.test import APITestCase
 
 from .models import FacilityInfo
