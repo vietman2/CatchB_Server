@@ -3,6 +3,7 @@ from django.db import models
 class Sido(models.Model):
     sido_code = models.PositiveBigIntegerField(primary_key=True, db_comment="시/도 코드")
     sido_name = models.CharField(max_length=20, db_comment="시/도 이름")
+    label     = models.CharField(max_length=2, db_comment="라벨")
 
     objects = models.Manager()
 
