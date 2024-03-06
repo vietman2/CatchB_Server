@@ -67,4 +67,3 @@ class UserProfile(models.Model):
     ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
     # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
     # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
-
