@@ -3,37 +3,8 @@ import string
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from user.models import CustomUser
 from .enums import CouponStatus, CouponIssuerType, CouponType
-
-class Coupon(models.Model):
-    user            = models.ForeignKey(
-        'user.CustomUser',
-        on_delete=models.PROTECT,
-        related_name='user_coupons'
-    )
-    coupon_class    = models.ForeignKey(
-        'coupon.CouponClass',
-        on_delete=models.PROTECT,
-        related_name='coupon_class'
-    )
-    issued_at       = models.DateTimeField()
-    status          = models.CharField(
-        max_length=3,
-        choices=CouponStatus.choices,
-        default=CouponStatus.ACTIVE
-    )
-    valid_until     = models.DateTimeField(null=True)
-    used_at         = models.DateTimeField(null=True, default=None)
-
-    objects = models.Manager()
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-    class Meta:
-        db_table = 'coupon'
-        verbose_name = _('coupon')
-        verbose_name_plural = _('coupons')
 
 class CouponClass(models.Model):
     def coupon_code_generator():    # pylint: disable=E0211
@@ -51,15 +22,15 @@ class CouponClass(models.Model):
         default=coupon_code_generator,
         editable=False
     )
-    coupon_name         = models.CharField(max_length=100)
-    coupon_description  = models.CharField(max_length=100)
+    coupon_name         = models.CharField(max_length=20)
+    coupon_description  = models.CharField(max_length=50)
     coupon_issuer_type  = models.CharField(
         max_length=3,
         choices=CouponIssuerType.choices,
         default=CouponIssuerType.NULL
     )
     coupon_issuer       = models.ForeignKey(
-        'user.CustomUser',
+        CustomUser,
         on_delete=models.PROTECT,
         related_name='coupon_issuer'
     )
@@ -83,5 +54,28 @@ class CouponClass(models.Model):
 
     class Meta:
         db_table = 'coupon_class'
-        verbose_name = _('coupon class')
-        verbose_name_plural = _('coupon classes')
+
+class Coupon(models.Model):
+    user            = models.ForeignKey(
+        CustomUser,
+        on_delete=models.PROTECT,
+        related_name='user_coupons'
+    )
+    coupon_class    = models.ForeignKey(
+        CouponClass,
+        on_delete=models.PROTECT,
+        related_name='coupon_class'
+    )
+    issued_at       = models.DateTimeField()
+    status          = models.CharField(
+        max_length=3,
+        choices=CouponStatus.choices,
+        default=CouponStatus.ACTIVE
+    )
+    valid_until     = models.DateTimeField(null=True)
+    used_at         = models.DateTimeField(null=True, default=None)
+
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'coupon'

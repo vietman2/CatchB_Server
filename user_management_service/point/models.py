@@ -6,8 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from user.models import CustomUser
 from .enums import PointStatus
 
-
-
 class PointsUseDetails(models.Model):
     user        = models.ForeignKey(
         CustomUser,
@@ -15,17 +13,15 @@ class PointsUseDetails(models.Model):
         null=True,
         related_name='user_points_use'
     )
-    title       = models.CharField(max_length=20, db_comment="포인트 사용 제목")
-    description = models.CharField(max_length=100, db_comment="포인트 사용 설명")
-    points      = models.IntegerField(default=0, db_comment="사용 포인트")
+    title       = models.CharField(max_length=20)
+    description = models.CharField(max_length=50)
+    points      = models.IntegerField(default=0)
     used_at     = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
 
     class Meta:
         db_table = 'points_use_details'
-        verbose_name = _('points use details')
-        verbose_name_plural = _('points use details')
         ordering = ['-used_at']
 
 class PointsEarnDetails(models.Model):
@@ -35,18 +31,16 @@ class PointsEarnDetails(models.Model):
         null=True,
         related_name='user_points_earn'
     )
-    title       = models.CharField(max_length=20, db_comment="포인트 적립 제목")
-    description = models.CharField(max_length=100, db_comment="포인트 적립 설명")
-    points      = models.IntegerField(default=0, db_comment="적립 포인트")
+    title       = models.CharField(max_length=20)
+    description = models.CharField(max_length=50)
+    points      = models.IntegerField(default=0)
     earned_at   = models.DateTimeField(auto_now_add=True)
-    valid_days  = models.IntegerField(default=0, db_comment="유효기간 (일수))")
+    valid_days  = models.IntegerField(default=0)
 
     objects = models.Manager()
 
     class Meta:
         db_table = 'points_earn_details'
-        verbose_name = _('points earn details')
-        verbose_name_plural = _('points earn details')
         ordering = ['-earned_at']
 
 class PointsManager(models.Manager):
@@ -138,8 +132,8 @@ class UserPoints(models.Model):
         null=True,
         related_name='user_points'
     )
-    points      = models.IntegerField(db_comment="적립 포인트")
-    used_points = models.IntegerField(default=0, db_comment="사용 포인트")
+    points      = models.IntegerField()
+    used_points = models.IntegerField(default=0)
     created_at  = models.DateTimeField(auto_now_add=True)
     status      = models.CharField(
         max_length=10,
@@ -156,6 +150,4 @@ class UserPoints(models.Model):
 
     class Meta:
         db_table = 'points'
-        verbose_name = _('points')
-        verbose_name_plural = _('points')
         ordering = ['-created_at']

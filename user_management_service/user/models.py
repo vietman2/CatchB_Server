@@ -1,18 +1,14 @@
 import uuid
 from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator as Min
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
-from .managers import UserManager
 from .enums import ExperienceTierChoices, RegisterRouteChoices
+from .managers import UserManager
 from .validators import CustomUsernameValidator
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username_validator = CustomUsernameValidator()
-    min_length_validator = MinLengthValidator(4)
-
     uuid            = models.UUIDField(
         primary_key=True,
         db_index=True,
@@ -22,74 +18,32 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     username        = models.CharField(
         max_length=20,
         unique=True,
-        db_comment='아이디',
-        help_text='Required. 4~20. Letters, digits and @/./+/-/_ only.',
-        validators=[username_validator, min_length_validator],
+        validators=[CustomUsernameValidator(), Min(4)],
     )
-    first_name      = models.CharField(max_length=50, db_comment='이름')
-    last_name       = models.CharField(max_length=50, db_comment='성')
-    email           = models.EmailField(unique=True, db_comment='이메일')
-    phone_number    = PhoneNumberField(unique=True, db_comment='전화번호')
+    first_name      = models.CharField(max_length=20)
+    last_name       = models.CharField(max_length=20)
+    email           = models.EmailField(unique=True)
+    phone_number    = PhoneNumberField(unique=True)
 
-    date_joined     = models.DateTimeField(auto_now_add=True, db_comment='가입일')
-    deleted_at      = models.DateTimeField(db_comment='탈퇴일', null=True, blank=True)
-
-    ############################################################################################
-
-    nickname = models.CharField(max_length=150, db_comment='닉네임', null=True, blank=True)
-    birth_date = models.DateField(db_comment='생년월일', null=True, blank=True)
-    gender = models.CharField(max_length=1, db_comment='성별', null=True, blank=True)
-
-    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
-    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
-    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
+    date_joined     = models.DateTimeField(auto_now_add=True)
 
     experience_tier = models.IntegerField(
         choices=ExperienceTierChoices.choices,
-        db_comment='야구 경험 등급',
         default=ExperienceTierChoices.UNDEFINED
     )
-
     register_route = models.IntegerField(
         choices=RegisterRouteChoices.choices,
-        db_comment='가입 경로',
         default=RegisterRouteChoices.UNDEFINED
     )
 
-    ############################################################################################
-
-    is_superuser    = models.BooleanField(
-        default=False,
-        db_comment='슈퍼유저 여부',
-        help_text='Designates that this user has all permissions without '
-                    'explicitly assigning them.',
-    )
-    is_active       = models.BooleanField(
-        default=True,
-        db_comment='계정 활성화 여부',
-        help_text='Designates whether this user should be treated as active. '
-                    'Unselect this instead of deleting accounts.',
-    )
-    is_verified     = models.BooleanField(
-        default=False,
-        db_comment='전화번호 인증 여부'
-    )
-    is_facility_owner = models.BooleanField(
-        default=False,
-        db_comment='시설 소유자 여부'
-    )
-    is_coach = models.BooleanField(
-        default=False,
-        db_comment='코치 여부'
-    )
+    is_superuser    = models.BooleanField(default=False)
+    is_active       = models.BooleanField(default=True)
+    is_verified     = models.BooleanField(default=False)
+    is_facility_owner = models.BooleanField(default=False)
+    is_coach = models.BooleanField(default=False)
 
     USERNAME_FIELD  = 'username'
-    REQUIRED_FIELDS = [
-        'first_name',
-        'last_name',
-        'email',
-        'phone_number',
-    ]
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'phone_number']
 
     objects = UserManager()
 
@@ -99,5 +53,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'user'
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    nickname = models.CharField(max_length=15)
+    birth_date = models.DateField()
+    gender = models.CharField(max_length=1)
+
+    ## region = models.IntegerField(choices=RegionChoices.choices, db_comment='지역')
+    # baseball_experience = models.IntegerField(choices=CareerChoices.choices, db_comment='야구 경력')
+    # profile_image_url = models.URLField(db_comment='프로필 이미지 URL')
+
