@@ -1,4 +1,3 @@
-import uuid
 from django.test import TestCase
 
 from lesson.models import LessonProduct
@@ -6,7 +5,7 @@ from lesson.models import LessonProduct
 class LessonTestCase(TestCase):
     def setUp(self):
         self.url = "/api/lessons/"
-        self.coach_uuid = uuid.uuid4()
+        self.coach_uuid = "123e4567-e89b-12d3-a456-426614174000"
         self.data = {
             "title": "테스트 레슨 상품",
             "description": "테스트 레슨 상품 설명",

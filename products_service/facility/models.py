@@ -9,7 +9,7 @@ class Facility(models.Model):
     ## 기본 정보: 시설 이름, 시설 고유번호, 시설 소유자 고유번호
     uuid        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name        = models.CharField(max_length=20)
-    owner_uuid  = models.UUIDField(editable=False)
+    owner_uuid  = models.UUIDField()
     owner_name  = models.CharField(max_length=10)
     owner_phone = models.CharField(max_length=13)
     reg_code    = models.CharField(unique=True, editable=False, max_length=12)
