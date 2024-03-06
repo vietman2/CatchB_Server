@@ -35,13 +35,6 @@ class Reservation(models.Model):
     )
     reserved_user   = models.UUIDField(null=False, db_comment="사용자 고유번호")
 
-    lesson_session  = models.ForeignKey(
-        "lesson.LessonSession",
-        null=True,
-        on_delete=models.DO_NOTHING,
-        db_comment="레슨 고유번호"
-    )
-
     start_datetime  = models.DateTimeField(null=False, db_comment="시작 시간")
     end_datetime    = models.DateTimeField(null=False, db_comment="종료 시간")
     status          = models.CharField(
