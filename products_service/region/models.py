@@ -1,16 +1,14 @@
 from django.db import models
 
 class Sido(models.Model):
-    sido_code = models.PositiveBigIntegerField(primary_key=True, db_comment="시/도 코드")
-    sido_name = models.CharField(max_length=20, db_comment="시/도 이름")
-    label     = models.CharField(max_length=2, db_comment="라벨")
+    sido_code = models.PositiveBigIntegerField(primary_key=True)
+    sido_name = models.CharField(max_length=20)
+    label     = models.CharField(max_length=2)
 
     objects = models.Manager()
 
     class Meta:
         db_table = "sido"
-        verbose_name = "시/도"
-        verbose_name_plural = "시/도"
 
 class SigunguManager(models.Manager):
     def get_sigungu_from_bcode(self, bcode):
@@ -21,13 +19,11 @@ class SigunguManager(models.Manager):
         return sigungu
 
 class Sigungu(models.Model):
-    sigungu_code    = models.PositiveBigIntegerField(primary_key=True, db_comment="시/군/구 코드")
-    sigungu_name    = models.CharField(max_length=20, db_comment="시/군/구 이름")
-    sido            = models.ForeignKey("Sido", on_delete=models.CASCADE, db_comment="시/도 코드")
+    sigungu_code    = models.PositiveBigIntegerField(primary_key=True)
+    sigungu_name    = models.CharField(max_length=20)
+    sido            = models.ForeignKey("Sido", on_delete=models.CASCADE)
 
     objects = SigunguManager()
 
     class Meta:
         db_table = "sigungu"
-        verbose_name = "시/군/구"
-        verbose_name_plural = "시/군/구"
