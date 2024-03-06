@@ -96,11 +96,32 @@ jobs:
         coverage lcov -o products_coverage.lcov
         cd ..
 
+    - name: Run payments tests
+      run: |
+        cd payments_service
+        coverage run --source='.' manage.py test
+        coverage lcov -o payments_coverage.lcov
+        cd ..
+
     - name: Run community tests
       run: |
         cd community_service
         coverage run --source='.' manage.py test
         coverage lcov -o community_coverage.lcov
+        cd ..
+
+    - name: Run calendar tests
+      run: |
+        cd calendar_service
+        coverage run --source='.' manage.py test
+        coverage lcov -o calendar_coverage.lcov
+        cd ..
+
+    - name: Run api gateway tests
+      run: |
+        cd api_gateway
+        coverage run --source='.' manage.py test
+        coverage lcov -o api_gateway_coverage.lcov
         cd ..
 
     - name: Upload coverage to Coveralls
