@@ -128,5 +128,10 @@ jobs:
       uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        files: user_management_service/user_management_coverage.lcov products_service/products_coverage.lcov community_service/community_coverage.lcov
+        files: user_management_service/user_management_coverage.lcov
+                products_service/products_coverage.lcov
+                payments_service/payments_coverage.lcov
+                community_service/community_coverage.lcov
+                calendar_service/calendar_coverage.lcov
+                api_gateway/api_gateway_coverage.lcov
         flag-name: coverage
