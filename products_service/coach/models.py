@@ -1,21 +1,61 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from facility.models import Facility
+from .enums import CareerChoices
+
 class Coach(models.Model):
-    coach_uuid = models.UUIDField(db_comment="시설 소유자 유저번호")
+    coach_uuid          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_uuid           = models.UUIDField(editable=False)
+    coach_name          = models.CharField(max_length=30)
+    coach_phone         = models.CharField(max_length=20)
+    certification       = models.FileField()
+    facility            = models.ForeignKey(Facility, null=True, on_delete=models.SET_NULL)
 
-    # certification = models.FileField(db_comment='자격증', help_text='자격증을 첨부해주세요.')
-    academic_background = models.TextField(db_comment='학력', help_text='학력을 입력해주세요.')
-    baseball_career = models.TextField(db_comment='야구 경력', help_text='야구 경력을 입력해주세요.')
-    coaching_career = models.TextField(db_comment='코칭 경력', help_text='코칭 경력을 입력해주세요.')
-    # facility = models.TextField(db_comment="소속 시설")
-    # areas = models.TextField(db_comment="레슨 영역", help_text="레슨 영역: 타격, 투구, 수비, 주루, 트레이닝, 피지컬, 기타")
+    baseball_career     = models.IntegerField(choices=CareerChoices.choices)
 
-    is_approved = models.BooleanField(default=False, db_comment='코치 승인 여부')
+    ## 상세 정보: 코치 계좌 정보
+    ## TODO: ADD BANK INFO
+
+    is_confirmed        = models.BooleanField(default=False)
 
     objects = models.Manager()
 
     class Meta:
         db_table = 'coach'
-        verbose_name = _('coach')
-        verbose_name_plural = _('coaches')
+
+class CoachInfo(models.Model):
+    ## 코치 기본 소개
+    coach       = models.ForeignKey('Coach', on_delete=models.CASCADE)
+    intro       = models.TextField()
+
+    ## 코치 정보1: 전문 파트
+    pitching        = models.BooleanField(default=False)
+    batting         = models.BooleanField(default=False)
+    defense         = models.BooleanField(default=False)
+    catching        = models.BooleanField(default=False)
+    rehabilitation  = models.BooleanField(default=False)
+    conditioning    = models.BooleanField(default=False)
+
+    ## 코치 정보2: 레슨 레벨
+    beginner1       = models.BooleanField(default=False)
+    beginner2       = models.BooleanField(default=False)
+    amateur         = models.BooleanField(default=False)
+    veteran         = models.BooleanField(default=False)
+    rookie          = models.BooleanField(default=False)
+    elite           = models.BooleanField(default=False)
+
+    ## 코치 정보3: 레슨 유형
+    individual      = models.BooleanField(default=False)
+    group           = models.BooleanField(default=False)
+    team            = models.BooleanField(default=False)
+    others          = models.BooleanField(default=False)
+
+    ## 코치 정보3: 소개 이미지/영상
+    ## TODO: Add Later
+
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'coach_info'
