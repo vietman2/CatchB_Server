@@ -42,6 +42,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_facility_owner = models.BooleanField(default=False)
     is_coach = models.BooleanField(default=False)
 
+    deleted_at      = models.DateTimeField(null=True, blank=True)
+
     USERNAME_FIELD  = 'username'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'phone_number']
 
