@@ -47,8 +47,8 @@ class UserView(APIView):
 
         return get_response(request.headers, request.body, REQUEST_URL, 'GET')
 
-    def delete(self, request):
-        uuid = request.query_params.get('uuid', None)
+    def delete(self, request, **kwargs):
+        uuid = kwargs.get('uuid', None)
         if not IsSelf.has_object_permission(None, request, None, uuid):
             return Response(
                 {'message': '권한이 없습니다.'},
@@ -78,6 +78,7 @@ class CouponStatusCheckView(APIView):
         return get_response(request.headers, request.body, REQUEST_URL, 'GET', request.query_params)
 
 class CouponView(APIView):
+    ## TODO: 권한 설정
     ## TODO: 쿠폰 생성은 관리자, 코치, 시설주만 가능하도록 권한 설정
     def get(self, request):
         REQUEST_URL = f'{user_service_url}/api/coupons/'
@@ -85,6 +86,7 @@ class CouponView(APIView):
         return get_response(request.headers, request.body, REQUEST_URL, 'GET', request.query_params)
 
 class PointsView(APIView):
+    ## TODO: 권한 설정
     def get(self, request):
         REQUEST_URL = f'{user_service_url}/api/points/'
 

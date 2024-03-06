@@ -4,14 +4,14 @@ from rest_framework.permissions import BasePermission
 
 def get_user_info(request):
     token = request.headers.get('Authorization', None)
+    key = settings.PRIVATE_KEY
 
     if token is None:
         return None
 
-    access = token.split(' ')[1]
-    key = settings.PRIVATE_KEY
-
-    if access is None:
+    try:
+        access = token.split(' ')[1]
+    except IndexError:
         return None
 
     decoded = jwt.decode(access, key, algorithms='HS256')

@@ -18,12 +18,7 @@ class FacilityView(APIView):
 
         REQUEST_URL = f'{products_service_url}/api/facilities/'
 
-        return get_response(
-            request.headers,
-            request.body,
-            REQUEST_URL,
-            'POST'
-        )
+        return get_response(request.headers, request.body, REQUEST_URL, 'POST')
 
 class FacilityInfoView(APIView):
     def post(self, request, uuid):
