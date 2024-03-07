@@ -1,5 +1,5 @@
-import requests_mock
 from unittest.mock import patch
+import requests_mock
 from rest_framework.test import APITestCase
 
 class UsersAPITests(APITestCase):
