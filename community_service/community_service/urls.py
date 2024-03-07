@@ -22,11 +22,10 @@ from drf_spectacular.views import (
     SpectacularSwaggerView as SSV,
 )
 
-from board.views import ForumViewSet, PostViewSet, CommentViewSet, ReCommentViewSet
+from board.views import PostViewSet, CommentViewSet, ReCommentViewSet
 
 router = DefaultRouter()
 
-router.register(r'forums', ForumViewSet)
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'recomments', ReCommentViewSet)
