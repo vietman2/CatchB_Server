@@ -138,7 +138,7 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
             "sunday_close",
             "num_mounds",
             "num_plates",
-            "images",
+            #"images",
         ]
         read_only_fields = ["facility"]
 

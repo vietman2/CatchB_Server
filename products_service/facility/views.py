@@ -155,8 +155,8 @@ class FacilityViewSet(ModelViewSet):
             facility_info_serializer.convenience(request.POST.getlist('convenience'))
             facility_info_serializer.equipment(request.POST.getlist('equipment'))
             facility_info_serializer.others(request.POST.getlist('others'))
-            facility_info_serializer.custom_equipment(request.POST.getlist('custom'))
-            facility_info_serializer.upload_images(request.FILES.getlist('images'), facility.uuid)
+            #facility_info_serializer.custom_equipment(request.POST.getlist('custom'))
+            #facility_info_serializer.upload_images(request.FILES.getlist('images'), facility.uuid)
 
             facility_info_serializer.validated_data['facility'] = facility
 

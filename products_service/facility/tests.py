@@ -48,7 +48,7 @@ class FacilityAPITestCase(APITestCase):
             "equipment": equipment,
             "others": others,
             "custom": ["asdf", "fdsa"],
-            "images": [self.generate_photo_file()],
+            #"images": [self.generate_photo_file()],
         }
         self.info_data_blank = {
             "intro": "테스트 시설 소개",
@@ -64,7 +64,7 @@ class FacilityAPITestCase(APITestCase):
             "equipment": [],
             "others": [],
             "custom": [],
-            "images": [self.generate_photo_file()],
+            #"images": [self.generate_photo_file()],
         }
 
     def test_facility_list(self):

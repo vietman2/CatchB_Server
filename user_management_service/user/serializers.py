@@ -50,7 +50,6 @@ class UserRegisterSerializer(ModelSerializer):
             "phone_number",
             "password",
             "password2",
-            "gender",
             "register_route"
         ]
         extra_kwargs = {
@@ -118,9 +117,6 @@ class UserSerializer(ModelSerializer):
             "email",
             "phone_number",
             "date_joined",
-            'nickname',
-            "birth_date",
-            "gender",
             "experience_tier",
             "register_route",
             "role",
