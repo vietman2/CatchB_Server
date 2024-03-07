@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import TimeStampedModel
+from ..core.models import TimeStampedModel
 from .enums import ForumChoices
 
 class Post(TimeStampedModel):
@@ -78,7 +78,7 @@ class CommentLike(Like):
 
 class ReCommentLike(Like):
     recomment       = models.ForeignKey(ReComment, on_delete=models.CASCADE)
-    
+
     class Meta:
         db_table = 'recomment_like'
         unique_together = ('recomment', 'user_uuid')
