@@ -1,28 +1,6 @@
 from rest_framework import serializers
 
-from .models import (
-    Forum, Post, Comment, ReComment, PostLike, CommentLike,
-    ReCommentLike, PostReport, CommentReport, ReCommentReport #, Bookmark
-)
-
-class ForumListSerializer(serializers.ModelSerializer):
-    latest_post = serializers.SerializerMethodField()
-
-    def get_latest_post(self, obj):
-        latest_post = Post.objects.filter(forum_id=obj.id).last()
-        if latest_post:
-            return latest_post.title
-
-        return None
-
-    class Meta:
-        model = Forum
-        fields = ["forum_name", "latest_post"]
-
-class ForumSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Forum
-        fields = '__all__'
+from .models import Post, Comment, ReComment, PostLike, CommentLike, ReCommentLike
 
 class PostListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,21 +50,6 @@ class CommentSerializer(serializers.ModelSerializer):
 class ReCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReComment
-        fields = '__all__'
-
-class PostReportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostReport
-        fields = '__all__'
-
-class CommentReportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CommentReport
-        fields = '__all__'
-
-class ReCommentReportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReCommentReport
         fields = '__all__'
 
 class PostLikeSerializer(serializers.ModelSerializer):

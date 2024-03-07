@@ -5,48 +5,12 @@ from rest_framework.serializers import ValidationError
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 
-from .models import Forum, Post, Comment, ReComment
+from .models import Post, Comment, ReComment
 from .serializers import (
-    ForumSerializer, ForumListSerializer, PostSerializer,
+    PostSerializer,
     CommentSerializer, ReCommentSerializer,
-    PostLikeSerializer, CommentLikeSerializer, ReCommentLikeSerializer,
-    PostReportSerializer, CommentReportSerializer, ReCommentReportSerializer
+    PostLikeSerializer, CommentLikeSerializer, ReCommentLikeSerializer
 )
-
-class ForumViewSet(ModelViewSet):
-    queryset = Forum.objects.all()
-    serializer_class = ForumSerializer
-    http_method_names = ['get', 'post', 'delete']
-
-    @extend_schema(summary="게시판 목록 조회", tags=["게시판"])
-    def list(self, request, *args, **kwargs):
-        queryset = Forum.objects.get_list()
-        serializer = ForumListSerializer(queryset, many=True)
-
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    @extend_schema(summary="게시판 생성", tags=["게시판"])
-    def create(self, request, *args, **kwargs):
-        serializer = ForumSerializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-    @extend_schema(summary="게시판 삭제", tags=["게시판"])
-    def destroy(self, request, *args, **kwargs):
-        forum = self.get_object()
-        Forum.objects.delete_forum(forum)
-        message = {"message": "삭제되었습니다"}
-
-        return Response(data=message, status=status.HTTP_204_NO_CONTENT)
-
-    @extend_schema(exclude=True)
-    def retrieve(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
@@ -98,18 +62,6 @@ class PostViewSet(ModelViewSet):
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @extend_schema(summary="게시글 신고", tags=["게시글"])
-    @action(detail=True, methods=["post"])
-    # pylint: disable=W0613
-    def report(self, request, *args, **kwargs):
-        serializer = PostReportSerializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
-
     @extend_schema(summary="게시글 좋아요", tags=["게시글"])
     @action(detail=True, methods=["post"])
     # pylint: disable=W0613
@@ -127,18 +79,6 @@ class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
     http_method_names = ['post']
 
-    @extend_schema(summary="댓글 신고", tags=["댓글"])
-    @action(detail=True, methods=["post"])
-    # pylint: disable=W0613
-    def report(self, request, *args, **kwargs):
-        serializer = CommentReportSerializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
-
     @extend_schema(summary="댓글 좋아요", tags=["댓글"])
     @action(detail=True, methods=["post"])
     # pylint: disable=W0613
@@ -155,18 +95,6 @@ class ReCommentViewSet(ModelViewSet):
     queryset = ReComment.objects.all()
     serializer_class = ReCommentSerializer
     http_method_names = ['post']
-
-    @extend_schema(summary="대댓글 신고", tags=["대댓글"])
-    @action(detail=True, methods=["post"])
-    # pylint: disable=W0613
-    def report(self, request, *args, **kwargs):
-        serializer = ReCommentReportSerializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(data={"message": "신고되었습니다"}, status=status.HTTP_200_OK)
 
     @extend_schema(summary="대댓글 좋아요", tags=["대댓글"])
     @action(detail=True, methods=["post"])
