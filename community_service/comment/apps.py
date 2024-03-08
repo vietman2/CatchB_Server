@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
-class StealConfig(AppConfig):
+class CommentConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'steal'
+    name = 'comment'
