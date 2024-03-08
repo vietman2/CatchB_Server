@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
 
-    'board.apps.BoardConfig',
+    'comment.apps.CommentConfig',
+    'post.apps.PostConfig',
 
     'rest_framework',
     'django_extensions',
