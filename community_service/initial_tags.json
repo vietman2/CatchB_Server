@@ -1,0 +1,130 @@
+[
+  {
+    "model": "post.tag",
+    "pk": 1,
+    "fields": {
+      "forum": 1,
+      "name": "MLB"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 2,
+    "fields": {
+      "forum": 1,
+      "name": "KBO"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 3,
+    "fields": {
+      "forum": 1,
+      "name": "아마야구"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 4,
+    "fields": {
+      "forum": 1,
+      "name": "사회인야구"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 5,
+    "fields": {
+      "forum": 2,
+      "name": "용병"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 6,
+    "fields": {
+      "forum": 2,
+      "name": "팀원"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 7,
+    "fields": {
+      "forum": 2,
+      "name": "경기"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 8,
+    "fields": {
+      "forum": 3,
+      "name": "New"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 9,
+    "fields": {
+      "forum": 3,
+      "name": "중고"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 10,
+    "fields": {
+      "forum": 3,
+      "name": "배트"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 11,
+    "fields": {
+      "forum": 3,
+      "name": "글러브"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 12,
+    "fields": {
+      "forum": 4,
+      "name": "투구: 우투"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 13,
+    "fields": {
+      "forum": 4,
+      "name": "투구: 좌투"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 14,
+    "fields": {
+      "forum": 4,
+      "name": "타격: 우타"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 15,
+    "fields": {
+      "forum": 4,
+      "name": "타격: 좌타"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 16,
+    "fields": {
+      "forum": 4,
+      "name": "수비"
+    }
+  }
+]
