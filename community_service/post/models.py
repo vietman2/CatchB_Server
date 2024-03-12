@@ -8,9 +8,19 @@ class Tag(models.Model):
     forum           = models.IntegerField(choices=ForumChoices.choices)
     name            = models.CharField(max_length=20)
 
+    icon            = models.URLField()
+    color           = models.CharField(max_length=7)
+    bgcolor         = models.CharField(max_length=7)
+
     class Meta:
         db_table = 'tag'
         ordering = ['name']
+
+class Image(TimeStampedModel):
+    image           = models.FileField(null=True)
+
+    class Meta:
+        db_table = 'image'
 
 class Post(TimeStampedModel):
     forum           = models.IntegerField(choices=ForumChoices.choices)
@@ -23,6 +33,7 @@ class Post(TimeStampedModel):
     tags            = models.ManyToManyField(Tag)
 
     ## TODO: Add Images
+    images          = models.ManyToManyField(Image)
 
     num_clicks      = models.IntegerField(default=0)
 
