@@ -26,6 +26,8 @@ jobs:
       RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
       NAVER_API_KEY: ${{ secrets.NAVER_API_KEY }}
       NAVER_API_KEY_ID: ${{ secrets.NAVER_API_KEY_ID }}
+      AWS_ACCESS_KEY: "AWS_ACCESS_KEY"
+      AWS_SECRET_KEY: "AWS_SECRET_KEY"
     strategy:
       max-parallel: 4
       matrix:
