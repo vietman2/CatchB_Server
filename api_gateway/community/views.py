@@ -10,3 +10,9 @@ class TagView(APIView):
         REQUEST_URL = f'{community_service_url}/api/tags/'
 
         return get_response(request.headers, request.body, REQUEST_URL, 'GET')
+
+class ImageView(APIView):
+    def post(self, request):
+        REQUEST_URL = f'{community_service_url}/api/images/'
+
+        return get_response(request.headers, request.body, REQUEST_URL, 'POST')
