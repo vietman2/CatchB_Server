@@ -1,8 +1,6 @@
 from django.conf import settings
 from rest_framework.views import APIView
 
-import sys
-
 from core.views import get_response
 
 community_service_url = settings.SERVICE_URLS['community_service']
