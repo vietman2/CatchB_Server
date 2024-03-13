@@ -18,7 +18,10 @@ class TagViewSet(ModelViewSet):
         ## create list for each forum. get forums in their display name
         forum_tags = {}
         for forum in ForumChoices:
-            forum_tags[forum.label] = self.get_serializer(self.queryset.filter(forum=forum.value), many=True).data
+            forum_tags[forum.label] = self.get_serializer(
+                self.queryset.filter(forum=forum.value),
+                many=True
+            ).data
 
         return Response(forum_tags, status=status.HTTP_200_OK)
 
@@ -41,7 +44,10 @@ class ImageViewSet(ModelViewSet):
         image_url = serializer.instance.image.name
         abs_url = media_url + image_url
 
-        return Response({"url": abs_url, "id": serializer.instance.pk}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"url": abs_url, "id": serializer.instance.pk},
+            status=status.HTTP_201_CREATED
+        )
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
@@ -57,8 +63,8 @@ class PostViewSet(ModelViewSet):
                 return ForumChoices.RECRUIT
             elif text == '장터':
                 return ForumChoices.MARKET
-            else:
-                return ForumChoices.STEAL
+
+            return ForumChoices.STEAL
 
         data = request.data
         data['forum'] = getForum(data['forum'])

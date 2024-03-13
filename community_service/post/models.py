@@ -12,12 +12,16 @@ class Tag(models.Model):
     color           = models.CharField(max_length=7)
     bgcolor         = models.CharField(max_length=7)
 
+    objects = models.Manager()
+
     class Meta:
         db_table = 'tag'
         ordering = ['name']
 
 class Image(TimeStampedModel):
     image           = models.FileField(null=True)
+
+    objects = models.Manager()
 
     class Meta:
         db_table = 'image'
@@ -40,9 +44,9 @@ class Post(TimeStampedModel):
     objects = models.Manager()
 
     def clean(self):
-        if not (1 <= self.tags.count <= 3):
+        if not 1 <= self.tags.count() <= 3:
             raise ValidationError('게시글은 최소 1개, 최대 3개의 태그를 가져야 합니다.')
-        
+
         super().clean()
 
     class Meta:
