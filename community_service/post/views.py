@@ -26,10 +26,6 @@ class TagViewSet(ModelViewSet):
 
         return Response(forum_tags, status=status.HTTP_200_OK)
 
-    @extend_schema(exclude=True)
-    def create(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 class ImageViewSet(ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
@@ -64,8 +60,10 @@ class PostViewSet(ModelViewSet):
                 return ForumChoices.RECRUIT
             if text == '장터':
                 return ForumChoices.MARKET
-
-            return ForumChoices.STEAL
+            if text == "스틸":
+                return ForumChoices.STEAL
+            
+            raise ValidationError("존재하지 않는 게시판입니다.")
 
         data = request.data
         data['forum'] = getForum(data['forum'])

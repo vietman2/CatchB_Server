@@ -31,3 +31,8 @@ class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['forum', 'author_uuid', 'title', 'content', 'tags', 'images']
+
+    def validate_tags(self, value):
+        if len(value) > 3:
+            raise serializers.ValidationError('게시글은 최대 3개의 태그를 가질 수 있습니다.')
+        return value

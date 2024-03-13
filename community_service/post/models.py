@@ -43,12 +43,6 @@ class Post(TimeStampedModel):
 
     objects = models.Manager()
 
-    def clean(self):
-        if not 1 <= self.tags.count() <= 3:     # pylint: disable=E1101
-            raise ValidationError('게시글은 최소 1개, 최대 3개의 태그를 가져야 합니다.')
-
-        super().clean()
-
     class Meta:
         db_table = 'post'
         ordering = ['-created_at']
