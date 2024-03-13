@@ -2,6 +2,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.exceptions import ValidationError
 from drf_spectacular.utils import extend_schema
 
 from .enums import ForumChoices
@@ -59,9 +60,9 @@ class PostViewSet(ModelViewSet):
         def getForum(text):
             if text == '덕아웃':
                 return ForumChoices.DUGOUT
-            elif text == '드래프트':
+            if text == '드래프트':
                 return ForumChoices.RECRUIT
-            elif text == '장터':
+            if text == '장터':
                 return ForumChoices.MARKET
 
             return ForumChoices.STEAL
@@ -75,7 +76,7 @@ class PostViewSet(ModelViewSet):
             serializer.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
+        except ValidationError as e:
             if 'unique' in str(e):
                 return Response({'message': "이미 존재하는 게시글입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
