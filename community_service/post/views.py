@@ -62,7 +62,7 @@ class PostViewSet(ModelViewSet):
                 return ForumChoices.MARKET
             if text == "스틸":
                 return ForumChoices.STEAL
-            
+
             raise ValidationError("존재하지 않는 게시판입니다.")
 
         data = request.data

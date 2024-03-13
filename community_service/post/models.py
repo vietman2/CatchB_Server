@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
 from core.models import TimeStampedModel, Report, Like  # pylint: disable=E0611
 from .enums import ForumChoices
