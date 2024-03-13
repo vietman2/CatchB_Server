@@ -5,8 +5,8 @@ from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema
 
 from .enums import ForumChoices
-from .models import Tag, Image
-from .serializers import TagSerializer, ImageSerializer
+from .models import Tag, Image, Post
+from .serializers import TagSerializer, ImageSerializer, PostCreateSerializer
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
@@ -42,3 +42,35 @@ class ImageViewSet(ModelViewSet):
         abs_url = media_url + image_url
 
         return Response({"url": abs_url, "id": serializer.instance.pk}, status=status.HTTP_201_CREATED)
+
+class PostViewSet(ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostCreateSerializer
+    http_method_names = ['post']
+
+    @extend_schema(summary='게시글 작성', tags=['게시글'])
+    def create(self, request, *args, **kwargs):
+        def getForum(text):
+            if text == '덕아웃':
+                return ForumChoices.DUGOUT
+            elif text == '드래프트':
+                return ForumChoices.RECRUIT
+            elif text == '장터':
+                return ForumChoices.MARKET
+            else:
+                return ForumChoices.STEAL
+
+        data = request.data
+        data['forum'] = getForum(data['forum'])
+
+        try:
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            if 'unique' in str(e):
+                return Response({'message': "이미 존재하는 게시글입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
