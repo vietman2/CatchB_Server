@@ -4,14 +4,14 @@ from rest_framework import serializers
 from .models import Tag, Image, Post
 
 class TagSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Tag
-        fields = ['name', 'icon', 'color', 'bgcolor']
+        fields = ['id', 'name', 'icon', 'color', 'bgcolor']
 
 class ImageSerializer(serializers.ModelSerializer):
     user_uuid = serializers.UUIDField(write_only=True)
     image = serializers.FileField()
+
     class Meta:
         model = Image
         fields = ['image', 'user_uuid']
@@ -26,3 +26,8 @@ class ImageSerializer(serializers.ModelSerializer):
         self.instance = Image.objects.create(image=filename)
 
         return self.instance
+
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['forum', 'author_uuid', 'title', 'content', 'tags', 'images']
