@@ -24,7 +24,7 @@ class Image(TimeStampedModel):
 
 class Post(TimeStampedModel):
     forum           = models.IntegerField(choices=ForumChoices.choices)
-    author_uuid     = models.UUIDField(editable=False)
+    author_uuid     = models.UUIDField()
 
     title           = models.CharField(max_length=40)
     content         = models.TextField()
@@ -33,7 +33,7 @@ class Post(TimeStampedModel):
     tags            = models.ManyToManyField(Tag)
 
     ## TODO: Add Images
-    images          = models.ManyToManyField(Image)
+    images          = models.ManyToManyField(Image, blank=True)
 
     num_clicks      = models.IntegerField(default=0)
 
@@ -48,6 +48,7 @@ class Post(TimeStampedModel):
     class Meta:
         db_table = 'post'
         ordering = ['-created_at']
+        unique_together = ('forum', 'author_uuid', 'title')
 
 class Steal(Post):
     video        = models.FileField(upload_to='steal_videos')
