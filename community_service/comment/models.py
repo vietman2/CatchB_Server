@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import TimeStampedModel, Report, Like
+from core.models import TimeStampedModel, Report, Like  # pylint: disable=E0611
 from post.models import Post
 
 class Comment(TimeStampedModel):

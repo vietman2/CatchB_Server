@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from core.models import TimeStampedModel, Report, Like
+from core.models import TimeStampedModel, Report, Like  # pylint: disable=E0611
 from .enums import ForumChoices
 
 class Tag(models.Model):
@@ -44,7 +44,7 @@ class Post(TimeStampedModel):
     objects = models.Manager()
 
     def clean(self):
-        if not 1 <= self.tags.count() <= 3:
+        if not 1 <= len(self.tags.all()) <= 3:
             raise ValidationError('게시글은 최소 1개, 최대 3개의 태그를 가져야 합니다.')
 
         super().clean()
