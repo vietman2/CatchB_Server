@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APITestCase
 
@@ -20,7 +21,8 @@ class ImageUploadAPITest(APITestCase):
             'user_uuid': '123e4567-e89b-12d3-a456-426614174000'
         }
 
-    def test_create(self):
+    @patch('django.core.files.storage.FileSystemStorage._save')
+    def test_create(self, mock_save):
         response = self.client.post(self.url, self.data, format='multipart')
         self.assertEqual(response.status_code, 201)
 
