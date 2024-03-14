@@ -21,7 +21,7 @@ class ImageUploadAPITest(APITestCase):
             'user_uuid': '123e4567-e89b-12d3-a456-426614174000'
         }
 
-    @patch('django.core.files.storage.FileSystemStorage._save')
+    @patch('django.core.files.storage.default_storage.save')
     def test_create(self, mock_save):
         mock_save.return_value = 'test.png'
         response = self.client.post(self.url, self.data, format='multipart')
