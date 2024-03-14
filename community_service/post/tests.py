@@ -23,6 +23,7 @@ class ImageUploadAPITest(APITestCase):
 
     @patch('django.core.files.storage.FileSystemStorage._save')
     def test_create(self, mock_save):
+        mock_save.return_value = 'test.png'
         response = self.client.post(self.url, self.data, format='multipart')
         self.assertEqual(response.status_code, 201)
 
