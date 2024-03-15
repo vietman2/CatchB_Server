@@ -1,0 +1,242 @@
+[
+  {
+    "model": "account.bank",
+    "pk": "002",
+    "fields": {
+      "name": "KDB산업은행",
+      "kor_code": "산업",
+      "eng_code": "KDB",
+      "icon": "bankicons/산업.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "003",
+    "fields": {
+      "name": "IBK기업은행",
+      "kor_code": "기업",
+      "eng_code": "IBK",
+      "icon": "bankicons/기업.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "004",
+    "fields": {
+      "name": "KB국민은행",
+      "kor_code": "국민",
+      "eng_code": "KB",
+      "icon": "bankicons/국민.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "007",
+    "fields": {
+      "name": "Sh수협은행",
+      "kor_code": "수협",
+      "eng_code": "SH",
+      "icon": "bankicons/수협.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "011",
+    "fields": {
+      "name": "NH농협은행",
+      "kor_code": "농협",
+      "eng_code": "NH",
+      "icon": "bankicons/농협.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "012",
+    "fields": {
+      "name": "지역농축협",
+      "kor_code": "지역농축협",
+      "eng_code": "LOCAL",
+      "icon": "bankicons/지역농축협.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "020",
+    "fields": {
+      "name": "우리은행",
+      "kor_code": "우리",
+      "eng_code": "WOORI",
+      "icon": "bankicons/우리.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "023",
+    "fields": {
+      "name": "SC제일은행",
+      "kor_code": "제일",
+      "eng_code": "SC",
+      "icon": "bankicons/제일.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "027",
+    "fields": {
+      "name": "한국씨티은행",
+      "kor_code": "씨티",
+      "eng_code": "CITI",
+      "icon": "bankicons/씨티.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "031",
+    "fields": {
+      "name": "DGB대구은행",
+      "kor_code": "대구",
+      "eng_code": "DAEGU",
+      "icon": "bankicons/대구.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "032",
+    "fields": {
+      "name": "부산은행",
+      "kor_code": "부산",
+      "eng_code": "BUSAN",
+      "icon": "bankicons/부산.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "034",
+    "fields": {
+      "name": "광주은행",
+      "kor_code": "광주",
+      "eng_code": "GWANGJU",
+      "icon": "bankicons/광주.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "035",
+    "fields": {
+      "name": "제주은행",
+      "kor_code": "제주",
+      "eng_code": "JEJU",
+      "icon": "bankicons/제주.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "037",
+    "fields": {
+      "name": "전북은행",
+      "kor_code": "전북",
+      "eng_code": "JEONBUK",
+      "icon": "bankicons/전북.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "039",
+    "fields": {
+      "name": "경남은행",
+      "kor_code": "경남",
+      "eng_code": "KYONGNAM",
+      "icon": "bankicons/경남.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "045",
+    "fields": {
+      "name": "새마을금고",
+      "kor_code": "새마을",
+      "eng_code": "SAEMAEUL",
+      "icon": "bankicons/새마을.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "048",
+    "fields": {
+      "name": "신협중앙회",
+      "kor_code": "신협",
+      "eng_code": "SHINHYUP",
+      "icon": "bankicons/신협.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "050",
+    "fields": {
+      "name": "상호저축은행",
+      "kor_code": "상호저축",
+      "eng_code": "SAVINGBANK",
+      "icon": "bankicons/상호저축.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "071",
+    "fields": {
+      "name": "우체국",
+      "kor_code": "우체국",
+      "eng_code": "POST",
+      "icon": "bankicons/우체국.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "081",
+    "fields": {
+      "name": "KEB하나은행",
+      "kor_code": "하나",
+      "eng_code": "KEBHANA",
+      "icon": "bankicons/하나.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "088",
+    "fields": {
+      "name": "신한은행",
+      "kor_code": "신한",
+      "eng_code": "SHINHAN",
+      "icon": "bankicons/신한.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "089",
+    "fields": {
+      "name": "케이뱅크",
+      "kor_code": "케이뱅크",
+      "eng_code": "Kbank",
+      "icon": "bankicons/케이뱅크.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "090",
+    "fields": {
+      "name": "카카오뱅크",
+      "kor_code": "카카오뱅크",
+      "eng_code": "KAKAOBANK",
+      "icon": "bankicons/카카오뱅크.svg"
+    }
+  },
+  {
+    "model": "account.bank",
+    "pk": "092",
+    "fields": {
+      "name": "토스뱅크",
+      "kor_code": "토스뱅크",
+      "eng_code": "TOSSBANK",
+      "icon": "bankicons/토스뱅크.svg"
+    }
+  }
+]
