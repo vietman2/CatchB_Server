@@ -6,7 +6,7 @@
       "name": "KDB산업은행",
       "kor_code": "산업",
       "eng_code": "KDB",
-      "icon": "bankicons/산업.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/산업.svg"
     }
   },
   {
@@ -16,7 +16,7 @@
       "name": "IBK기업은행",
       "kor_code": "기업",
       "eng_code": "IBK",
-      "icon": "bankicons/기업.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/기업.svg"
     }
   },
   {
@@ -26,7 +26,7 @@
       "name": "KB국민은행",
       "kor_code": "국민",
       "eng_code": "KB",
-      "icon": "bankicons/국민.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/국민.svg"
     }
   },
   {
@@ -36,7 +36,7 @@
       "name": "Sh수협은행",
       "kor_code": "수협",
       "eng_code": "SH",
-      "icon": "bankicons/수협.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/수협.svg"
     }
   },
   {
@@ -46,7 +46,7 @@
       "name": "NH농협은행",
       "kor_code": "농협",
       "eng_code": "NH",
-      "icon": "bankicons/농협.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/농협.svg"
     }
   },
   {
@@ -56,7 +56,7 @@
       "name": "지역농축협",
       "kor_code": "지역농축협",
       "eng_code": "LOCAL",
-      "icon": "bankicons/지역농축협.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/지역농축협.svg"
     }
   },
   {
@@ -66,7 +66,7 @@
       "name": "우리은행",
       "kor_code": "우리",
       "eng_code": "WOORI",
-      "icon": "bankicons/우리.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/우리.svg"
     }
   },
   {
@@ -76,7 +76,7 @@
       "name": "SC제일은행",
       "kor_code": "제일",
       "eng_code": "SC",
-      "icon": "bankicons/제일.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/제일.svg"
     }
   },
   {
@@ -86,7 +86,7 @@
       "name": "한국씨티은행",
       "kor_code": "씨티",
       "eng_code": "CITI",
-      "icon": "bankicons/씨티.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/씨티.svg"
     }
   },
   {
@@ -96,7 +96,7 @@
       "name": "DGB대구은행",
       "kor_code": "대구",
       "eng_code": "DAEGU",
-      "icon": "bankicons/대구.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/대구.svg"
     }
   },
   {
@@ -106,7 +106,7 @@
       "name": "부산은행",
       "kor_code": "부산",
       "eng_code": "BUSAN",
-      "icon": "bankicons/부산.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/부산.svg"
     }
   },
   {
@@ -116,7 +116,7 @@
       "name": "광주은행",
       "kor_code": "광주",
       "eng_code": "GWANGJU",
-      "icon": "bankicons/광주.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/광주.svg"
     }
   },
   {
@@ -126,7 +126,7 @@
       "name": "제주은행",
       "kor_code": "제주",
       "eng_code": "JEJU",
-      "icon": "bankicons/제주.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/제주.svg"
     }
   },
   {
@@ -136,7 +136,7 @@
       "name": "전북은행",
       "kor_code": "전북",
       "eng_code": "JEONBUK",
-      "icon": "bankicons/전북.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/전북.svg"
     }
   },
   {
@@ -146,7 +146,7 @@
       "name": "경남은행",
       "kor_code": "경남",
       "eng_code": "KYONGNAM",
-      "icon": "bankicons/경남.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/경남.svg"
     }
   },
   {
@@ -156,7 +156,7 @@
       "name": "새마을금고",
       "kor_code": "새마을",
       "eng_code": "SAEMAEUL",
-      "icon": "bankicons/새마을.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/새마을.svg"
     }
   },
   {
@@ -166,7 +166,7 @@
       "name": "신협중앙회",
       "kor_code": "신협",
       "eng_code": "SHINHYUP",
-      "icon": "bankicons/신협.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/신협.svg"
     }
   },
   {
@@ -176,7 +176,7 @@
       "name": "상호저축은행",
       "kor_code": "상호저축",
       "eng_code": "SAVINGBANK",
-      "icon": "bankicons/상호저축.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/상호저축.svg"
     }
   },
   {
@@ -186,7 +186,7 @@
       "name": "우체국",
       "kor_code": "우체국",
       "eng_code": "POST",
-      "icon": "bankicons/우체국.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/우체국.svg"
     }
   },
   {
@@ -196,7 +196,7 @@
       "name": "KEB하나은행",
       "kor_code": "하나",
       "eng_code": "KEBHANA",
-      "icon": "bankicons/하나.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/하나.svg"
     }
   },
   {
@@ -206,7 +206,7 @@
       "name": "신한은행",
       "kor_code": "신한",
       "eng_code": "SHINHAN",
-      "icon": "bankicons/신한.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/신한.svg"
     }
   },
   {
@@ -216,7 +216,7 @@
       "name": "케이뱅크",
       "kor_code": "케이뱅크",
       "eng_code": "Kbank",
-      "icon": "bankicons/케이뱅크.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/케이뱅크.svg"
     }
   },
   {
@@ -226,7 +226,7 @@
       "name": "카카오뱅크",
       "kor_code": "카카오뱅크",
       "eng_code": "KAKAOBANK",
-      "icon": "bankicons/카카오뱅크.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/카카오뱅크.svg"
     }
   },
   {
@@ -236,7 +236,7 @@
       "name": "토스뱅크",
       "kor_code": "토스뱅크",
       "eng_code": "TOSSBANK",
-      "icon": "bankicons/토스뱅크.svg"
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/bankicons/토스뱅크.svg"
     }
   }
 ]
