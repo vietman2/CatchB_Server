@@ -6,4 +6,5 @@ urlpatterns = [
     path("tags/", views.TagView.as_view(), name="forums"),
     path("images/", views.ImageView.as_view(), name="images"),
     path("posts/", views.PostView.as_view(), name="posts"),
+    path("posts/<int:pk>/", views.PostDetailView.as_view(), name="post_detail"),
 ]

@@ -37,3 +37,20 @@ class PostView(APIView):
         REQUEST_URL = f'{community_service_url}/api/posts/'
 
         return get_response(request.headers, request.body, REQUEST_URL, 'POST')
+
+    def get(self, request):
+        REQUEST_URL = f'{community_service_url}/api/posts/'
+
+        return get_response(
+            request.headers,
+            request.body,
+            REQUEST_URL,
+            'GET',
+            request.query_params
+        )
+
+class PostDetailView(APIView):
+    def get(self, request, pk):
+        REQUEST_URL = f'{community_service_url}/api/posts/{pk}/'
+
+        return get_response(request.headers, request.body, REQUEST_URL, 'GET')
