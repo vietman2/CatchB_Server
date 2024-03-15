@@ -1,0 +1,121 @@
+[
+  {
+    "model": "post.post",
+    "pk": 2024031500000001,
+    "fields": {
+      "created_at": "2024-03-15T02:41:48.366Z",
+      "updated_at": "2024-03-15T02:41:48.367Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 1,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "크보",
+      "content": "개막 언제함",
+      "num_clicks": 0,
+      "tags": [2],
+      "images": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2024031500000002,
+    "fields": {
+      "created_at": "2024-03-15T02:42:15.444Z",
+      "updated_at": "2024-03-15T02:42:15.444Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 1,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "올해 믈브",
+      "content": "개재밌겠다",
+      "num_clicks": 0,
+      "tags": [2, 1],
+      "images": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2024031500000003,
+    "fields": {
+      "created_at": "2024-03-15T02:42:52.601Z",
+      "updated_at": "2024-03-15T02:42:52.601Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 2,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "3/30 토요일 오후 12시반 저희랑 경기하실 팀",
+      "content": "있나요?",
+      "num_clicks": 0,
+      "tags": [7],
+      "images": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2024031500000004,
+    "fields": {
+      "created_at": "2024-03-15T02:43:17.011Z",
+      "updated_at": "2024-03-15T02:43:17.011Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 2,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "3/31 일요일 오후 4시 2루수 용병",
+      "content": "있나요?",
+      "num_clicks": 0,
+      "tags": [5],
+      "images": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2024031500000005,
+    "fields": {
+      "created_at": "2024-03-15T02:43:34.458Z",
+      "updated_at": "2024-03-15T02:43:34.458Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 2,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "캐치비 야구단 팀원 모집합니다",
+      "content": "할사람?",
+      "num_clicks": 0,
+      "tags": [6],
+      "images": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2024031500000006,
+    "fields": {
+      "created_at": "2024-03-15T02:43:49.002Z",
+      "updated_at": "2024-03-15T02:43:49.002Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 3,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "새글러브",
+      "content": "삽니다",
+      "num_clicks": 0,
+      "tags": [8, 11],
+      "images": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2024031500000007,
+    "fields": {
+      "created_at": "2024-03-15T02:44:02.052Z",
+      "updated_at": "2024-03-15T02:44:02.052Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "forum": 3,
+      "author_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "title": "중고 배트",
+      "content": "팝니다",
+      "num_clicks": 0,
+      "tags": [10, 9],
+      "images": []
+    }
+  }
+]
