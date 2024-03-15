@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import TimeStampedModel, Report, Like  # pylint: disable=E0611
+from core.models import TimeStampedModel, Report, Like, CustomAutoField  # pylint: disable=E0611
 from .enums import ForumChoices
 
 class Tag(models.Model):
@@ -26,16 +26,14 @@ class Image(TimeStampedModel):
         db_table = 'image'
 
 class Post(TimeStampedModel):
+    id              = CustomAutoField()
     forum           = models.IntegerField(choices=ForumChoices.choices)
     author_uuid     = models.UUIDField()
 
     title           = models.CharField(max_length=40)
     content         = models.TextField()
 
-    ## TODO: Add Tags
     tags            = models.ManyToManyField(Tag)
-
-    ## TODO: Add Images
     images          = models.ManyToManyField(Image, blank=True)
 
     num_clicks      = models.IntegerField(default=0)
