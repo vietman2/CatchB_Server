@@ -2,7 +2,7 @@ from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APITestCase
 
-from .models import Tag
+from .models import Tag, Post
 
 class TagAPITest(APITestCase):
     def setUp(self):
@@ -41,6 +41,12 @@ class PostAPITest(APITestCase):
         Tag.objects.create(name='test2', icon='test2', color='test2', bgcolor='test2', forum=1)
         Tag.objects.create(name='test3', icon='test3', color='test3', bgcolor='test3', forum=1)
         Tag.objects.create(name='test4', icon='test4', color='test4', bgcolor='test4', forum=1)
+        self.post = Post.objects.create(
+            title='title',
+            content='content',
+            author_uuid='123e4567-e89b-12d3-a456-426614174000',
+            forum=1
+        )
 
     def test_create_success(self):
         self.data['forum'] = '덕아웃'
@@ -77,3 +83,17 @@ class PostAPITest(APITestCase):
         self.data['forum'] = '테스트'
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, 400)
+
+    def test_list(self):
+        query = '?forum=덕아웃'
+        response = self.client.get(self.url + query)
+        self.assertEqual(response.status_code, 200)
+
+    def test_list_fail(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 400)
+
+    def test_retrieve(self):
+        id = self.post.id
+        response = self.client.get(self.url + str(id) + '/')
+        self.assertEqual(response.status_code, 200)
