@@ -54,3 +54,25 @@ class PostAPITests(APITestCase):
             status_code=201
         )
         self.client.post('/api/community/posts/', {'content': 'content'})
+
+    @requests_mock.Mocker()
+    def test_post_list(self, m):
+        m.get(
+            self.community_server + '/api/posts/',
+            json=[{'id': 1, 'content': 'content'}],
+            status_code=200
+        )
+        self.client.get('/api/community/posts/')
+
+class PostDetailAPITests(APITestCase):
+    def setUp(self):
+        self.community_server = 'http://localhost:8002'
+
+    @requests_mock.Mocker()
+    def test_post_detail(self, m):
+        m.get(
+            self.community_server + '/api/posts/1/',
+            json={'id': 1, 'content': 'content'},
+            status_code=200
+        )
+        self.client.get('/api/community/posts/1/')
