@@ -54,16 +54,16 @@ class PostViewSet(ModelViewSet):
     http_method_names = ['get', 'post']
 
     def getForum(self, text):
-            if text == '덕아웃':
-                return ForumChoices.DUGOUT
-            if text == '드래프트':
-                return ForumChoices.RECRUIT
-            if text == '장터':
-                return ForumChoices.MARKET
-            if text == "스틸":
-                return ForumChoices.STEAL
+        if text == '덕아웃':
+            return ForumChoices.DUGOUT
+        if text == '드래프트':
+            return ForumChoices.RECRUIT
+        if text == '장터':
+            return ForumChoices.MARKET
+        if text == "스틸":
+            return ForumChoices.STEAL
 
-            raise ValidationError("존재하지 않는 게시판입니다.")
+        raise ValidationError("존재하지 않는 게시판입니다.")
 
     @extend_schema(summary='게시글 작성', tags=['게시글'])
     def create(self, request, *args, **kwargs):
@@ -91,10 +91,9 @@ class PostViewSet(ModelViewSet):
             serializer = PostSimpleSerializer(queryset, many=True)
             ## TODO: Pagination 구현
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
+
         ## TODO: 내가 쓴 글만 보기 구현
-        else:
-            return Response({'message': "게시판을 선택해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': "게시판을 선택해주세요."}, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(summary='게시글 상세 조회', tags=['게시글'])
     def retrieve(self, request, *args, **kwargs):

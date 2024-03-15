@@ -57,5 +57,5 @@ class CustomAutoField(models.PositiveBigIntegerField):
             setattr(model_instance, self.attname, next_id)
 
             return next_id
-        else:
-            return super().pre_save(model_instance, add)
+
+        return super().pre_save(model_instance, add)

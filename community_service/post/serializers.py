@@ -57,9 +57,9 @@ class PostSimpleSerializer(serializers.ModelSerializer):
     def get_contains_images(self, obj):
         if obj.images.exists():
             return True
-        
+
         return False
-        
+
 class PostDetailSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     images = ImageSerializer(many=True)
