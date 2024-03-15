@@ -1,0 +1,178 @@
+[
+  {
+    "model": "post.tag",
+    "pk": 1,
+    "fields": {
+      "forum": 1,
+      "name": "MLB",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/MLB.svg",
+      "color": "#ffffff",
+      "bgcolor": "#002d72"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 2,
+    "fields": {
+      "forum": 1,
+      "name": "KBO",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/KBO.svg",
+      "color": "#002561",
+      "bgcolor": "#b3a177"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 3,
+    "fields": {
+      "forum": 1,
+      "name": "아마야구",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/아마야구.svg",
+      "color": "#ff0000",
+      "bgcolor": "#4bffff"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 4,
+    "fields": {
+      "forum": 1,
+      "name": "사회인야구",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/사회인야구.svg",
+      "color": "#7c102c",
+      "bgcolor": "#1ac99b"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 5,
+    "fields": {
+      "forum": 2,
+      "name": "용병",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/용병.svg",
+      "color": "#3C92CA",
+      "bgcolor": "#e8c4ac"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 6,
+    "fields": {
+      "forum": 2,
+      "name": "팀원",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/팀원.svg",
+      "color": "#000000",
+      "bgcolor": "#ca97fb"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 7,
+    "fields": {
+      "forum": 2,
+      "name": "경기",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/경기.svg",
+      "color": "#B3404A",
+      "bgcolor": "#F4B2B0"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 8,
+    "fields": {
+      "forum": 3,
+      "name": "New",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/New.svg",
+      "color": "#fbff00",
+      "bgcolor": "#9ea100"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 9,
+    "fields": {
+      "forum": 3,
+      "name": "중고",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/중고.svg",
+      "color": "#802d00",
+      "bgcolor": "#c9c9c9"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 10,
+    "fields": {
+      "forum": 3,
+      "name": "배트",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/배트.svg",
+      "color": "#ff9500",
+      "bgcolor": "#9d6412"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 11,
+    "fields": {
+      "forum": 3,
+      "name": "글러브",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/글러브.svg",
+      "color": "#1100ff",
+      "bgcolor": "#aacfff"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 12,
+    "fields": {
+      "forum": 4,
+      "name": "투구: 우투",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/우투.svg",
+      "color": "#ffffff",
+      "bgcolor": "#002d72"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 13,
+    "fields": {
+      "forum": 4,
+      "name": "투구: 좌투",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/좌투.svg",
+      "color": "#00FEFF",
+      "bgcolor": "#8000FF"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 14,
+    "fields": {
+      "forum": 4,
+      "name": "타격: 우타",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/우타.svg",
+      "color": "#8a8a8a",
+      "bgcolor": "#19f6f6"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 15,
+    "fields": {
+      "forum": 4,
+      "name": "타격: 좌타",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/좌타.svg",
+      "color": "#0000ff",
+      "bgcolor": "#c0c0c0"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 16,
+    "fields": {
+      "forum": 4,
+      "name": "수비",
+      "icon": "https://kr.object.ncloudstorage.com/catchb.resources/tagicons/수비.svg",
+      "color": "#14a800",
+      "bgcolor": "#d9ddff"
+    }
+  }
+]

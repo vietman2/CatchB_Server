@@ -26,31 +26,13 @@ jobs:
       RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
       NAVER_API_KEY: ${{ secrets.NAVER_API_KEY }}
       NAVER_API_KEY_ID: ${{ secrets.NAVER_API_KEY_ID }}
+      AWS_ACCESS_KEY: "AWS_ACCESS_KEY"
+      AWS_SECRET_KEY: "AWS_SECRET_KEY"
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.9]
     services:
-      postgres_products:
-        image: postgres:14
-        env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.PRODUCTS_DB_NAME }}
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-      postgres_community:
-        image: postgres:14
-        env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.COMMUNITY_DB_NAME }}
-        ports:
-          - 5433:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
       rabbitmq:
         image: rabbitmq:3.9
         env:
@@ -76,11 +58,6 @@ jobs:
         sudo apt-get install graphviz graphviz-dev
         sudo apt-get install lcov
         pip install -r requirements.txt
-
-    - name: Setup Django Database Config
-      run: |
-        echo "DATABASE_URL=postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.PRODUCTS_DB_NAME }}" >> .env
-        echo "DATABASE_URL=postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.COMMUNITY_DB_NAME }}" >> .env
 
     - name: Run user_management tests
       run: |
