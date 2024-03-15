@@ -7,7 +7,9 @@ from drf_spectacular.utils import extend_schema
 
 from .enums import ForumChoices
 from .models import Tag, Image, Post
-from .serializers import TagSerializer, ImageSerializer, PostCreateSerializer
+from .serializers import (TagSerializer, ImageSerializer,
+                          PostCreateSerializer, PostSimpleSerializer,
+                            PostDetailSerializer)
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
@@ -49,11 +51,9 @@ class ImageViewSet(ModelViewSet):
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
-    http_method_names = ['post']
+    http_method_names = ['get', 'post']
 
-    @extend_schema(summary='게시글 작성', tags=['게시글'])
-    def create(self, request, *args, **kwargs):
-        def getForum(text):
+    def getForum(self, text):
             if text == '덕아웃':
                 return ForumChoices.DUGOUT
             if text == '드래프트':
@@ -65,8 +65,10 @@ class PostViewSet(ModelViewSet):
 
             raise ValidationError("존재하지 않는 게시판입니다.")
 
+    @extend_schema(summary='게시글 작성', tags=['게시글'])
+    def create(self, request, *args, **kwargs):
         data = request.data
-        data['forum'] = getForum(data['forum'])
+        data['forum'] = self.getForum(data['forum'])
 
         try:
             serializer = self.get_serializer(data=data)
@@ -79,3 +81,24 @@ class PostViewSet(ModelViewSet):
                 return Response({'message': "이미 존재하는 게시글입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(summary='게시글 목록 조회', tags=['게시글'])
+    def list(self, request, *args, **kwargs):
+        if 'forum' in request.query_params:
+            forum = self.getForum(request.query_params['forum'])
+            queryset = self.queryset.filter(forum=forum, is_deleted=False)
+
+            serializer = PostSimpleSerializer(queryset, many=True)
+            ## TODO: Pagination 구현
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        ## TODO: 내가 쓴 글만 보기 구현
+        else:
+            return Response({'message': "게시판을 선택해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(summary='게시글 상세 조회', tags=['게시글'])
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = PostDetailSerializer(instance)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

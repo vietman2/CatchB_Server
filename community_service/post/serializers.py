@@ -36,3 +36,47 @@ class PostCreateSerializer(serializers.ModelSerializer):
         if len(value) > 3:
             raise serializers.ValidationError('게시글은 최대 3개의 태그를 가질 수 있습니다.')
         return value
+
+class PostSimpleSerializer(serializers.ModelSerializer):
+    contains_images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = [
+            'id',
+            'author_uuid',  ## TODO: Replace uuid with nickname by requesting user service
+            'title',
+            'content',
+            'tags',
+            'contains_images',
+            'num_clicks',
+            'created_at',
+            ## TODO: Add num likes, num comments
+        ]
+
+    def get_contains_images(self, obj):
+        if obj.images.exists():
+            return True
+        
+        return False
+        
+class PostDetailSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True)
+    images = ImageSerializer(many=True)
+    forum = serializers.CharField(source='get_forum_display')
+
+    class Meta:
+        model = Post
+        fields = [
+            'id',
+            'forum',
+            'author_uuid',  ## TODO: Replace uuid with nickname by requesting user service
+            'title',
+            'content',
+            'tags',
+            'images',
+            'num_clicks',
+            'created_at',
+            'updated_at',
+            ## TODO: Add num likes, num comments
+        ]
