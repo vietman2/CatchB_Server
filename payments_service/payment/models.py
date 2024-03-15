@@ -22,10 +22,10 @@ class Payment(models.Model):
         choices=Status.choices,
         default=Status.PENDING
     )
-    price       = models.PositiveIntegerField(db_comment='결제 금액')
+    price       = models.PositiveIntegerField()
 
-    buyer_uuid  = models.UUIDField(db_comment='구매자 uuid')
-    seller_uuid = models.UUIDField(db_comment='판매자 uuid')    # TODO: 생각해보기
+    buyer_uuid  = models.UUIDField()
+    seller_uuid = models.UUIDField()    # TODO: 생각해보기
 
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now=True)
