@@ -23,7 +23,7 @@ class FacilitySimpleSerializer(serializers.ModelSerializer):
 
     def get_region(self, obj):
         sigungu_name = obj.region.sigungu_name
-        sido_name = obj.region.sido.sido_name
+        sido_name = obj.region.sido.display
 
         return f"{sido_name} {sigungu_name}"
 
