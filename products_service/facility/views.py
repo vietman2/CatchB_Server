@@ -1,6 +1,7 @@
 import requests
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.base import ContentFile
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
@@ -49,6 +50,61 @@ def get_coordinates(address):
             status=status.HTTP_502_BAD_GATEWAY,
         )
 
+def get_error_message(e):
+    err_types = ["name", "phone", "reg_code", "num_mounds", "num_plates",
+                 "sunday_close", "sunday_open", "saturday_close", "saturday_open",
+                 "weekday_close", "weekday_open", "intro"]
+
+    for err_type in err_types:
+        if err_type in e.detail:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"message": e.detail[err_type][0]}
+            )
+        
+    if "images" in e.detail:
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST,
+            data={"message": "아카데미를 소개하는 이미지를 최소 1장 업로드 해주세요."}
+        )
+
+    return Response(
+        status=status.HTTP_400_BAD_REQUEST,
+        data={"message": "등록 실패했습니다."}
+    )
+
+def fetch_map_image(lat, lng):
+    naver_staticmap_url = 'https://naveropenapi.apigw.ntruss.com/map-static/v2/raster'
+    headers = {
+        'X-NCP-APIGW-API-KEY-ID': settings.NAVER_CLIENT_ID,
+        'X-NCP-APIGW-API-KEY': settings.NAVER_CLIENT_SECRET,
+    }
+    params = {
+        'center': f'{lng},{lat}',
+        'level': 15,
+        'w': 500,
+        'h': 300,
+        'format': 'png',
+        'markers': f'type:d|size:small|pos:{lng} {lat}|color:0x14863e|viewSizeRatio:0.75',
+    }
+
+    try:
+        response = requests.request(
+                method='GET',
+                url=naver_staticmap_url,
+                headers=headers,
+                params=params,
+                timeout=10,
+            )
+
+        return ContentFile(response.content)
+    
+    except requests.RequestException as e:
+        return Response(
+            {'message': str(e)},
+            status=status.HTTP_502_BAD_GATEWAY,
+        )
+
 class FacilityViewSet(ModelViewSet):
     queryset = Facility.objects.all()
     serializer_class = FacilitySimpleSerializer
@@ -60,28 +116,6 @@ class FacilityViewSet(ModelViewSet):
 
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
     def create(self, request, *args, **kwargs):     ## pylint: disable=R0914, W0613
-        def handle_error(e):
-            if "name" in e.detail:
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": e.detail["name"][0]}
-                )
-            if "phone" in e.detail:
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": e.detail["phone"][0]}
-                )
-            if "reg_code" in e.detail:
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": e.detail["reg_code"][0]}
-                )
-
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"message": "시설 등록 신청에 실패했습니다."}
-            )
-
         try:
             if request.data['road_address_part1'] == "" or request.data['road_address_part2'] == "":
                 return Response(
@@ -105,8 +139,13 @@ class FacilityViewSet(ModelViewSet):
             facility_serializer.is_valid(raise_exception=True)
 
             facility = facility_serializer.save()
+
+            image = fetch_map_image(facility.latitude, facility.longitude)
+            path = f"products/facility/{facility.uuid}/map_image.png"
+            facility.map_image.save(path, image)
+
         except ValidationError as e:
-            return handle_error(e)
+            return get_error_message(e)
         except (ObjectDoesNotExist, MultiValueDictKeyError, ValueError):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
@@ -116,30 +155,6 @@ class FacilityViewSet(ModelViewSet):
             status=status.HTTP_201_CREATED,
             data={"message": "시설 등록 신청이 완료되었습니다.", "uuid": facility.uuid}
         )
-
-    def custom_error_message(self, e):      ## pylint: disable=R0911
-        if "num_mounds" in e.detail:
-            return e.detail["num_mounds"][0]
-        if "num_plates" in e.detail:
-            return e.detail["num_plates"][0]
-        if "sunday_close" in e.detail:
-            return e.detail["sunday_close"][0]
-        if "sunday_open" in e.detail:
-            return e.detail["sunday_open"][0]
-        if "saturday_close" in e.detail:
-            return e.detail["saturday_close"][0]
-        if "saturday_open" in e.detail:
-            return e.detail["saturday_open"][0]
-        if "weekday_close" in e.detail:
-            return e.detail["weekday_close"][0]
-        if "weekday_open" in e.detail:
-            return e.detail["weekday_open"][0]
-        if "intro" in e.detail:
-            return e.detail["intro"][0]
-        if "images" in e.detail:
-            return "아카데미를 소개하는 이미지를 최소 1장 업로드 해주세요."
-
-        return "시설 정보 입력에 실패했습니다."
 
     @action(detail=True, methods=["post"])
     @extend_schema(summary="시설 정보 입력", tags=["시설"])
@@ -161,10 +176,11 @@ class FacilityViewSet(ModelViewSet):
             facility_info_serializer.validated_data['facility'] = facility
 
             facility_info_serializer.save()
+
         except ValidationError as e:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"message": self.custom_error_message(e)}
+                data={"message": get_error_message(e)}
             )
 
         return Response(
