@@ -12,6 +12,8 @@ python-decouple = "*"
 psycopg2-binary = "*"
 pillow = "*"
 requests = "*"
+boto3 = "*"
+django-storages = "*"
 
 [dev-packages]
 coverage = "*"
