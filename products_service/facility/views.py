@@ -178,10 +178,7 @@ class FacilityViewSet(ModelViewSet):
             facility_info_serializer.save()
 
         except ValidationError as e:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"message": get_error_message(e)}
-            )
+            return get_error_message(e)
 
         return Response(
             status=status.HTTP_201_CREATED,

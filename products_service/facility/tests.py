@@ -3,6 +3,7 @@ from unittest.mock import patch
 from PIL import Image
 from rest_framework.test import APITestCase
 
+from region.models import Sido, Sigungu
 from .models import FacilityInfo
 
 class FacilityAPITestCase(APITestCase):
@@ -24,9 +25,9 @@ class FacilityAPITestCase(APITestCase):
         self.url = "/api/facilities/"
         self.data = {
             "name": "테스트 시설",
-            "owner_uuid": "123e4567-e89b-12d3-a456-426614174000",
-            "owner_name": "테스트",
-            "owner_phone": "010-1234-5678",
+            "member_uuid": "123e4567-e89b-12d3-a456-426614174000",
+            "member_name": "테스트",
+            "member_phone": "010-1234-5678",
             "reg_code": "012-34-56789",
             "phone": "010-1234-5678",
             "road_address_part1": "서울특별시",
@@ -47,7 +48,7 @@ class FacilityAPITestCase(APITestCase):
             "convenience": convience,
             "equipment": equipment,
             "others": others,
-            "custom": ["asdf", "fdsa"],
+            #"custom": ["asdf", "fdsa"],
             #"images": [self.generate_photo_file()],
         }
         self.info_data_blank = {
@@ -66,18 +67,30 @@ class FacilityAPITestCase(APITestCase):
             "custom": [],
             #"images": [self.generate_photo_file()],
         }
+        sido1 = Sido.objects.create(
+            sido_code=1100000000, sido_name="서울특별시", label="서울", display="서울시"
+        )
+        self.sigungu1 = Sigungu.objects.create(
+            sigungu_code=1111000000, sigungu_name="종로구", sido=sido1
+        )
 
     def test_facility_list(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    @patch("facility.views.get_coordinates")
-    def test_facility_create_success(self, mock_get_coordinates):
-        self.data["bcode"] = "1111000000"
+    def test_facility_create_success(self):
+        with patch("facility.views.get_coordinates") as mock_get_coordinates, \
+             patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
+             patch('django.core.files.storage.default_storage.save') as mock_save, \
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+            self.data["bcode"] = "1111000000"
 
-        mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 201)
+            mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
+            mock_fetch_map_image.return_value = self.generate_photo_file()
+            mock_save.return_value = 'test.png'
+            mock_get_sigungu_from_bcode.return_value = self.sigungu1
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 201)
 
     @patch("facility.views.get_coordinates")
     def test_facility_create_failure(self, mock_get_coordinates):
@@ -119,91 +132,113 @@ class FacilityAPITestCase(APITestCase):
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 400)
 
-    @patch("facility.views.get_coordinates")
-    def test_facility_info_create_success_full(self, mock_get_coordinates):
-        self.data["bcode"] = "1111000000"
+    def test_facility_info_create_success_full(self):
+        with patch("facility.views.get_coordinates") as mock_get_coordinates, \
+             patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
+             patch('django.core.files.storage.default_storage.save') as mock_save, \
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
 
-        mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 201)
+            self.data["bcode"] = "1111000000"
 
-        facility_uuid = response.data["uuid"]
-        info_url = f"/api/facilities/{facility_uuid}/info/"
+            mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
+            mock_fetch_map_image.return_value = self.generate_photo_file()
+            mock_save.return_value = 'test.png'
+            mock_get_sigungu_from_bcode.return_value = self.sigungu1
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 201)
 
-        response = self.client.post(info_url, self.info_data_full, format="multipart")
-        self.assertEqual(response.status_code, 201)
+            facility_uuid = response.data["uuid"]
+            info_url = f"/api/facilities/{facility_uuid}/info/"
 
-        FacilityInfo.objects.get().delete()
+            response = self.client.post(info_url, self.info_data_full, format="multipart")
+            self.assertEqual(response.status_code, 201)
 
-        response = self.client.post(info_url, self.info_data_blank, format="multipart")
-        self.assertEqual(response.status_code, 201)
+            FacilityInfo.objects.get().delete()
 
-    @patch("facility.views.get_coordinates")
-    def test_facility_info_create_failure_already_exists(self, mock_get_coordinates):
-        mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
-        self.data["bcode"] = "1111000000"
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 201)
+            response = self.client.post(info_url, self.info_data_blank, format="multipart")
+            self.assertEqual(response.status_code, 201)
 
-        facility_uuid = response.data["uuid"]
-        info_url = f"/api/facilities/{facility_uuid}/info/"
+    def test_facility_info_create_failure_already_exists(self):
+        with patch("facility.views.get_coordinates") as mock_get_coordinates, \
+             patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
+             patch('django.core.files.storage.default_storage.save') as mock_save, \
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+            mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
+            mock_fetch_map_image.return_value = self.generate_photo_file()
+            mock_save.return_value = 'test.png'
+            mock_get_sigungu_from_bcode.return_value = self.sigungu1
 
-        response = self.client.post(info_url, self.info_data_full, format="multipart")
-        self.assertEqual(response.status_code, 201)
+            self.data["bcode"] = "1111000000"
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 201)
 
-        response = self.client.post(info_url, self.info_data_full, format="multipart")
-        self.assertEqual(response.status_code, 400)
+            facility_uuid = response.data["uuid"]
+            info_url = f"/api/facilities/{facility_uuid}/info/"
 
-    @patch("facility.views.get_coordinates")
-    def test_facility_info_create_failure(self, mock_get_coordinates):
-        mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
-        self.data["bcode"] = "1111000000"
-        response = self.client.post(self.url, self.data)
+            response = self.client.post(info_url, self.info_data_full, format="multipart")
+            self.assertEqual(response.status_code, 201)
 
-        facility_uuid = response.data["uuid"]
-        info_url = f"/api/facilities/{facility_uuid}/info/"
+            response = self.client.post(info_url, self.info_data_full, format="multipart")
+            self.assertEqual(response.status_code, 400)
 
-        # 1. no num mounds
-        del self.info_data_blank["num_mounds"]
-        response = self.client.post(info_url, self.info_data_blank, format="multipart")
-        self.assertEqual(response.status_code, 400)
+    def test_facility_info_create_failure(self):
+        with patch("facility.views.get_coordinates") as mock_get_coordinates, \
+             patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
+             patch('django.core.files.storage.default_storage.save') as mock_save, \
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+            mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
+            mock_fetch_map_image.return_value = self.generate_photo_file()
+            mock_save.return_value = 'test.png'
+            mock_get_sigungu_from_bcode.return_value = self.sigungu1
 
-        # 2. no num plates
-        self.info_data_blank["num_mounds"] = 1
-        del self.info_data_blank["num_plates"]
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
+            self.data["bcode"] = "1111000000"
+            response = self.client.post(self.url, self.data)
 
-        # 3. no intro
-        self.info_data_blank["num_plates"] = 1
-        del self.info_data_blank["intro"]
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            facility_uuid = response.data["uuid"]
+            info_url = f"/api/facilities/{facility_uuid}/info/"
 
-        # 4. wrong time formats
-        self.info_data_blank["intro"] = "테스트 시설 소개"
-        self.info_data_blank["weekday_open"] = "0900"
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            # 1. no num mounds
+            del self.info_data_blank["num_mounds"]
+            response = self.client.post(info_url, self.info_data_blank, format="multipart")
+            self.assertEqual(response.status_code, 400)
 
-        self.info_data_blank["weekday_open"] = "09:00"
-        self.info_data_blank["weekday_close"] = "1800"
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            # 2. no num plates
+            self.info_data_blank["num_mounds"] = 1
+            del self.info_data_blank["num_plates"]
+            self.client.post(info_url, self.info_data_blank, format="multipart")
 
-        self.info_data_blank["weekday_close"] = "18:00"
-        self.info_data_blank["saturday_open"] = "0900"
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            # 3. no intro
+            self.info_data_blank["num_plates"] = 1
+            del self.info_data_blank["intro"]
+            self.client.post(info_url, self.info_data_blank, format="multipart")
 
-        self.info_data_blank["saturday_open"] = "09:00"
-        self.info_data_blank["saturday_close"] = "1800"
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            # 4. wrong time formats
+            self.info_data_blank["intro"] = "테스트 시설 소개"
+            self.info_data_blank["weekday_open"] = "0900"
+            self.client.post(info_url, self.info_data_blank, format="multipart")
 
-        self.info_data_blank["saturday_close"] = "18:00"
-        self.info_data_blank["sunday_open"] = "0900"
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            self.info_data_blank["weekday_open"] = "09:00"
+            self.info_data_blank["weekday_close"] = "1800"
+            self.client.post(info_url, self.info_data_blank, format="multipart")
 
-        self.info_data_blank["sunday_open"] = "09:00"
-        self.info_data_blank["sunday_close"] = "1800"
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            self.info_data_blank["weekday_close"] = "18:00"
+            self.info_data_blank["saturday_open"] = "0900"
+            self.client.post(info_url, self.info_data_blank, format="multipart")
 
-        # 5. no images
-        self.info_data_blank["sunday_close"] = "18:00"
-        self.info_data_blank["images"] = []
-        self.client.post(info_url, self.info_data_blank, format="multipart")
+            self.info_data_blank["saturday_open"] = "09:00"
+            self.info_data_blank["saturday_close"] = "1800"
+            self.client.post(info_url, self.info_data_blank, format="multipart")
+
+            self.info_data_blank["saturday_close"] = "18:00"
+            self.info_data_blank["sunday_open"] = "0900"
+            self.client.post(info_url, self.info_data_blank, format="multipart")
+
+            self.info_data_blank["sunday_open"] = "09:00"
+            self.info_data_blank["sunday_close"] = "1800"
+            self.client.post(info_url, self.info_data_blank, format="multipart")
+
+            # 5. no images
+            self.info_data_blank["sunday_close"] = "18:00"
+            self.info_data_blank["images"] = []
+            self.client.post(info_url, self.info_data_blank, format="multipart")
