@@ -1,15 +1,11 @@
-import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.models import Provider
 from facility.models import Facility
 from .enums import CareerChoices
 
-class Coach(models.Model):
-    coach_uuid          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_uuid           = models.UUIDField(editable=False)
-    coach_name          = models.CharField(max_length=30)
-    coach_phone         = models.CharField(max_length=20)
+class Coach(Provider):
     certification       = models.FileField()
     facility            = models.ForeignKey(Facility, null=True, on_delete=models.SET_NULL)
 
@@ -17,8 +13,6 @@ class Coach(models.Model):
 
     ## 상세 정보: 코치 계좌 정보
     ## TODO: ADD BANK INFO
-
-    is_confirmed        = models.BooleanField(default=False)
 
     objects = models.Manager()
 
