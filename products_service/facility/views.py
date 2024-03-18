@@ -61,7 +61,7 @@ def get_error_message(e):
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": e.detail[err_type][0]}
             )
-        
+
     if "images" in e.detail:
         return Response(
             status=status.HTTP_400_BAD_REQUEST,
@@ -98,7 +98,7 @@ def fetch_map_image(lat, lng):
             )
 
         return ContentFile(response.content)
-    
+
     except requests.RequestException as e:
         return Response(
             {'message': str(e)},

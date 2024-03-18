@@ -19,7 +19,7 @@ class FacilityView(APIView):
         REQUEST_URL = f'{products_service_url}/api/facilities/'
 
         return get_response(request.headers, request.body, REQUEST_URL, 'POST')
-    
+
     def get(self, request):
         REQUEST_URL = f'{products_service_url}/api/facilities/'
 
