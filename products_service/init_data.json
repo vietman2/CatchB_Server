@@ -2,87 +2,151 @@
   {
     "model": "region.sido",
     "pk": 1100000000,
-    "fields": { "sido_name": "서울특별시", "label": "서울" }
+    "fields": {
+      "sido_name": "서울특별시",
+      "label": "서울",
+      "display": "서울시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 2600000000,
-    "fields": { "sido_name": "부산광역시", "label": "부산" }
+    "fields": {
+      "sido_name": "부산광역시",
+      "label": "부산",
+      "display": "부산시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 2700000000,
-    "fields": { "sido_name": "대구광역시", "label": "대구" }
+    "fields": {
+      "sido_name": "대구광역시",
+      "label": "대구",
+      "display": "대구시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 2800000000,
-    "fields": { "sido_name": "인천광역시", "label": "인천" }
+    "fields": {
+      "sido_name": "인천광역시",
+      "label": "인천",
+      "display": "인천시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 2900000000,
-    "fields": { "sido_name": "광주광역시", "label": "광주" }
+    "fields": {
+      "sido_name": "광주광역시",
+      "label": "광주",
+      "display": "광주시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 3000000000,
-    "fields": { "sido_name": "대전광역시", "label": "대전" }
+    "fields": {
+      "sido_name": "대전광역시",
+      "label": "대전",
+      "display": "대전시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 3100000000,
-    "fields": { "sido_name": "울산광역시", "label": "울산" }
+    "fields": {
+      "sido_name": "울산광역시",
+      "label": "울산",
+      "display": "울산시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 3611000000,
-    "fields": { "sido_name": "세종특별자치시", "label": "세종" }
+    "fields": {
+      "sido_name": "세종특별자치시",
+      "label": "세종",
+      "display": "세종시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 4100000000,
-    "fields": { "sido_name": "경기도", "label": "경기" }
+    "fields": { "sido_name": "경기도", "label": "경기", "display": "경기도" }
   },
   {
     "model": "region.sido",
     "pk": 4300000000,
-    "fields": { "sido_name": "충청북도", "label": "충북" }
+    "fields": {
+      "sido_name": "충청북도",
+      "label": "충북",
+      "display": "충청북도"
+    }
   },
   {
     "model": "region.sido",
     "pk": 4400000000,
-    "fields": { "sido_name": "충청남도", "label": "충남" }
+    "fields": {
+      "sido_name": "충청남도",
+      "label": "충남",
+      "display": "충청남도"
+    }
   },
   {
     "model": "region.sido",
     "pk": 4500000000,
-    "fields": { "sido_name": "전라북도", "label": "전북" }
+    "fields": {
+      "sido_name": "전라북도",
+      "label": "전북",
+      "display": "전라북도"
+    }
   },
   {
     "model": "region.sido",
     "pk": 4600000000,
-    "fields": { "sido_name": "전라남도", "label": "전남" }
+    "fields": {
+      "sido_name": "전라남도",
+      "label": "전남",
+      "display": "전라남도"
+    }
   },
   {
     "model": "region.sido",
     "pk": 4700000000,
-    "fields": { "sido_name": "경상북도", "label": "경북" }
+    "fields": {
+      "sido_name": "경상북도",
+      "label": "경북",
+      "display": "경상북도"
+    }
   },
   {
     "model": "region.sido",
     "pk": 4800000000,
-    "fields": { "sido_name": "경상남도", "label": "경남" }
+    "fields": {
+      "sido_name": "경상남도",
+      "label": "경남",
+      "display": "경상남도"
+    }
   },
   {
     "model": "region.sido",
     "pk": 5000000000,
-    "fields": { "sido_name": "제주특별자치도", "label": "제주" }
+    "fields": {
+      "sido_name": "제주특별자치도",
+      "label": "제주",
+      "display": "제주시"
+    }
   },
   {
     "model": "region.sido",
     "pk": 5100000000,
-    "fields": { "sido_name": "강원특별자치도", "label": "강원" }
+    "fields": {
+      "sido_name": "강원특별자치도",
+      "label": "강원",
+      "display": "강원도"
+    }
   },
   {
     "model": "region.sigungu",

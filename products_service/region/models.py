@@ -4,6 +4,7 @@ class Sido(models.Model):
     sido_code = models.PositiveBigIntegerField(primary_key=True)
     sido_name = models.CharField(max_length=20)
     label     = models.CharField(max_length=2)
+    display   = models.CharField(max_length=4)
 
     objects = models.Manager()
 
