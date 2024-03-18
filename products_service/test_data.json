@@ -1,0 +1,71 @@
+[
+  {
+    "model": "facility.facility",
+    "pk": "0ac8df28-ad6d-4a8d-aef6-28a71a702fec",
+    "fields": {
+      "member_uuid": "b48db7e2-de01-46ca-907f-aa2c8b9321e9",
+      "member_name": "서 울대",
+      "member_phone": "010-9876-6789",
+      "is_confirmed": false,
+      "name": "서울대 야구장",
+      "phone": "010-9876-6789",
+      "reg_code": "987-65-43210",
+      "region": 1162000000,
+      "road_address_part1": "서울 관악구 관악로 1",
+      "road_address_part2": "보조운동장",
+      "building_name": "서울대학교",
+      "eng_address": "1, Gwanak-ro, Gwanak-gu, Seoul, Republic of Korea",
+      "jibun_address": "서울특별시 관악구 신림동 산56-1 서울대학교",
+      "zip_code": "08826",
+      "longitude": "126.9522394",
+      "latitude": "37.4640070",
+      "map_image": "products/facility/0ac8df28-ad6d-4a8d-aef6-28a71a702fec/map_image.png"
+    }
+  },
+  {
+    "model": "facility.facility",
+    "pk": "70c6826a-6e98-46e9-a876-ff5d734b03d1",
+    "fields": {
+      "member_uuid": "71646c72-d9bb-44ad-96ad-8925795eea8b",
+      "member_name": "캐 치비",
+      "member_phone": "010-1234-4321",
+      "is_confirmed": false,
+      "name": "캐치비 타격 아카데미",
+      "phone": "010-1234-4321",
+      "reg_code": "135-79-02468",
+      "region": 2826000000,
+      "road_address_part1": "인천 서구 청라한내로72번길 17",
+      "road_address_part2": "417호",
+      "building_name": "청라 큐브시그니처 3차 오피스텔",
+      "eng_address": "17, Cheongna hannae-ro 72beon-gil, Seo-gu, Incheon, Republic of Korea",
+      "jibun_address": "인천광역시 서구 청라동 97-3 청라 큐브시그니처 3차 오피스텔",
+      "zip_code": "22758",
+      "longitude": "126.6294447",
+      "latitude": "37.5320388",
+      "map_image": "products/facility/70c6826a-6e98-46e9-a876-ff5d734b03d1/map_image.png"
+    }
+  },
+  {
+    "model": "facility.facility",
+    "pk": "8b84b364-4713-4304-ab90-b457c29d9555",
+    "fields": {
+      "member_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "member_name": "사 장님",
+      "member_phone": "010-2222-2222",
+      "is_confirmed": false,
+      "name": "Catch B 아카데미",
+      "phone": "010-0000-5555",
+      "reg_code": "012-34-56789",
+      "region": 2826000000,
+      "road_address_part1": "인천 서구 청라한내로72번길 17",
+      "road_address_part2": "416호",
+      "building_name": "청라 큐브시그니처 3차 오피스텔",
+      "eng_address": "17, Cheongna hannae-ro 72beon-gil, Seo-gu, Incheon, Republic of Korea",
+      "jibun_address": "인천광역시 서구 청라동 97-3 청라 큐브시그니처 3차 오피스텔",
+      "zip_code": "22758",
+      "longitude": "126.6294447",
+      "latitude": "37.5320388",
+      "map_image": "products/facility/8b84b364-4713-4304-ab90-b457c29d9555/map_image.png"
+    }
+  }
+]
