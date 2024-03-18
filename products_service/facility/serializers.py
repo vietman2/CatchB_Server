@@ -8,15 +8,24 @@ class FacilitySimpleSerializer(serializers.ModelSerializer):
     """
         목록 조회용 시설 정보
     """
+    region = serializers.SerializerMethodField()
+
     class Meta:
         model = Facility
         fields = [
             "name",
             "uuid",
-            "address",
-            "phone",
+            "region",
+            "map_image",
+            "latitude",
+            "longitude",
         ]
-        depth = 1
+
+    def get_region(self, obj):
+        sigungu_name = obj.region.sigungu_name
+        sido_name = obj.region.sido.sido_name
+
+        return f"{sido_name} {sigungu_name}"
 
 class FacilityCreateSerializer(serializers.ModelSerializer):
     """
@@ -41,13 +50,13 @@ class FacilityCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Facility
         fields = [
+            "member_uuid",
+            "member_name",
+            "member_phone",
             "name",
-            "owner_uuid",
-            "owner_name",
-            "owner_phone",
+            "phone",
             "reg_code",
             "region",
-            "phone",
             "road_address_part1",
             "road_address_part2",
             "building_name",
