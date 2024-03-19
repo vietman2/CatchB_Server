@@ -25,6 +25,7 @@ class Provider(models.Model):
     member_phone    = models.CharField(max_length=13)
 
     is_confirmed    = models.BooleanField(default=False)
+    is_complete     = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
