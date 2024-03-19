@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator as Min, MaxValueValidator as Max
 
-from core.models import Provider, Image     ## pylint: disable=#0611
+from core.models import Provider, Image     ## pylint: disable=#E0611
 from region.models import Sigungu
 
 class Facility(Provider):
