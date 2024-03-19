@@ -82,68 +82,68 @@ class FacilityAPITestCase(APITestCase):
         with patch("facility.views.get_coordinates") as mock_get_coordinates, \
              patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
              patch('django.core.files.storage.default_storage.save') as mock_save, \
-             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu:
             self.data["bcode"] = "1111000000"
 
             mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
             mock_fetch_map_image.return_value = self.generate_photo_file()
             mock_save.return_value = 'test.png'
-            mock_get_sigungu_from_bcode.return_value = self.sigungu1
+            mock_get_sigungu.return_value = self.sigungu1
             response = self.client.post(self.url, self.data)
             self.assertEqual(response.status_code, 201)
 
-    @patch("facility.views.get_coordinates")
-    def test_facility_create_failure(self, mock_get_coordinates):
-        mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
-        # 1. no bcode
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+    def test_facility_create_failure(self):
+        with patch("facility.views.get_coordinates") as mock:
+            mock.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
+            # 1. no bcode
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
-        # 2. wrong bcode
-        self.data["bcode"] = "0000000000"
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+            # 2. wrong bcode
+            self.data["bcode"] = "0000000000"
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
-        # 3. invalid bcode
-        self.data["bcode"] = "asdfasdfas"
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+            # 3. invalid bcode
+            self.data["bcode"] = "asdfasdfas"
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
-        # 4. no name
-        self.data["bcode"] = "1111000000"
-        del self.data["name"]
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+            # 4. no name
+            self.data["bcode"] = "1111000000"
+            del self.data["name"]
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
-        # 5. no phone
-        self.data["name"] = "테스트 시설"
-        del self.data["phone"]
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+            # 5. no phone
+            self.data["name"] = "테스트 시설"
+            del self.data["phone"]
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
-        # 6. no reg_code
-        self.data["phone"] = "010-1234-5678"
-        del self.data["reg_code"]
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+            # 6. no reg_code
+            self.data["phone"] = "010-1234-5678"
+            del self.data["reg_code"]
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
-        # 7. wrong reg_code
-        self.data["reg_code"] = "0123456789"
-        response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, 400)
+            # 7. wrong reg_code
+            self.data["reg_code"] = "0123456789"
+            response = self.client.post(self.url, self.data)
+            self.assertEqual(response.status_code, 400)
 
     def test_facility_info_create_success_full(self):
         with patch("facility.views.get_coordinates") as mock_get_coordinates, \
              patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
              patch('django.core.files.storage.default_storage.save') as mock_save, \
-             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu:
 
             self.data["bcode"] = "1111000000"
 
             mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
             mock_fetch_map_image.return_value = self.generate_photo_file()
             mock_save.return_value = 'test.png'
-            mock_get_sigungu_from_bcode.return_value = self.sigungu1
+            mock_get_sigungu.return_value = self.sigungu1
             response = self.client.post(self.url, self.data)
             self.assertEqual(response.status_code, 201)
 
@@ -162,11 +162,11 @@ class FacilityAPITestCase(APITestCase):
         with patch("facility.views.get_coordinates") as mock_get_coordinates, \
              patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
              patch('django.core.files.storage.default_storage.save') as mock_save, \
-             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu:
             mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
             mock_fetch_map_image.return_value = self.generate_photo_file()
             mock_save.return_value = 'test.png'
-            mock_get_sigungu_from_bcode.return_value = self.sigungu1
+            mock_get_sigungu.return_value = self.sigungu1
 
             self.data["bcode"] = "1111000000"
             response = self.client.post(self.url, self.data)
@@ -185,11 +185,11 @@ class FacilityAPITestCase(APITestCase):
         with patch("facility.views.get_coordinates") as mock_get_coordinates, \
              patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
              patch('django.core.files.storage.default_storage.save') as mock_save, \
-             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu_from_bcode:
+             patch("region.models.SigunguManager.get_sigungu_from_bcode") as mock_get_sigungu:
             mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
             mock_fetch_map_image.return_value = self.generate_photo_file()
             mock_save.return_value = 'test.png'
-            mock_get_sigungu_from_bcode.return_value = self.sigungu1
+            mock_get_sigungu.return_value = self.sigungu1
 
             mock_get_coordinates.return_value = (0, 0, "asdf", "asdf")
             self.data["bcode"] = "1111000000"
