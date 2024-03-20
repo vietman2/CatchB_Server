@@ -4,7 +4,7 @@
     "pk": "0ac8df28-ad6d-4a8d-aef6-28a71a702fec",
     "fields": {
       "member_uuid": "b48db7e2-de01-46ca-907f-aa2c8b9321e9",
-      "member_name": "서 울대",
+      "member_name": "서울대",
       "member_phone": "010-9876-6789",
       "is_confirmed": false,
       "name": "서울대 야구장",
@@ -27,7 +27,7 @@
     "pk": "70c6826a-6e98-46e9-a876-ff5d734b03d1",
     "fields": {
       "member_uuid": "71646c72-d9bb-44ad-96ad-8925795eea8b",
-      "member_name": "캐 치비",
+      "member_name": "캐치비",
       "member_phone": "010-1234-4321",
       "is_confirmed": false,
       "name": "캐치비 타격 아카데미",
@@ -50,7 +50,7 @@
     "pk": "8b84b364-4713-4304-ab90-b457c29d9555",
     "fields": {
       "member_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
-      "member_name": "사 장님",
+      "member_name": "사장님",
       "member_phone": "010-2222-2222",
       "is_confirmed": false,
       "name": "Catch B 아카데미",
@@ -66,6 +66,48 @@
       "longitude": "126.6294447",
       "latitude": "37.5320388",
       "map_image": "products/facility/8b84b364-4713-4304-ab90-b457c29d9555/map_image.png"
+    }
+  },
+  {
+    "model": "coach.coach",
+    "pk": "7e1186bf-3172-41df-91fd-a9f74f2508ca",
+    "fields": {
+      "member_uuid": "cc8eb907-97fa-42b1-9b74-4126b04bc024",
+      "member_name": "이대호",
+      "member_phone": "010-8989-8989",
+      "is_confirmed": false,
+      "is_complete": false,
+      "certification": "products/coach/7e1186bf-3172-41df-91fd-a9f74f2508ca/certification.pdf",
+      "facility": null,
+      "baseball_career": 1
+    }
+  },
+  {
+    "model": "coach.coach",
+    "pk": "c5c5636e-74e8-4ee5-b0d8-8356830b2e76",
+    "fields": {
+      "member_uuid": "5d5c5796-61a7-4983-ae62-1bb9fbd46a7b",
+      "member_name": "이승엽",
+      "member_phone": "010-2323-2323",
+      "is_confirmed": false,
+      "is_complete": false,
+      "certification": "products/coach/c5c5636e-74e8-4ee5-b0d8-8356830b2e76/certification.jpg",
+      "facility": null,
+      "baseball_career": 1
+    }
+  },
+  {
+    "model": "coach.coach",
+    "pk": "e8217f3c-1aee-4a24-9fe6-a1347b278c16",
+    "fields": {
+      "member_uuid": "f5afb4a0-8c5f-40cf-9f71-0055fd0e480e",
+      "member_name": "홍승우",
+      "member_phone": "010-0101-1010",
+      "is_confirmed": false,
+      "is_complete": false,
+      "certification": "products/coach/e8217f3c-1aee-4a24-9fe6-a1347b278c16/certification.jpg",
+      "facility": null,
+      "baseball_career": 1
     }
   }
 ]
