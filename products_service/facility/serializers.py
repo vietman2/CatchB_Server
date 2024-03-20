@@ -27,6 +27,34 @@ class FacilitySimpleSerializer(serializers.ModelSerializer):
 
         return f"{sido_name} {sigungu_name}"
 
+class FacilityDetailSeralizer(serializers.ModelSerializer):
+    """
+        상세 조회용 시설 정보
+    """
+    region = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
+    #info = serializers.FacilityInfoSerializer()
+
+    class Meta:
+        model = Facility
+        fields = [
+            "name",
+            "phone",
+            "region",
+            "address",
+            "map_image",
+            #"info",
+        ]
+
+    def get_region(self, obj):
+        sigungu_name = obj.region.sigungu_name
+        sido_name = obj.region.sido.display
+
+        return f"{sido_name} {sigungu_name}"
+
+    def get_address(self, obj):
+        return f"{obj.road_address_part1} {obj.road_address_part2} {obj.building_name}"
+
 class FacilityCreateSerializer(serializers.ModelSerializer):
     """
         시설 생성용 시설 정보
@@ -137,7 +165,6 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacilityInfo
         fields = [
-            "facility",
             "intro",
             "weekday_open",
             "weekday_close",
@@ -149,7 +176,6 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
             "num_plates",
             #"images",
         ]
-        read_only_fields = ["facility"]
 
     def convenience(self, choices):     ## pylint: disable=R0912
         if 'Wi-Fi' in choices:
@@ -236,9 +262,9 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
 
         self.validated_data['custom_equipment'] = custom
 
-    def upload_images(self, choices, uuid):
+    def upload_images(self, data, uuid):
         images = []
-        for image in choices:
+        for image in data:
             save_path = f"facility_images/{uuid}/{image.name}"
             path = default_storage.save(save_path, image)
             images.append(path)
