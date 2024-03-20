@@ -1,12 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Provider        ## pylint: disable=#E0611
+from core.models import Provider, Image     ## pylint: disable=#E0611
 from facility.models import Facility
 from .enums import CareerChoices
 
 class Coach(Provider):
-    certification       = models.FileField()
+    certification       = models.FileField(blank=True)
     facility            = models.ForeignKey(Facility, null=True, on_delete=models.SET_NULL)
 
     baseball_career     = models.IntegerField(choices=CareerChoices.choices)
@@ -18,6 +18,7 @@ class Coach(Provider):
 
     class Meta:
         db_table = 'coach'
+        unique_together = ['member_uuid', 'uuid']
 
 class CoachInfo(models.Model):
     ## 코치 기본 소개
@@ -47,9 +48,22 @@ class CoachInfo(models.Model):
     others          = models.BooleanField(default=False)
 
     ## 코치 정보3: 소개 이미지/영상
-    ## TODO: Add Later
+    images          = models.ManyToManyField('CoachImage', related_name='coach_info')
 
-    objects = models.Manager()
+    ## 코치 정보4: 선호 지역
+    regions         = models.ManyToManyField('region.Sigungu', related_name='coach_info')
+
+    objects         = models.Manager()
 
     class Meta:
         db_table = 'coach_info'
+
+class CoachImage(Image):
+    coach       = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name='coach_images')
+
+    cover       = models.BooleanField(default=False)
+
+    objects     = models.Manager()
+
+    class Meta:
+        db_table = 'coach_image'
