@@ -31,7 +31,7 @@ class Provider(models.Model):
         abstract = True
 
 class Image(TimeStampedModel):
-    image   = models.ImageField()
+    image   = models.FileField()
 
     class Meta:
         abstract = True
