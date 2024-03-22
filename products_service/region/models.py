@@ -4,6 +4,7 @@ class Sido(models.Model):
     sido_code = models.PositiveBigIntegerField(primary_key=True)
     sido_name = models.CharField(max_length=20)
     label     = models.CharField(max_length=2)
+    display   = models.CharField(max_length=4)
 
     objects = models.Manager()
 
@@ -17,6 +18,10 @@ class SigunguManager(models.Manager):
         sigungu = self.get(sigungu_code=sigungu_code)
 
         return sigungu
+
+    def get_display_name(self, obj):
+        sido = obj.sido.label
+        return f"{sido} {obj.sigungu_name}"
 
 class Sigungu(models.Model):
     sigungu_code    = models.PositiveBigIntegerField(primary_key=True)

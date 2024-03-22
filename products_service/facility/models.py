@@ -1,40 +1,35 @@
-import uuid
 from django.db import models
 from django.core.validators import MinValueValidator as Min, MaxValueValidator as Max
-#from django.contrib.postgres.fields import ArrayField
 
+from core.models import Provider, Image     ## pylint: disable=E0611
 from region.models import Sigungu
 
-class Facility(models.Model):
-    ## 기본 정보: 시설 이름, 시설 고유번호, 시설 소유자 고유번호
-    uuid        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class Facility(Provider):
     name        = models.CharField(max_length=20)
-    owner_uuid  = models.UUIDField()
-    owner_name  = models.CharField(max_length=10)
-    owner_phone = models.CharField(max_length=13)
-    reg_code    = models.CharField(unique=True, editable=False, max_length=12)
-
-    ## 상세 정보: 시설 지역, 시설 전화번호
-    region      = models.ForeignKey(Sigungu, on_delete=models.PROTECT)
     phone       = models.CharField(max_length=13)
+    reg_code    = models.CharField(unique=True, editable=False, max_length=12)
 
     ## 상세 정보: 시설 주소
     # 주소
+    region              = models.ForeignKey(Sigungu, on_delete=models.PROTECT)
     road_address_part1  = models.CharField(max_length=30)
     road_address_part2  = models.CharField(max_length=30)
-    building_name       = models.CharField(max_length=15)
-    eng_address         = models.CharField(max_length=50)
-    jibun_address       = models.CharField(max_length=30)
-    zip_code            = models.PositiveIntegerField(validators=[Min(10000), Max(99999)])
+    building_name       = models.CharField(max_length=30)
+    eng_address         = models.CharField(max_length=80)
+    jibun_address       = models.CharField(max_length=50)
+    zip_code            = models.CharField(max_length=5)
+
+    # 좌표
+    longitude           = models.DecimalField(max_digits=10, decimal_places=7)
+    latitude            = models.DecimalField(max_digits=10, decimal_places=7)
+
+    # 지도 이미지
+    map_image           = models.ImageField(blank=True)
 
     ## 상세 정보: 시설 계좌 정보
     ## TODO: ADD BANK INFO
 
-    # 좌표
-    longitude           = models.DecimalField(max_digits=9, decimal_places=6)
-    latitude            = models.DecimalField(max_digits=9, decimal_places=6)
-
-    is_confirmed        = models.BooleanField(default=False)
+    is_complete     = models.BooleanField(default=False)
 
     objects = models.Manager()
 
@@ -112,3 +107,13 @@ class FacilityInfo(models.Model):
 
     class Meta:
         db_table = "facility_info"
+
+class FacilityImage(Image):
+    facility    = models.ForeignKey(Facility, on_delete=models.CASCADE, related_name="fac_images")
+
+    cover       = models.BooleanField(default=False)
+
+    objects     = models.Manager()
+
+    class Meta:
+        db_table = 'facility_image'

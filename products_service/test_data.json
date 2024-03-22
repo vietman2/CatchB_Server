@@ -1,0 +1,198 @@
+[
+  {
+    "model": "coach.coach",
+    "pk": "7e1186bf-3172-41df-91fd-a9f74f2508ca",
+    "fields": {
+      "member_uuid": "cc8eb907-97fa-42b1-9b74-4126b04bc024",
+      "member_name": "이대호",
+      "member_phone": "010-8989-8989",
+      "is_confirmed": true,
+      "certification": "products/coach/7e1186bf-3172-41df-91fd-a9f74f2508ca/certification.pdf",
+      "facility": null,
+      "baseball_career": 1
+    }
+  },
+  {
+    "model": "coach.coach",
+    "pk": "c5c5636e-74e8-4ee5-b0d8-8356830b2e76",
+    "fields": {
+      "member_uuid": "5d5c5796-61a7-4983-ae62-1bb9fbd46a7b",
+      "member_name": "이승엽",
+      "member_phone": "010-2323-2323",
+      "is_confirmed": false,
+      "certification": "products/coach/c5c5636e-74e8-4ee5-b0d8-8356830b2e76/certification.jpg",
+      "facility": null,
+      "baseball_career": 1
+    }
+  },
+  {
+    "model": "coach.coach",
+    "pk": "e8217f3c-1aee-4a24-9fe6-a1347b278c16",
+    "fields": {
+      "member_uuid": "f5afb4a0-8c5f-40cf-9f71-0055fd0e480e",
+      "member_name": "홍승우",
+      "member_phone": "010-0101-1010",
+      "is_confirmed": true,
+      "certification": "products/coach/e8217f3c-1aee-4a24-9fe6-a1347b278c16/certification.jpg",
+      "facility": "70c6826a-6e98-46e9-a876-ff5d734b03d1",
+      "baseball_career": 1
+    }
+  },
+  {
+    "model": "coach.coachinfo",
+    "pk": 1,
+    "fields": {
+      "coach": "e8217f3c-1aee-4a24-9fe6-a1347b278c16",
+      "intro": "ㅋㅋㅋㅋ",
+      "pitching": false,
+      "batting": true,
+      "defense": false,
+      "catching": false,
+      "rehabilitation": false,
+      "conditioning": false,
+      "beginner1": true,
+      "beginner2": true,
+      "amateur": true,
+      "veteran": true,
+      "rookie": true,
+      "elite": false,
+      "individual": true,
+      "group": true,
+      "team": false,
+      "others": false,
+      "images": [1, 2],
+      "regions": [2818500000, 2826000000]
+    }
+  },
+  {
+    "model": "coach.coachinfo",
+    "pk": 2,
+    "fields": {
+      "coach": "7e1186bf-3172-41df-91fd-a9f74f2508ca",
+      "intro": "롯데",
+      "pitching": false,
+      "batting": true,
+      "defense": true,
+      "catching": false,
+      "rehabilitation": false,
+      "conditioning": false,
+      "beginner1": false,
+      "beginner2": false,
+      "amateur": false,
+      "veteran": false,
+      "rookie": false,
+      "elite": true,
+      "individual": true,
+      "group": false,
+      "team": false,
+      "others": false,
+      "images": [3],
+      "regions": [2635000000]
+    }
+  },
+  {
+    "model": "coach.coachimage",
+    "pk": 1,
+    "fields": {
+      "created_at": "2024-03-20T07:15:37.865Z",
+      "updated_at": "2024-03-20T07:15:37.865Z",
+      "image": "products/coach/e8217f3c-1aee-4a24-9fe6-a1347b278c16/image0",
+      "coach": "e8217f3c-1aee-4a24-9fe6-a1347b278c16",
+      "cover": true
+    }
+  },
+  {
+    "model": "coach.coachimage",
+    "pk": 2,
+    "fields": {
+      "created_at": "2024-03-20T07:15:38.377Z",
+      "updated_at": "2024-03-20T07:15:38.377Z",
+      "image": "products/coach/e8217f3c-1aee-4a24-9fe6-a1347b278c16/image1",
+      "coach": "e8217f3c-1aee-4a24-9fe6-a1347b278c16",
+      "cover": false
+    }
+  },
+  {
+    "model": "coach.coachimage",
+    "pk": 3,
+    "fields": {
+      "created_at": "2024-03-22T05:00:37.492Z",
+      "updated_at": "2024-03-22T05:00:37.492Z",
+      "image": "products/coach/7e1186bf-3172-41df-91fd-a9f74f2508ca/image0",
+      "coach": "7e1186bf-3172-41df-91fd-a9f74f2508ca",
+      "cover": true
+    }
+  },
+  {
+    "model": "facility.facility",
+    "pk": "0ac8df28-ad6d-4a8d-aef6-28a71a702fec",
+    "fields": {
+      "member_uuid": "b48db7e2-de01-46ca-907f-aa2c8b9321e9",
+      "member_name": "서울대",
+      "member_phone": "010-9876-6789",
+      "is_confirmed": false,
+      "name": "서울대 야구장",
+      "phone": "010-9876-6789",
+      "reg_code": "987-65-43210",
+      "region": 1162000000,
+      "road_address_part1": "서울 관악구 관악로 1",
+      "road_address_part2": "보조운동장",
+      "building_name": "서울대학교",
+      "eng_address": "1, Gwanak-ro, Gwanak-gu, Seoul, Republic of Korea",
+      "jibun_address": "서울특별시 관악구 신림동 산56-1 서울대학교",
+      "zip_code": "08826",
+      "longitude": "126.9522394",
+      "latitude": "37.4640070",
+      "map_image": "products/facility/0ac8df28-ad6d-4a8d-aef6-28a71a702fec/map_image.png",
+      "is_complete": false
+    }
+  },
+  {
+    "model": "facility.facility",
+    "pk": "70c6826a-6e98-46e9-a876-ff5d734b03d1",
+    "fields": {
+      "member_uuid": "71646c72-d9bb-44ad-96ad-8925795eea8b",
+      "member_name": "캐치비",
+      "member_phone": "010-1234-4321",
+      "is_confirmed": false,
+      "name": "캐치비 타격 아카데미",
+      "phone": "010-1234-4321",
+      "reg_code": "135-79-02468",
+      "region": 2826000000,
+      "road_address_part1": "인천 서구 청라한내로72번길 17",
+      "road_address_part2": "417호",
+      "building_name": "청라 큐브시그니처 3차 오피스텔",
+      "eng_address": "17, Cheongna hannae-ro 72beon-gil, Seo-gu, Incheon, Republic of Korea",
+      "jibun_address": "인천광역시 서구 청라동 97-3 청라 큐브시그니처 3차 오피스텔",
+      "zip_code": "22758",
+      "longitude": "126.6294447",
+      "latitude": "37.5320388",
+      "map_image": "products/facility/70c6826a-6e98-46e9-a876-ff5d734b03d1/map_image.png",
+      "is_complete": false
+    }
+  },
+  {
+    "model": "facility.facility",
+    "pk": "8b84b364-4713-4304-ab90-b457c29d9555",
+    "fields": {
+      "member_uuid": "d35c3371-e88b-4c20-8d4e-976b964fdb6e",
+      "member_name": "사장님",
+      "member_phone": "010-2222-2222",
+      "is_confirmed": false,
+      "name": "Catch B 아카데미",
+      "phone": "010-0000-5555",
+      "reg_code": "012-34-56789",
+      "region": 2826000000,
+      "road_address_part1": "인천 서구 청라한내로72번길 17",
+      "road_address_part2": "416호",
+      "building_name": "청라 큐브시그니처 3차 오피스텔",
+      "eng_address": "17, Cheongna hannae-ro 72beon-gil, Seo-gu, Incheon, Republic of Korea",
+      "jibun_address": "인천광역시 서구 청라동 97-3 청라 큐브시그니처 3차 오피스텔",
+      "zip_code": "22758",
+      "longitude": "126.6294447",
+      "latitude": "37.5320388",
+      "map_image": "products/facility/8b84b364-4713-4304-ab90-b457c29d9555/map_image.png",
+      "is_complete": false
+    }
+  }
+]

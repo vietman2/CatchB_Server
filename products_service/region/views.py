@@ -19,8 +19,7 @@ class RegionViewSet(ModelViewSet):
         sigungu = {}
         for sido in sido_list:
             sido_label = sido.label
-            if sido_label not in sigungu:
-                sigungu[sido_label] = []
+            sigungu[sido_label] = []
 
             sigungu_list = Sigungu.objects.filter(sido=sido)
             sigungu_serializer = SigunguSerializer(sigungu_list, many=True)
