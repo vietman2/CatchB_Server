@@ -2,13 +2,17 @@ import re
 from django.core.files.storage import default_storage
 from rest_framework import serializers
 
-from .models import Facility, FacilityInfo
+from coach.models import Coach
+from coach.serializers import CoachProfileSerializer
+from region.models import Sigungu
+from .models import Facility, FacilityInfo, FacilityImage, CustomEquipment
 
 class FacilitySimpleSerializer(serializers.ModelSerializer):
     """
         목록 조회용 시설 정보
     """
-    region = serializers.SerializerMethodField()
+    region  = serializers.SerializerMethodField()
+    profile = serializers.SerializerMethodField()
 
     class Meta:
         model = Facility
@@ -16,44 +20,76 @@ class FacilitySimpleSerializer(serializers.ModelSerializer):
             "name",
             "uuid",
             "region",
-            "map_image",
+            "profile",
             "latitude",
             "longitude",
         ]
 
     def get_region(self, obj):
-        sigungu_name = obj.region.sigungu_name
-        sido_name = obj.region.sido.display
+        return Sigungu.objects.get_display_name(obj.region)
 
-        return f"{sido_name} {sigungu_name}"
+    def get_profile(self, obj):
+        return obj.fac_images.filter(cover=True).first().image.url
 
-class FacilityDetailSeralizer(serializers.ModelSerializer):
+class FacilityDetailSerializer(serializers.ModelSerializer):
     """
         상세 조회용 시설 정보
     """
-    region = serializers.SerializerMethodField()
-    address = serializers.SerializerMethodField()
-    #info = serializers.FacilityInfoSerializer()
+    owner_name  = serializers.SerializerMethodField()
+    owner_phone = serializers.SerializerMethodField()
+    address     = serializers.SerializerMethodField()
 
     class Meta:
         model = Facility
         fields = [
             "name",
             "phone",
-            "region",
+            "owner_name",
+            "owner_phone",
             "address",
             "map_image",
-            #"info",
         ]
 
-    def get_region(self, obj):
-        sigungu_name = obj.region.sigungu_name
-        sido_name = obj.region.sido.display
+    def get_owner_name(self, obj):
+        return obj.member_name
 
-        return f"{sido_name} {sigungu_name}"
+    def get_owner_phone(self, obj):
+        return obj.member_phone
 
     def get_address(self, obj):
-        return f"{obj.road_address_part1} {obj.road_address_part2} {obj.building_name}"
+        return f"{obj.road_address_part1} {obj.road_address_part2} ({obj.building_name})"
+
+class FacilityImageSerializer(serializers.ModelSerializer):
+    uri = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FacilityImage
+        fields = [
+            "uri",
+        ]
+
+    def get_uri(self, obj):
+        return obj.image.url
+
+class FacilityInfoDetailSerializer(serializers.ModelSerializer):
+    facility = FacilityDetailSerializer()
+    images = FacilityImageSerializer(many=True)
+    coaches = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FacilityInfo
+        fields = [
+            "intro",
+            "facility",
+            "images",
+            "coaches",
+        ]
+
+    def get_coaches(self, obj):
+        coaches = Coach.objects.filter(facility=obj.facility)
+        serializer = CoachProfileSerializer(coaches, many=True)
+
+        return serializer.data
 
 class FacilityCreateSerializer(serializers.ModelSerializer):
     """
@@ -174,7 +210,6 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
             "sunday_close",
             "num_mounds",
             "num_plates",
-            #"images",
         ]
 
     def convenience(self, choices):     ## pylint: disable=R0912
@@ -258,22 +293,35 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
     def custom_equipment(self, choices):
         custom = []
         for item in choices:
-            custom.append(item)
+            equipment = CustomEquipment.objects.create(name=item)
+            custom.append(equipment)
 
         self.validated_data['custom_equipment'] = custom
 
     def upload_images(self, data, uuid):
         images = []
         for image in data:
-            save_path = f"facility_images/{uuid}/{image.name}"
-            path = default_storage.save(save_path, image)
-            images.append(path)
+            # first image: image.obj.cover = True
+            cover = False
+            if not images:
+                cover = True
+
+            path = f"products/facility/{uuid}/{image.name}"
+            default_storage.save(path, image)
+            facility_image = FacilityImage.objects.create(
+                facility=self.validated_data['facility'],
+                image=path,
+                cover=cover
+            )
+            images.append(facility_image)
 
         self.validated_data['images'] = images
 
     def save(self, **kwargs):
-        facility_info = FacilityInfo.objects.create(
-            **self.validated_data
-        )
+        custom_equipment = self.validated_data.pop('custom_equipment')
+        images = self.validated_data.pop('images')
+        facility_info = FacilityInfo.objects.create(**self.validated_data)
+        facility_info.custom_equipment.set(custom_equipment)
+        facility_info.images.set(images)
 
         return facility_info

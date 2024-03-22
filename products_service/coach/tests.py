@@ -76,8 +76,10 @@ class CoachInfoCreateAPITestCase(APITestCase):
     fixtures = ["init_data.json", "test_data.json"]
 
     def setUp(self):
-        self.uuid = "c5c5636e-74e8-4ee5-b0d8-8356830b2e76"
+        self.uuid = "ad177d27-3787-4e0c-9c40-ba9213f1a8e5"
+        self.existing = "c5c5636e-74e8-4ee5-b0d8-8356830b2e76"
         self.url = f"/api/coaches/{self.uuid}/info/"
+        self.url_existing = f"/api/coaches/{self.existing}/info/"
         self.data = {
             "intro": "투수로서의 경험을 공유합니다.",
             "regions": [1111000000],
@@ -109,8 +111,7 @@ class CoachInfoCreateAPITestCase(APITestCase):
     @patch("django.core.files.storage.default_storage.save")
     def test_coach_info_create_existing(self, mock_save):
         mock_save.return_value = "test.png"
-        response = self.client.post(self.url, self.data, format="multipart")
-        response = self.client.post(self.url, self.data, format="multipart")
+        response = self.client.post(self.url_existing, self.data, format="multipart")
         self.assertEqual(response.status_code, 400)
 
 class CoachStatusCheckAPITestCase(APITestCase):
@@ -119,7 +120,7 @@ class CoachStatusCheckAPITestCase(APITestCase):
     def setUp(self):
         self.url = "/api/coaches/status/"
         self.uuid_step0 = "7e1186bf-3172-41df-91fd-a9f74f2508ca"
-        self.uuid_step1 = "cc8eb907-97fa-42b1-9b74-4126b04bc024"
+        self.uuid_step1 = "7d7d2817-253c-485e-8081-b20a034c44ab"
 
     def test_coach_status_check(self):
         response = self.client.get(self.url, {"uuid": self.uuid_step0})

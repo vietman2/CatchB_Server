@@ -20,7 +20,7 @@ class SigunguManager(models.Manager):
         return sigungu
 
     def get_display_name(self, obj):
-        sido = obj.sido.label
+        sido = obj.sido.display
         return f"{sido} {obj.sigungu_name}"
 
 class Sigungu(models.Model):
