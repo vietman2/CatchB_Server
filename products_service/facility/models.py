@@ -29,6 +29,8 @@ class Facility(Provider):
     ## 상세 정보: 시설 계좌 정보
     ## TODO: ADD BANK INFO
 
+    is_complete     = models.BooleanField(default=False)
+
     objects = models.Manager()
 
     class Meta:
