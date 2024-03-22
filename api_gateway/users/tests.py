@@ -59,6 +59,11 @@ class UsersAPITests(APITestCase):
 
         self.client.get('/api/users/2/')
 
+    @patch("core.permissions.get_user_info")
+    def test_userinfo_get_no_token(self, mock_get_user_info):
+        mock_get_user_info.return_value = None
+        self.client.get('/api/users/1/')
+
     @requests_mock.Mocker()
     @patch("core.permissions.get_user_info")
     def test_userinfo_delete(self, m, mock_get_user_info):
