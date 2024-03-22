@@ -15,7 +15,12 @@ class FacilityGetAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_facility_detail(self):
+        # 1. no fac coach
         response = self.client.get("/api/facilities/0ac8df28-ad6d-4a8d-aef6-28a71a702fec/")
+        self.assertEqual(response.status_code, 200)
+
+        # 2. has fac coach
+        response = self.client.get("/api/facilities/70c6826a-6e98-46e9-a876-ff5d734b03d1/")
         self.assertEqual(response.status_code, 200)
 
 def generate_photo_file():
@@ -65,13 +70,11 @@ class FacilityCreateAPITestCase(APITestCase):
 
     def test_facility_create_failure_existing_regcode(self):
         with patch("facility.views.get_coordinates") as mock_get_coordinates, \
-             patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
              patch("django.core.files.storage.default_storage.save") as mock_save:
             mock_get_coordinates.return_value = (
                 37.123456, 127.123456,
                 "경기도 용인", "Yongin, Gyeonggi-do"
             )
-            mock_fetch_map_image.return_value = generate_photo_file()
             mock_save.return_value = "test.png"
             self.data["bcode"] = "1111000000"
             self.data["reg_code"] = "987-65-43210"
@@ -185,7 +188,7 @@ class FacilityInfoCreateAPITestCase(APITestCase):
             "equipment": equipment,
             "others": others,
             "custom": ["asdf", "fdsa"],
-            "images": [generate_photo_file()],
+            "images": [generate_photo_file(), generate_photo_file()],
         }
         self.info_data_blank = {
             "intro": "테스트 시설 소개",
