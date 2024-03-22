@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError as DjValidError
 from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.utils.datastructures import MultiValueDictKeyError
@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
+from rest_framework.exceptions import APIException
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 
@@ -46,10 +47,7 @@ def get_coordinates(address):
         return lat, lng, jibun_address, english_address
 
     except requests.RequestException as e:
-        return Response(
-            {'message': str(e)},
-            status=status.HTTP_502_BAD_GATEWAY,
-        )
+        raise APIException(str(e))
 
 def get_error_message(e):
     err_types = ["name", "phone", "reg_code", "num_mounds", "num_plates",
@@ -101,10 +99,7 @@ def fetch_map_image(lat, lng):
         return ContentFile(response.content)
 
     except requests.RequestException as e:
-        return Response(
-            {'message': str(e)},
-            status=status.HTTP_502_BAD_GATEWAY,
-        )
+        raise APIException(str(e))
 
 class FacilityViewSet(ModelViewSet):
     queryset = Facility.objects.all()
@@ -128,12 +123,6 @@ class FacilityViewSet(ModelViewSet):
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
     def create(self, request, *args, **kwargs):     ## pylint: disable=R0914, W0613
         try:
-            if request.data['road_address_part1'] == "" or request.data['road_address_part2'] == "":
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": "주소를 입력해주세요."}
-                )
-
             query = request.data['road_address_part1']
             lat, lng, jibun_address, english_address = get_coordinates(query)
 
@@ -160,7 +149,12 @@ class FacilityViewSet(ModelViewSet):
         except (ObjectDoesNotExist, MultiValueDictKeyError, ValueError):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"message": "올바른 지역 코드를 입력해주세요."}
+                data={"message": "올바른 주소를 입력해주세요."}
+            )
+        except APIException as e:
+            return Response(
+                status=status.HTTP_502_BAD_GATEWAY,
+                data={"message": str(e)}
             )
         return Response(
             status=status.HTTP_201_CREATED,
@@ -200,64 +194,65 @@ class FacilityViewSet(ModelViewSet):
     @action(detail=False, methods=["get"])
     @extend_schema(summary="시설 등록 현황 조회", tags=["시설"])
     def status(self, request, *args, **kwargs):
-        if "uuid" in request.query_params:
+        try:
             user_uuid = request.query_params["uuid"]
-        else:
+
+            q = Q()
+            q &= Q(member_uuid=user_uuid)
+
+            facilities = Facility.objects.filter(q)
+
+            ## 0. 등록한 시설이 없음
+            if not facilities.exists():
+                return Response(
+                    status=status.HTTP_200_OK,
+                    data={
+                        "step": 0,
+                        "title": "등록 시작",
+                        "message": "사장님의 첫번째 아카데미를 등록해 보세요!"
+                    }
+                )
+
+            q &= Q(is_complete=False)
+            ## 1. if 등록 절차가 안끝난 아카데미가 없는 경우: 새로운 아카데미 등록
+            if not facilities.filter(q).exists():
+                return Response(
+                    status=status.HTTP_200_OK,
+                    data={
+                        "step": 0,
+                        "title": "새로 등록하기",
+                        "message": "이미 운영중인 아카데미가 있습니다.\n새로운 아카데미를 등록하시겠습니까?"
+                    }
+                )
+
+            ## 2. if 시설 정보 입력이 안끝난 경우: step 1
+            facility = facilities.filter(q).first()
+            if not FacilityInfo.objects.filter(facility=facility).exists():
+                step = 1
+            ## TODO: Finish this
+            #elif facility.bank is None:
+            #    step = 2
+            #elif facility.products.count() == 0:
+            #    step = 3
+            else:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": "오류가 발생했습니다. 나중에 다시 시도해주세요."}
+                )
+
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "facility": facility.uuid,
+                    "step": step,
+                    "status": facility.is_confirmed,
+                    "title": "이어서 등록하기",
+                    "message": "이미 등록중인 아카데미가 있습니다.\n아카데미 정보를 이어서 입력해주세요."
+                }
+            )
+
+        except (ValidationError, DjValidError, MultiValueDictKeyError):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "잘못된 요청입니다."}
             )
-        
-        q = Q()
-        q &= Q(member_uuid=user_uuid)
-
-        facilities = Facility.objects.filter(q)
-
-        ## 0. 등록한 시설이 없음
-        if not facilities.exists():
-            return Response(
-                status=status.HTTP_200_OK,
-                data={
-                    "step": 0,
-                    "title": "등록 시작",
-                    "message": "사장님의 첫번째 아카데미를 등록해 보세요!"
-                }
-            )
-
-        q &= Q(is_complete=False)
-        ## 1. if 등록 절차가 안끝난 아카데미가 없는 경우: 새로운 아카데미 등록
-        if not facilities.filter(q).exists():
-            return Response(
-                status=status.HTTP_200_OK,
-                data={
-                    "step": 0,
-                    "title": "새로 등록하기",
-                    "message": "이미 운영중인 아카데미가 있습니다.\n새로운 아카데미를 등록하시겠습니까?"
-                }
-            )
-
-        ## 2. if 시설 정보 입력이 안끝난 경우: step 1
-        facility = facilities.filter(q).first()
-        if not FacilityInfo.objects.filter(facility=facility).exists():
-            step = 1
-        ## TODO: Finish this
-        #elif facility.bank is None:
-        #    step = 2
-        #elif facility.products.count() == 0:
-        #    step = 3
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"message": "오류가 발생했습니다. 나중에 다시 시도해주세요."}
-            )
-
-        return Response(
-            status=status.HTTP_200_OK,
-            data={
-                "facility": facility.uuid,
-                "step": step,
-                "status": facility.is_confirmed,
-                "title": "이어서 등록하기",
-                "message": "이미 등록중인 아카데미가 있습니다.\n아카데미 정보를 이어서 입력해주세요."
-            }
-        )
