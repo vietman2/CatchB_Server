@@ -11,8 +11,8 @@ from drf_spectacular.utils import extend_schema
 from .enums import CareerChoices
 from .models import Coach, CoachInfo
 from .serializers import (
-    CoachSimpleSerializer, CoachCreateSerializer,
-    CoachInfoCreateSerializer
+    CoachSimpleSerializer, CoachDetailSerizlizer,
+    CoachCreateSerializer, CoachInfoCreateSerializer
 )
 
 def get_career_choice(choice):
@@ -39,8 +39,12 @@ class CoachViewSet(ModelViewSet):
 
     @extend_schema(summary="코치 상세 조회", tags=["코치"])
     def retrieve(self, request, *args, **kwargs):
-        ## TODO: Custom serializer for detailed view
-        return super().retrieve(request, *args, **kwargs)
+        coach = self.get_object()
+        serializer = CoachDetailSerizlizer(coach.coach_info)
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
 
     @extend_schema(summary="코치 목록 조회", tags=["코치"])
     def create(self, request, *args, **kwargs):

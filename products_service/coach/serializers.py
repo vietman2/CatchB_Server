@@ -33,13 +33,46 @@ class CoachSimpleSerializer(serializers.ModelSerializer):
         return url.split("?")[0]
 
     def get_regions(self, obj):
-        region = obj.coach_info.first().regions.first()
+        region = obj.coach_info.regions.first()
         return Sigungu.objects.get_display_name(region)
 
     def get_is_academy_coach(self, obj):
         if obj.facility is not None:
             return True
         return False
+
+class CoachDetailSerizlizer(serializers.ModelSerializer):
+    """
+        상세 조회용 코치 정보
+    """
+    name        = serializers.SerializerMethodField()
+    phone       = serializers.SerializerMethodField()
+    facility    = serializers.SerializerMethodField()
+    career      = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CoachInfo
+        fields = [
+            "name",
+            "phone",
+            "facility",
+            "career",
+            "intro",
+        ]
+
+    def get_name(self, obj):
+        return obj.coach.member_name
+    
+    def get_phone(self, obj):
+        return obj.coach.member_phone
+    
+    def get_facility(self, obj):
+        if obj.coach.facility is not None:
+            return obj.coach.facility.name
+        return None
+    
+    def get_career(self, obj):
+        return obj.coach.get_baseball_career_display()
 
 class CoachCreateSerializer(serializers.ModelSerializer):
     """
