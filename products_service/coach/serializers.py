@@ -40,14 +40,14 @@ class CoachCreateSerializer(serializers.ModelSerializer):
         ]
 
     def file_name(self, certificate):
-        type = certificate.content_type
-        if type == "application/pdf":
+        content_type = certificate.content_type
+        if content_type == "application/pdf":
             return "certification.pdf"
-        if type == "image/jpeg":
-            return f"certification.jpg"
-        if type == "image/png":
-            return f"certification.png"
-        
+        if content_type == "image/jpeg":
+            return "certification.jpg"
+        if content_type == "image/png":
+            return "certification.png"
+
         raise ValidationError("지원하지 않는 파일 형식입니다.")
 
     def save(self, **kwargs):

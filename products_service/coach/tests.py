@@ -1,6 +1,6 @@
 from io import BytesIO
-from PIL import Image
 from unittest.mock import patch
+from PIL import Image
 from reportlab.pdfgen import canvas
 from rest_framework.test import APITestCase
 
@@ -15,11 +15,11 @@ class CoachGetAPITestCase(APITestCase):
         response = self.client.get("/api/coaches/7e1186bf-3172-41df-91fd-a9f74f2508ca/")
         self.assertEqual(response.status_code, 200)
 
-def generate_photo_file(type="png"):
+def generate_photo_file(content_type="png"):
     file = BytesIO()
     image = Image.new("RGBA", size=(100, 100), color=(155, 0, 0))
     image.save(file, "png")
-    file.name = f"test.{type}"
+    file.name = f"test.{content_type}"
     file.seek(0)
     return file
 
@@ -35,7 +35,7 @@ def generate_pdf_file():
 
 class CoachCreateAPITestCase(APITestCase):
     fixtures = ["init_data.json"]
-    
+
     def setUp(self):
         self.url = "/api/coaches/"
         self.data = {

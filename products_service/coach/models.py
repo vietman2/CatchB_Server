@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Provider, Image     ## pylint: disable=#E0611
+from core.models import Provider, Image ## pylint: disable=E0611
 from facility.models import Facility
 from .enums import CareerChoices
 

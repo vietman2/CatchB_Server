@@ -15,9 +15,9 @@ from .serializers import (
     CoachInfoCreateSerializer
 )
 
-def get_career_choice(input):
+def get_career_choice(choice):
     for career in CareerChoices:
-        if career.label == input:
+        if career.label == choice:
             return career.value
 
     return None
@@ -53,7 +53,7 @@ class CoachViewSet(ModelViewSet):
                 data={"uuid": coach.uuid}
             )
 
-        except Exception as e:
+        except ValidationError:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "잘못된 요청입니다."}
@@ -61,7 +61,7 @@ class CoachViewSet(ModelViewSet):
 
     @action(detail=True, methods=["post"])
     @extend_schema(summary="코치 상세 조회", tags=["코치"])
-    def info(self, request, *args, **kwargs):
+    def info(self, request, *args, **kwargs):   ## pylint: disable=W0613
         coach = self.get_object()
         serializer = CoachInfoCreateSerializer(data=request.data)
 
@@ -92,7 +92,7 @@ class CoachViewSet(ModelViewSet):
 
     @action(detail=False, methods=["get"])
     @extend_schema(summary="코치 등록 현황 조회", tags=["코치"])
-    def status(self, request, *args, **kwargs):
+    def status(self, request, *args, **kwargs): ## pylint: disable=W0613
         try:
             user_uuid = request.query_params["uuid"]
 
@@ -110,7 +110,7 @@ class CoachViewSet(ModelViewSet):
                         "message": "코치 등록을 시작해 보세요!"
                     }
                 )
-            
+
             coach = coach.first()
 
             if not CoachInfo.objects.filter(coach=coach).exists():
