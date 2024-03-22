@@ -3,22 +3,43 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 
 from .models import Coach, CoachInfo, CoachImage
+from region.models import Sigungu
 
 class CoachSimpleSerializer(serializers.ModelSerializer):
     """
         목록 조회용 코치 정보
     """
-    name    = serializers.SerializerMethodField()
+    name                = serializers.SerializerMethodField()
+    profile             = serializers.SerializerMethodField()
+    regions             = serializers.SerializerMethodField()
+    is_academy_coach    = serializers.SerializerMethodField()
 
     class Meta:
         model = Coach
         fields = [
             "uuid",
             "name",
+            "profile",
+            "regions",
+            "is_academy_coach",
         ]
 
     def get_name(self, obj):
         return obj.member_name
+    
+    def get_profile(self, obj):
+        url = obj.coach_images.filter(cover=True).first().image.url
+
+        return url.split("?")[0]
+    
+    def get_regions(self, obj):
+        region = obj.coach_info.first().regions.first()
+        return Sigungu.objects.get_display_name(region)
+
+    def get_is_academy_coach(self, obj):
+        if obj.facility is not None:
+            return True
+        return False
 
 class CoachCreateSerializer(serializers.ModelSerializer):
     """
