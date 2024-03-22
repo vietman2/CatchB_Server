@@ -22,7 +22,7 @@ class Coach(Provider):
 
 class CoachInfo(models.Model):
     ## 코치 기본 소개
-    coach       = models.ForeignKey('Coach', on_delete=models.CASCADE, related_name='coach_info')
+    coach       = models.OneToOneField('Coach', on_delete=models.CASCADE, related_name='coach_info')
     intro       = models.TextField()
 
     ## 코치 정보1: 전문 파트
