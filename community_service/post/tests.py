@@ -10,7 +10,7 @@ class TagAPITest(APITestCase):
     def test_list(self):
         response = self.client.get('/api/tags/')
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.client.get('/api/tags/1/')
         self.assertEqual(response.status_code, 405)
 
@@ -63,7 +63,7 @@ class PostAPITest(APITestCase):
         ## delete all posts
         Post.objects.all().delete()
         self.data['forum'] = '덕아웃'
-        response = self.client.post(self.url, self.data, format='json')        
+        self.client.post(self.url, self.data, format='json')
 
     def test_create_fail(self):
         # 1. duplicate title in same forum
