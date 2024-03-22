@@ -29,9 +29,13 @@ class CoachViewSet(ModelViewSet):
 
     @extend_schema(summary="코치 목록 조회", tags=["코치"])
     def list(self, request, *args, **kwargs):
-        ## TODO: Coach.objects.get(is_confirmed=True)
         ## TODO: pagination, filter based on lat and lng
-        return super().list(request, *args, **kwargs)
+        queryset = self.queryset.filter(is_confirmed=True)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
 
     @extend_schema(summary="코치 상세 조회", tags=["코치"])
     def retrieve(self, request, *args, **kwargs):
@@ -121,8 +125,12 @@ class CoachViewSet(ModelViewSet):
             #    step = 3
             else:
                 return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": "오류가 발생했습니다. 나중에 다시 시도해주세요."}
+                    status=status.HTTP_200_OK,
+                    data={
+                        "step": -1,
+                        "title": "승인 대기",
+                        "message": "코치 등록 절차가 완료되어 승인 대기중입니다."
+                    }
                 )
 
             return Response(
