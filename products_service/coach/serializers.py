@@ -59,15 +59,15 @@ class CoachDetailSerializer(serializers.ModelSerializer):
 
     def get_name(self, obj):
         return obj.member_name
-    
+
     def get_phone(self, obj):
         return obj.member_phone
-    
+
     def get_facility(self, obj):
         if obj.facility is not None:
             return obj.facility.name
         return None
-    
+
     def get_career(self, obj):
         return obj.get_baseball_career_display()
 
@@ -107,7 +107,7 @@ class CoachProfileSerializer(serializers.ModelSerializer):
 
     def get_name(self, obj):
         return obj.member_name
-    
+
     def get_profile(self, obj):
         return obj.coach_images.filter(cover=True).first().image.url
 

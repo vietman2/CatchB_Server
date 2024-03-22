@@ -6,7 +6,6 @@ from PIL import Image
 from rest_framework.test import APITestCase
 
 from region.models import Sigungu
-from .models import FacilityInfo
 
 class FacilityGetAPITestCase(APITestCase):
     fixtures = ["init_data.json", "test_data.json"]

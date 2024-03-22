@@ -27,7 +27,7 @@ class FacilitySimpleSerializer(serializers.ModelSerializer):
 
     def get_region(self, obj):
         return Sigungu.objects.get_display_name(obj.region)
-    
+
     def get_profile(self, obj):
         return obj.fac_images.filter(cover=True).first().image.url
 
