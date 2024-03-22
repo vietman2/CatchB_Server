@@ -29,7 +29,7 @@ class Facility(Provider):
     ## 상세 정보: 시설 계좌 정보
     ## TODO: ADD BANK INFO
 
-    is_complete     = models.BooleanField(default=False)
+    is_complete         = models.BooleanField(default=False)
 
     objects = models.Manager()
 
@@ -38,7 +38,11 @@ class Facility(Provider):
 
 class FacilityInfo(models.Model):
     ## 시설 기본 소개
-    facility    = models.ForeignKey("Facility", on_delete=models.CASCADE)
+    facility    = models.OneToOneField(
+        Facility,
+        on_delete=models.CASCADE,
+        related_name="facility_info"
+    )
     intro       = models.TextField()
 
     ## 시설 정보1: 기본 영업 시간
@@ -84,11 +88,8 @@ class FacilityInfo(models.Model):
     monitor             = models.BooleanField(default=False)
     speaker             = models.BooleanField(default=False)
     fitness             = models.BooleanField(default=False)
-    ## 커스텀 array field
-    #custom_equipment    = ArrayField(
-    #    models.CharField(max_length=30),
-    #    default=list
-    #)
+    ## 커스텀
+    custom_equipment    = models.ManyToManyField('CustomEquipment', related_name='facility_info')
 
     ## 시설 정보4: 기타
     group_lesson    = models.BooleanField(default=False)
@@ -99,9 +100,7 @@ class FacilityInfo(models.Model):
     wheelchair      = models.BooleanField(default=False)
 
     ## 공개 정보: 시설 이미지 (주소)
-    #images          = ArrayField(
-    #    models.ImageField(upload_to="facility_images")
-    #)
+    images          = models.ManyToManyField('FacilityImage', related_name='facility_info')
 
     objects = models.Manager()
 
@@ -117,3 +116,11 @@ class FacilityImage(Image):
 
     class Meta:
         db_table = 'facility_image'
+
+class CustomEquipment(models.Model):
+    name        = models.CharField(max_length=30)
+
+    objects     = models.Manager()
+
+    class Meta:
+        db_table = 'custom_equipment'
