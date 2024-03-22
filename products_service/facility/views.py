@@ -8,7 +8,6 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
-from rest_framework.exceptions import APIException
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 
