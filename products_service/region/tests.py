@@ -1,6 +1,8 @@
 from rest_framework.test import APITestCase
 
 class RegionAPITestCase(APITestCase):
+    fixtures = ["init_data.json"]
+
     def setUp(self):
         self.url = "/api/regions/"
 
