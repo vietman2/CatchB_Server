@@ -10,15 +10,17 @@ djangorestframework = "*"
 drf-spectacular = "*"
 python-decouple = "*"
 psycopg2-binary = "*"
-pillow = "*"
 requests = "*"
 boto3 = "*"
 django-storages = "*"
+pillow = "*"
 
 [dev-packages]
 coverage = "*"
 pylint = "*"
 pylint-django = "*"
+requests-mock = "*"
+reportlab = "*"
 
 [requires]
 python_version = "3.9"
