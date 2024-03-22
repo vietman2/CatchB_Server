@@ -170,7 +170,8 @@ class FacilityInfoCreateAPITestCase(APITestCase):
                      "헬멧 대여", "스피드건",   "영상분석", "모니터", "스피커", "헬스기구"]
         others = [ "단체 수업 가능", "개인 코치 영업 가능", "스파이크 착용 가능", "야외 시설", "반려동물 출입가능", "휠체어 출입가능"]
         self.url = "/api/facilities/"
-        self.uuid = "0ac8df28-ad6d-4a8d-aef6-28a71a702fec"
+        self.uuid = "dd8a7793-139f-4e0a-856a-fd014ced3281"
+        self.existing = "70c6826a-6e98-46e9-a876-ff5d734b03d1"
         self.info_data_full = {
             "intro": "테스트 시설 소개",
             "weekday_open": "09:00",
@@ -184,8 +185,8 @@ class FacilityInfoCreateAPITestCase(APITestCase):
             "convenience": convience,
             "equipment": equipment,
             "others": others,
-            #"custom": ["asdf", "fdsa"],
-            #"images": [self.generate_photo_file()],
+            "custom": ["asdf", "fdsa"],
+            "images": [generate_photo_file()],
         }
         self.info_data_blank = {
             "intro": "테스트 시설 소개",
@@ -201,26 +202,28 @@ class FacilityInfoCreateAPITestCase(APITestCase):
             "equipment": [],
             "others": [],
             "custom": [],
-            #"images": [self.generate_photo_file()],
+            "images": [generate_photo_file()],
         }
         self.jongnogu = Sigungu.objects.get(sigungu_code="1111000000")
 
-    def test_facility_info_create_success_full(self):
+    @patch("django.core.files.storage.default_storage.save")
+    def test_facility_info_create_success_full(self, mock_save):
         info_url = f"/api/facilities/{self.uuid}/info/"
+        mock_save.return_value = "test.png"
 
         response = self.client.post(info_url, self.info_data_full, format="multipart")
         self.assertEqual(response.status_code, 201)
 
-        FacilityInfo.objects.get().delete()
+    @patch("django.core.files.storage.default_storage.save")
+    def test_facility_info_create_success_empty(self, mock_save):
+        info_url = f"/api/facilities/{self.uuid}/info/"
+        mock_save.return_value = "test.png"
 
         response = self.client.post(info_url, self.info_data_blank, format="multipart")
         self.assertEqual(response.status_code, 201)
 
     def test_facility_info_create_failure_already_exists(self):
-        info_url = f"/api/facilities/{self.uuid}/info/"
-
-        response = self.client.post(info_url, self.info_data_full, format="multipart")
-        self.assertEqual(response.status_code, 201)
+        info_url = f"/api/facilities/{self.existing}/info/"
 
         response = self.client.post(info_url, self.info_data_full, format="multipart")
         self.assertEqual(response.status_code, 400)
@@ -278,7 +281,7 @@ class FacilityStatusCheckAPITestCase(APITestCase):
 
     def setUp(self):
         self.uuid_step0 = "0ac8df28-ad6d-4a8d-aef6-28a71a702fec"
-        self.uuid_step1 = "b48db7e2-de01-46ca-907f-aa2c8b9321e9"
+        self.uuid_step1 = "7d7d2817-253c-485e-8081-b20a034c44ab"
         self.url = "/api/facilities/status/"
 
     def test_facility_status_check_success(self):

@@ -72,6 +72,30 @@
     }
   },
   {
+    "model": "facility.facility",
+    "pk": "dd8a7793-139f-4e0a-856a-fd014ced3281",
+    "fields": {
+      "member_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "member_name": "관리자",
+      "member_phone": "010-1234-1234",
+      "is_confirmed": false,
+      "name": "예시",
+      "phone": "010-1010-1010",
+      "reg_code": "010-10-10101",
+      "region": 1168000000,
+      "road_address_part1": "서울 강남구 삼성로 212",
+      "road_address_part2": "1동 1호",
+      "building_name": "은마아파트",
+      "eng_address": "212, Samseong-ro, Gangnam-gu, Seoul, Republic of Korea",
+      "jibun_address": "서울특별시 강남구 대치동 316 은마아파트",
+      "zip_code": "06284",
+      "longitude": "127.0650701",
+      "latitude": "37.4977415",
+      "map_image": "products/facility/dd8a7793-139f-4e0a-856a-fd014ced3281/map_image.png",
+      "is_complete": false
+    }
+  },
+  {
     "model": "facility.facilityinfo",
     "pk": 1,
     "fields": {
@@ -293,6 +317,19 @@
       "certification": "products/coach/7e1186bf-3172-41df-91fd-a9f74f2508ca/certification.pdf",
       "facility": null,
       "baseball_career": 1
+    }
+  },
+  {
+    "model": "coach.coach",
+    "pk": "ad177d27-3787-4e0c-9c40-ba9213f1a8e5",
+    "fields": {
+      "member_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "member_name": "관리자",
+      "member_phone": "010-1234-1234",
+      "is_confirmed": false,
+      "certification": "products/coach/ad177d27-3787-4e0c-9c40-ba9213f1a8e5/certification.jpg",
+      "facility": null,
+      "baseball_career": 3
     }
   },
   {
