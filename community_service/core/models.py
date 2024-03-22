@@ -31,7 +31,7 @@ class Report(TimeStampedModel):
     )
 
     reviewed            = models.BooleanField(default=False)
-    feedback            = models.TextField(null=True)
+    feedback            = models.TextField(blank=True)
 
     class Meta:
         abstract = True
