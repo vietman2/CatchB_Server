@@ -28,9 +28,7 @@ class CoachSimpleSerializer(serializers.ModelSerializer):
         return obj.member_name
 
     def get_profile(self, obj):
-        url = obj.coach_images.filter(cover=True).first().image.url
-
-        return url.split("?")[0]
+        return obj.coach_images.filter(cover=True).first().image.url
 
     def get_regions(self, obj):
         region = obj.coach_info.regions.first()
@@ -41,7 +39,7 @@ class CoachSimpleSerializer(serializers.ModelSerializer):
             return True
         return False
 
-class CoachDetailSerizlizer(serializers.ModelSerializer):
+class CoachDetailSerializer(serializers.ModelSerializer):
     """
         상세 조회용 코치 정보
     """
@@ -51,28 +49,67 @@ class CoachDetailSerizlizer(serializers.ModelSerializer):
     career      = serializers.SerializerMethodField()
 
     class Meta:
-        model = CoachInfo
+        model = Coach
         fields = [
             "name",
             "phone",
             "facility",
             "career",
-            "intro",
         ]
 
     def get_name(self, obj):
-        return obj.coach.member_name
+        return obj.member_name
     
     def get_phone(self, obj):
-        return obj.coach.member_phone
+        return obj.member_phone
     
     def get_facility(self, obj):
-        if obj.coach.facility is not None:
-            return obj.coach.facility.name
+        if obj.facility is not None:
+            return obj.facility.name
         return None
     
     def get_career(self, obj):
-        return obj.coach.get_baseball_career_display()
+        return obj.get_baseball_career_display()
+
+class CoachImageSerializer(serializers.ModelSerializer):
+    uri = serializers.SerializerMethodField()
+    class Meta:
+        model = CoachImage
+        fields = [
+            "uri",
+        ]
+
+    def get_uri(self, obj):
+        return obj.image.url
+
+class CoachInfoDetailSerializer(serializers.ModelSerializer):
+    coach = CoachDetailSerializer()
+    images = CoachImageSerializer(many=True)
+
+    class Meta:
+        model = CoachInfo
+        fields = [
+            "intro",
+            "coach",
+            "images",
+        ]
+
+class CoachProfileSerializer(serializers.ModelSerializer):
+    name    = serializers.SerializerMethodField()
+    profile             = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Coach
+        fields = [
+            "name",
+            "profile",
+        ]
+
+    def get_name(self, obj):
+        return obj.member_name
+    
+    def get_profile(self, obj):
+        return obj.coach_images.filter(cover=True).first().image.url
 
 class CoachCreateSerializer(serializers.ModelSerializer):
     """

@@ -15,7 +15,7 @@ from region.models import Sigungu
 from .models import Facility, FacilityInfo
 from .serializers import (
     FacilitySimpleSerializer, FacilityCreateSerializer,
-    FacilityInfoCreateSerializer, FacilityDetailSeralizer
+    FacilityInfoCreateSerializer, FacilityInfoDetailSerializer
 )
 
 def get_coordinates(address):
@@ -99,17 +99,23 @@ class FacilityViewSet(ModelViewSet):
 
     @extend_schema(summary="시설 상세 조회", tags=["시설"])
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = FacilityDetailSeralizer(instance)
-        return Response(serializer.data)
+        facility = self.get_object()
+        instance = FacilityInfo.objects.get(facility=facility)
+        serializer = FacilityInfoDetailSerializer(instance)
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
 
     @extend_schema(summary="시설 목록 조회", tags=["시설"])
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        ## TODO: Facility.objects.get(is_confirmed=True)
         ## TODO: pagination, filter based on lat and lng
+        queryset = self.queryset.filter(is_confirmed=True)
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
 
     @extend_schema(summary="시설 등록 신청", tags=["시설"])
     def create(self, request, *args, **kwargs):     ## pylint: disable=R0914, W0613
@@ -167,10 +173,10 @@ class FacilityViewSet(ModelViewSet):
             serializer.convenience(request.POST.getlist('convenience'))
             serializer.equipment(request.POST.getlist('equipment'))
             serializer.others(request.POST.getlist('others'))
-            #serializer.custom_equipment(request.POST.getlist('custom'))
-            #serializer.upload_images(request.FILES.getlist('images'), facility.uuid)
 
             serializer.validated_data['facility'] = facility
+            serializer.custom_equipment(request.POST.getlist('custom'))
+            serializer.upload_images(request.FILES.getlist('images'), facility.uuid)
 
             serializer.save()
 
