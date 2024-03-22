@@ -1,6 +1,6 @@
-import requests
 from io import BytesIO
 from unittest.mock import patch
+import requests
 import requests_mock
 from PIL import Image
 from rest_framework.test import APITestCase
@@ -51,7 +51,10 @@ class FacilityCreateAPITestCase(APITestCase):
              patch('django.core.files.storage.default_storage.save') as mock_save:
             self.data["bcode"] = "1111000000"
 
-            mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
+            mock_get_coordinates.return_value = (
+                37.123456, 127.123456,
+                "경기도 용인", "Yongin, Gyeonggi-do"
+            )
             m.get(
                 'https://naveropenapi.apigw.ntruss.com/map-static/v2/raster',
                 content=generate_photo_file().getvalue(),
@@ -65,7 +68,10 @@ class FacilityCreateAPITestCase(APITestCase):
         with patch("facility.views.get_coordinates") as mock_get_coordinates, \
              patch("facility.views.fetch_map_image") as mock_fetch_map_image, \
              patch("django.core.files.storage.default_storage.save") as mock_save:
-            mock_get_coordinates.return_value = (37.123456, 127.123456, "경기도 용인", "Yongin, Gyeonggi-do")
+            mock_get_coordinates.return_value = (
+                37.123456, 127.123456,
+                "경기도 용인", "Yongin, Gyeonggi-do"
+            )
             mock_fetch_map_image.return_value = generate_photo_file()
             mock_save.return_value = "test.png"
             self.data["bcode"] = "1111000000"
@@ -273,7 +279,7 @@ class FacilityStatusCheckAPITestCase(APITestCase):
     def setUp(self):
         self.uuid_step0 = "0ac8df28-ad6d-4a8d-aef6-28a71a702fec"
         self.uuid_step1 = "b48db7e2-de01-46ca-907f-aa2c8b9321e9"
-        self.url = f"/api/facilities/status/"
+        self.url = "/api/facilities/status/"
 
     def test_facility_status_check_success(self):
         response = self.client.get(self.url, {"uuid": self.uuid_step0})

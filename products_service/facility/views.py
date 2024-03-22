@@ -30,24 +30,20 @@ def get_coordinates(address):
         'query': address,
     }
 
-    try:
-        response = requests.request(
-                method='GET',
-                url=naver_geocode_url,
-                headers=headers,
-                params=params,
-                timeout=10,
-            )
+    response = requests.request(
+            method='GET',
+            url=naver_geocode_url,
+            headers=headers,
+            params=params,
+            timeout=10,
+        )
 
-        lat = response.json()['addresses'][0]['y']
-        lng = response.json()['addresses'][0]['x']
-        jibun_address = response.json()['addresses'][0]['jibunAddress']
-        english_address = response.json()['addresses'][0]['englishAddress']
+    lat = response.json()['addresses'][0]['y']
+    lng = response.json()['addresses'][0]['x']
+    jibun_address = response.json()['addresses'][0]['jibunAddress']
+    english_address = response.json()['addresses'][0]['englishAddress']
 
-        return lat, lng, jibun_address, english_address
-
-    except requests.RequestException as e:
-        raise APIException(str(e))
+    return lat, lng, jibun_address, english_address
 
 def get_error_message(e):
     err_types = ["name", "phone", "reg_code", "num_mounds", "num_plates",
@@ -87,19 +83,15 @@ def fetch_map_image(lat, lng):
         'markers': f'type:d|size:small|pos:{lng} {lat}|color:0x14863e|viewSizeRatio:0.75',
     }
 
-    try:
-        response = requests.request(
-                method='GET',
-                url=naver_staticmap_url,
-                headers=headers,
-                params=params,
-                timeout=10,
-            )
+    response = requests.request(
+            method='GET',
+            url=naver_staticmap_url,
+            headers=headers,
+            params=params,
+            timeout=10,
+        )
 
-        return ContentFile(response.content)
-
-    except requests.RequestException as e:
-        raise APIException(str(e))
+    return ContentFile(response.content)
 
 class FacilityViewSet(ModelViewSet):
     queryset = Facility.objects.all()
@@ -151,7 +143,7 @@ class FacilityViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "올바른 주소를 입력해주세요."}
             )
-        except APIException as e:
+        except requests.RequestException as e:
             return Response(
                 status=status.HTTP_502_BAD_GATEWAY,
                 data={"message": str(e)}
@@ -193,7 +185,7 @@ class FacilityViewSet(ModelViewSet):
 
     @action(detail=False, methods=["get"])
     @extend_schema(summary="시설 등록 현황 조회", tags=["시설"])
-    def status(self, request, *args, **kwargs):
+    def status(self, request, *args, **kwargs):     ## pylint: disable=W0613
         try:
             user_uuid = request.query_params["uuid"]
 
