@@ -18,7 +18,7 @@ class SigunguManager(models.Manager):
         sigungu = self.get(sigungu_code=sigungu_code)
 
         return sigungu
-    
+
     def get_display_name(self, obj):
         sido = obj.sido.label
         return f"{sido} {obj.sigungu_name}"

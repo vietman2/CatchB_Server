@@ -2,8 +2,8 @@ from django.core.files.storage import default_storage
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 
-from .models import Coach, CoachInfo, CoachImage
 from region.models import Sigungu
+from .models import Coach, CoachInfo, CoachImage
 
 class CoachSimpleSerializer(serializers.ModelSerializer):
     """
@@ -26,12 +26,12 @@ class CoachSimpleSerializer(serializers.ModelSerializer):
 
     def get_name(self, obj):
         return obj.member_name
-    
+
     def get_profile(self, obj):
         url = obj.coach_images.filter(cover=True).first().image.url
 
         return url.split("?")[0]
-    
+
     def get_regions(self, obj):
         region = obj.coach_info.first().regions.first()
         return Sigungu.objects.get_display_name(region)
