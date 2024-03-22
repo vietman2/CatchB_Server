@@ -31,7 +31,7 @@ class Report(TimeStampedModel):
     )
 
     reviewed            = models.BooleanField(default=False)
-    feedback            = models.TextField(null=True)
+    feedback            = models.TextField(blank=True)
 
     class Meta:
         abstract = True
@@ -58,4 +58,5 @@ class CustomAutoField(models.PositiveBigIntegerField):
 
             return next_id
 
+        ## if not add: update, delete
         return super().pre_save(model_instance, add)

@@ -8,13 +8,16 @@ from core.views import get_response
 
 products_service_url = settings.SERVICE_URLS['products_service']
 
+def unauthorized_response():
+    return Response(
+        {'message': '로그인이 필요합니다.'},
+        status=status.HTTP_401_UNAUTHORIZED,
+    )
+
 class CoachView(APIView):
     def post(self, request):
         if not IsLoggedIn().has_permission(request, self):
-            return Response(
-                {'message': '로그인이 필요합니다.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return unauthorized_response()
 
         REQUEST_URL = f'{products_service_url}/api/coaches/'
 
@@ -28,10 +31,7 @@ class CoachView(APIView):
 class CoachInfoView(APIView):
     def post(self, request, uuid):
         if not IsLoggedIn().has_permission(request, self):
-            return Response(
-                {'message': '로그인이 필요합니다.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return unauthorized_response()
 
         REQUEST_URL = f'{products_service_url}/api/coaches/{uuid}/info/'
 
@@ -55,10 +55,7 @@ class CoachInfoView(APIView):
 class CoachStatusView(APIView):
     def get(self, request):
         if not IsLoggedIn().has_permission(request, self):
-            return Response(
-                {'message': '로그인이 필요합니다.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return unauthorized_response()
 
         REQUEST_URL = f'{products_service_url}/api/coaches/status/'
 
@@ -73,10 +70,7 @@ class CoachStatusView(APIView):
 class FacilityView(APIView):
     def post(self, request):
         if not IsLoggedIn().has_permission(request, self):
-            return Response(
-                {'message': '로그인이 필요합니다.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return unauthorized_response()
 
         REQUEST_URL = f'{products_service_url}/api/facilities/'
 
@@ -90,10 +84,7 @@ class FacilityView(APIView):
 class FacilityInfoView(APIView):
     def post(self, request, uuid):
         if not IsLoggedIn().has_permission(request, self):
-            return Response(
-                {'message': '로그인이 필요합니다.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return unauthorized_response()
 
         REQUEST_URL = f'{products_service_url}/api/facilities/{uuid}/info/'
 
@@ -117,10 +108,7 @@ class FacilityInfoView(APIView):
 class FacilityStatusView(APIView):
     def get(self, request):
         if not IsLoggedIn().has_permission(request, self):
-            return Response(
-                {'message': '로그인이 필요합니다.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return unauthorized_response()
 
         REQUEST_URL = f'{products_service_url}/api/facilities/status/'
 

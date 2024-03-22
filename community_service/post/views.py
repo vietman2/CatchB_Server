@@ -7,14 +7,20 @@ from drf_spectacular.utils import extend_schema
 
 from .enums import ForumChoices
 from .models import Tag, Image, Post
-from .serializers import (TagSerializer, ImageSerializer,
-                          PostCreateSerializer, PostSimpleSerializer,
-                            PostDetailSerializer)
+from .serializers import (
+    TagSerializer, ImageSerializer,
+    PostCreateSerializer, PostSimpleSerializer,
+    PostDetailSerializer
+)
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     http_method_names = ['get']
+
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @extend_schema(summary='태그 목록 조회', tags=['태그'])
     def list(self, request, *args, **kwargs):
