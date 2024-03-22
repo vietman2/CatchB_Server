@@ -4,7 +4,7 @@ class BankAccount(models.Model):
     holder_name     = models.CharField(max_length=30)
     bank            = models.ForeignKey("Bank", on_delete=models.PROTECT)
     account_number  = models.CharField(unique=True, max_length=30)
-    branch_code     = models.CharField(null=True, max_length=3)
+    branch_code     = models.CharField(blank=True, default="", max_length=3)
 
     is_verified     = models.BooleanField(default=False)
     created_at      = models.DateTimeField(auto_now_add=True)
