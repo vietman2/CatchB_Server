@@ -1,4 +1,6 @@
 from django.db.models import Q
+from django.core.exceptions import ValidationError as DjValidError
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -30,6 +32,11 @@ class CoachViewSet(ModelViewSet):
         ## TODO: Coach.objects.get(is_confirmed=True)
         ## TODO: pagination, filter based on lat and lng
         return super().list(request, *args, **kwargs)
+
+    @extend_schema(summary="코치 상세 조회", tags=["코치"])
+    def retrieve(self, request, *args, **kwargs):
+        ## TODO: Custom serializer for detailed view
+        return super().retrieve(request, *args, **kwargs)
 
     @extend_schema(summary="코치 목록 조회", tags=["코치"])
     def create(self, request, *args, **kwargs):
@@ -78,7 +85,6 @@ class CoachViewSet(ModelViewSet):
             )
 
         except ValidationError as e:
-            print(e.detail)
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": e.detail[0]}
@@ -87,60 +93,51 @@ class CoachViewSet(ModelViewSet):
     @action(detail=False, methods=["get"])
     @extend_schema(summary="코치 등록 현황 조회", tags=["코치"])
     def status(self, request, *args, **kwargs):
-        if "uuid" in request.query_params:
+        try:
             user_uuid = request.query_params["uuid"]
-        else:
+
+            q = Q()
+            q &= Q(member_uuid=user_uuid)
+
+            coach = Coach.objects.filter(q)
+
+            if not coach.exists():
+                return Response(
+                    status=status.HTTP_200_OK,
+                    data={
+                        "step": 0,
+                        "title": "등록 시작",
+                        "message": "코치 등록을 시작해 보세요!"
+                    }
+                )
+            
+            coach = coach.first()
+
+            if not CoachInfo.objects.filter(coach=coach).exists():
+                step = 1
+            #elif coach.bank is None:
+            #    step = 2
+            #elif coach.products.count() == 0:
+            #    step = 3
+            else:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": "오류가 발생했습니다. 나중에 다시 시도해주세요."}
+                )
+
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "coach": coach.uuid,
+                    "step": step,
+                    "status": coach.is_confirmed,
+                    "title": "이어서 등록하기",
+                    "message": "코치 등록이 진행중입니다.\n코치님에 대한 상세 정보를 입력해주세요."
+                }
+            )
+
+        except (ValidationError, DjValidError, MultiValueDictKeyError):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "잘못된 요청입니다."}
             )
-
-        q = Q()
-        q &= Q(member_uuid=user_uuid)
-
-        coach = Coach.objects.filter(q)
-
-        if not coach.exists():
-            return Response(
-                status=status.HTTP_200_OK,
-                data={
-                    "step": 0,
-                    "title": "등록 시작",
-                    "message": "코치 등록을 시작해 보세요!"
-                }
-            )
-        
-        coach = coach.first()
-
-        if coach.is_complete:
-            return Response(
-                status=status.HTTP_200_OK,
-                data={
-                    "step": -1,
-                    "title": "코치 등록",
-                    "message": "이미 코치 등록이 되어있습니다!"
-                }
-            )
-
-        if not CoachInfo.objects.filter(coach=coach).exists():
-            step = 1
-        #elif coach.bank is None:
-        #    step = 2
-        #elif coach.products.count() == 0:
-        #    step = 3
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"message": "오류가 발생했습니다. 나중에 다시 시도해주세요."}
-            )
-
-        return Response(
-            status=status.HTTP_200_OK,
-            data={
-                "coach": coach.uuid,
-                "step": step,
-                "status": coach.is_confirmed,
-                "title": "이어서 등록하기",
-                "message": "코치 등록이 진행중입니다.\n코치님에 대한 상세 정보를 입력해주세요."
-            }
-        )
