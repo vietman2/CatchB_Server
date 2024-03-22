@@ -1,7 +1,5 @@
-from io import BytesIO
 from unittest.mock import patch
-from PIL import Image
-from reportlab.pdfgen import canvas
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APITestCase
 
 class CoachGetAPITestCase(APITestCase):
@@ -14,24 +12,6 @@ class CoachGetAPITestCase(APITestCase):
     def test_coach_detail(self):
         response = self.client.get("/api/coaches/7e1186bf-3172-41df-91fd-a9f74f2508ca/")
         self.assertEqual(response.status_code, 200)
-
-def generate_photo_file(content_type="png"):
-    file = BytesIO()
-    image = Image.new("RGBA", size=(100, 100), color=(155, 0, 0))
-    image.save(file, "png")
-    file.name = f"test.{content_type}"
-    file.seek(0)
-    return file
-
-def generate_pdf_file():
-    file = BytesIO()
-    c = canvas.Canvas(file)
-    c.drawString(100, 100, "Hello World")  # Add some text to the PDF
-    c.showPage()
-    c.save()
-    file.seek(0)
-    file.name = "test.pdf"
-    return file
 
 class CoachCreateAPITestCase(APITestCase):
     fixtures = ["init_data.json"]
@@ -48,16 +28,28 @@ class CoachCreateAPITestCase(APITestCase):
     @patch("django.core.files.storage.default_storage.save")
     def test_coach_create_pdf(self, mock_save):
         mock_save.return_value = "test.png"
-        self.data["certification"] = generate_pdf_file()
+        self.data["certification"] = SimpleUploadedFile("test.pdf", b"file_content", content_type="application/pdf")
         response = self.client.post(self.url, self.data, format="multipart")
         self.assertEqual(response.status_code, 201)
 
     @patch("django.core.files.storage.default_storage.save")
     def test_coach_create_png(self, mock_save):
         mock_save.return_value = "test.png"
-        self.data["certification"] = generate_photo_file()
+        self.data["certification"] = SimpleUploadedFile("test.png", b"file_content", content_type="image/png")
         response = self.client.post(self.url, self.data, format="multipart")
         self.assertEqual(response.status_code, 201)
+
+    @patch("django.core.files.storage.default_storage.save")
+    def test_coach_create_jpeg(self, mock_save):
+        mock_save.return_value = "test.png"
+        self.data["certification"] = SimpleUploadedFile("test.jpg", b"file_content", content_type="image/jpeg")
+        response = self.client.post(self.url, self.data, format="multipart")
+        self.assertEqual(response.status_code, 201)
+
+    def test_coach_create_invalid_certification(self):
+        self.data["certification"] = SimpleUploadedFile("test.txt", b"file_content", content_type="text/plain")
+        response = self.client.post(self.url, self.data, format="multipart")
+        self.assertEqual(response.status_code, 400)
 
     def test_coach_create_invalid_career(self):
         self.data["baseball_career"] = "선수 출신"
@@ -76,7 +68,10 @@ class CoachInfoCreateAPITestCase(APITestCase):
             "specialty": ["투구", "타격", "수비", "포수수비", "재활", "컨디셔닝"],
             "level": ["비기너1", "비기너2", "아마추어", "베테랑", "루키", "엘리트"],
             "lesson_type": ["개인 레슨", "소그룹 레슨", "팀 레슨", "기타"],
-            "images": [generate_photo_file(), generate_photo_file("jpg")],
+            "images": [
+                SimpleUploadedFile("test.jpg", b"file_content", content_type="image/jpeg"),
+                SimpleUploadedFile("test.png", b"file_content", content_type="image/png")
+            ],
         }
         self.data_empty = {
             "intro": "투수로서의 경험을 공유합니다.",
