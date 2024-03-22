@@ -300,6 +300,9 @@ class FacilityInfoCreateSerializer(serializers.ModelSerializer):
 
     def upload_images(self, data, uuid):
         images = []
+        if not data:
+            raise serializers.ValidationError({"images": "이미지를 업로드해주세요."})
+
         for image in data:
             # first image: image.obj.cover = True
             cover = False
