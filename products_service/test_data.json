@@ -76,7 +76,6 @@
       "member_name": "이대호",
       "member_phone": "010-8989-8989",
       "is_confirmed": false,
-      "is_complete": false,
       "certification": "products/coach/7e1186bf-3172-41df-91fd-a9f74f2508ca/certification.pdf",
       "facility": null,
       "baseball_career": 1
@@ -90,7 +89,6 @@
       "member_name": "이승엽",
       "member_phone": "010-2323-2323",
       "is_confirmed": false,
-      "is_complete": false,
       "certification": "products/coach/c5c5636e-74e8-4ee5-b0d8-8356830b2e76/certification.jpg",
       "facility": null,
       "baseball_career": 1
@@ -104,7 +102,6 @@
       "member_name": "홍승우",
       "member_phone": "010-0101-1010",
       "is_confirmed": false,
-      "is_complete": false,
       "certification": "products/coach/e8217f3c-1aee-4a24-9fe6-a1347b278c16/certification.jpg",
       "facility": null,
       "baseball_career": 1
