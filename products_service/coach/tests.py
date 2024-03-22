@@ -5,12 +5,19 @@ from rest_framework.test import APITestCase
 class CoachGetAPITestCase(APITestCase):
     fixtures = ["init_data.json", "test_data.json"]
 
+    def setUp(self):
+        self.catchb_coach = "7e1186bf-3172-41df-91fd-a9f74f2508ca"
+        self.fac_coach = "e8217f3c-1aee-4a24-9fe6-a1347b278c16"
+
     def test_coach_list(self):
         response = self.client.get("/api/coaches/")
         self.assertEqual(response.status_code, 200)
 
     def test_coach_detail(self):
-        response = self.client.get("/api/coaches/7e1186bf-3172-41df-91fd-a9f74f2508ca/")
+        response = self.client.get(f"/api/coaches/{self.catchb_coach}/")
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(f"/api/coaches/{self.fac_coach}/")
         self.assertEqual(response.status_code, 200)
 
 class CoachCreateAPITestCase(APITestCase):
@@ -119,10 +126,14 @@ class CoachStatusCheckAPITestCase(APITestCase):
 
     def setUp(self):
         self.url = "/api/coaches/status/"
+        self.uuid_step_neg1 = "f5afb4a0-8c5f-40cf-9f71-0055fd0e480e"
         self.uuid_step0 = "7e1186bf-3172-41df-91fd-a9f74f2508ca"
         self.uuid_step1 = "7d7d2817-253c-485e-8081-b20a034c44ab"
 
     def test_coach_status_check(self):
+        response = self.client.get(self.url, {"uuid": self.uuid_step_neg1})
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.get(self.url, {"uuid": self.uuid_step0})
         self.assertEqual(response.status_code, 200)
 
