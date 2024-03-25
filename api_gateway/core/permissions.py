@@ -1,4 +1,5 @@
 import jwt
+from jwt.exceptions import DecodeError
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 
@@ -11,11 +12,13 @@ def get_user_info(request):
 
     try:
         access = token.split(' ')[1]
+
+        decoded = jwt.decode(access, key, algorithms='HS256')
+        return decoded
     except IndexError:
         return None
-
-    decoded = jwt.decode(access, key, algorithms='HS256')
-    return decoded
+    except DecodeError:
+        return None
 
 class IsLoggedIn(BasePermission):
     def has_permission(self, request, view):
