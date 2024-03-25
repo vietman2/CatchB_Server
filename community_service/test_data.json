@@ -29,7 +29,7 @@
       "title": "올해 믈브",
       "content": "개재밌겠다",
       "num_clicks": 0,
-      "tags": [2, 1],
+      "tags": [1],
       "images": []
     }
   },
@@ -116,6 +116,79 @@
       "num_clicks": 0,
       "tags": [10, 9],
       "images": []
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": 1,
+    "fields": {
+      "created_at": "2024-03-25T02:28:11.200Z",
+      "updated_at": "2024-03-25T02:28:11.200Z",
+      "is_deleted": false,
+      "deleted_at": null,
+      "post": 2024031500000005,
+      "commenter_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "content": "ㅋㅋㅋㅋ"
+    }
+  },
+  {
+    "model": "post.postcontentview",
+    "pk": 1,
+    "fields": {
+      "post": 2024031500000002,
+      "user_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "viewed_first_at": "2024-03-25T01:26:39.174Z",
+      "viewed_last_at": "2024-03-25T05:21:56.214Z"
+    }
+  },
+  {
+    "model": "post.postcontentview",
+    "pk": 2,
+    "fields": {
+      "post": 2024031500000001,
+      "user_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "viewed_first_at": "2024-03-25T01:27:52.221Z",
+      "viewed_last_at": "2024-03-25T01:38:41.625Z"
+    }
+  },
+  {
+    "model": "post.postcontentview",
+    "pk": 3,
+    "fields": {
+      "post": 2024031500000007,
+      "user_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "viewed_first_at": "2024-03-25T02:01:24.714Z",
+      "viewed_last_at": "2024-03-25T02:01:24.714Z"
+    }
+  },
+  {
+    "model": "post.postcontentview",
+    "pk": 4,
+    "fields": {
+      "post": 2024031500000006,
+      "user_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "viewed_first_at": "2024-03-25T02:01:26.644Z",
+      "viewed_last_at": "2024-03-25T02:01:26.644Z"
+    }
+  },
+  {
+    "model": "post.postcontentview",
+    "pk": 5,
+    "fields": {
+      "post": 2024031500000005,
+      "user_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "viewed_first_at": "2024-03-25T02:01:32.337Z",
+      "viewed_last_at": "2024-03-25T05:23:13.174Z"
+    }
+  },
+  {
+    "model": "post.postcontentview",
+    "pk": 6,
+    "fields": {
+      "post": 2024031500000003,
+      "user_uuid": "7d7d2817-253c-485e-8081-b20a034c44ab",
+      "viewed_first_at": "2024-03-25T05:13:30.854Z",
+      "viewed_last_at": "2024-03-25T05:13:30.854Z"
     }
   }
 ]
