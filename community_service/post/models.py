@@ -1,7 +1,7 @@
 from django.db import models
 
 from core.models import (
-    TimeStampedModel, Report, Like, 
+    TimeStampedModel, Report, Like,
     Dislike, CustomAutoField)  # pylint: disable=E0611
 from .enums import ForumChoices
 
@@ -83,6 +83,8 @@ class PostContentView(models.Model):
     user_uuid       = models.UUIDField()
     viewed_first_at = models.DateTimeField(auto_now_add=True)
     viewed_last_at  = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
 
     class Meta:
         db_table = 'content_view'

@@ -69,7 +69,7 @@ class PostSimpleSerializer(serializers.ModelSerializer):
 
     def get_num_likes(self, obj):
         return obj.post_likes.count()
-    
+
     def get_num_dislikes(self, obj):
         return obj.post_dislikes.count()
 
