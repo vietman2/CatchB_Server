@@ -1,7 +1,9 @@
 from django.core.files.storage import default_storage
+from django.utils import timezone
 from rest_framework import serializers
 
-from .models import Tag, Image, Post
+from comment.serializers import CommentListSerializer
+from .models import Tag, Image, Post, PostContentView
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +41,9 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
 class PostSimpleSerializer(serializers.ModelSerializer):
     contains_images = serializers.SerializerMethodField()
+    num_likes       = serializers.SerializerMethodField()
+    num_dislikes    = serializers.SerializerMethodField()
+    num_comments    = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -51,7 +56,9 @@ class PostSimpleSerializer(serializers.ModelSerializer):
             'contains_images',
             'num_clicks',
             'created_at',
-            ## TODO: Add num likes, num comments
+            'num_likes',
+            'num_dislikes',
+            'num_comments'
         ]
 
     def get_contains_images(self, obj):
@@ -60,10 +67,22 @@ class PostSimpleSerializer(serializers.ModelSerializer):
 
         return False
 
+    def get_num_likes(self, obj):
+        return obj.post_likes.count()
+
+    def get_num_dislikes(self, obj):
+        return obj.post_dislikes.count()
+
+    def get_num_comments(self, obj):
+        return obj.comments.count()
+
 class PostDetailSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
-    images = ImageSerializer(many=True)
-    forum = serializers.CharField(source='get_forum_display')
+    tags            = TagSerializer(many=True)
+    images          = ImageSerializer(many=True)
+    forum           = serializers.CharField(source='get_forum_display')
+    num_likes       = serializers.SerializerMethodField()
+    num_comments    = serializers.SerializerMethodField()
+    comments        = CommentListSerializer(many=True)  # TODO: Add pagination
 
     class Meta:
         model = Post
@@ -78,5 +97,28 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'num_clicks',
             'created_at',
             'updated_at',
-            ## TODO: Add num likes, num comments
+            'num_likes',
+            'num_comments',
+            'comments'
         ]
+
+    def increment_clicks(self):
+        self.instance.num_clicks += 1
+        self.instance.save()
+
+    def content_viewed(self, user_uuid):
+        view_obj = PostContentView.objects.filter(post=self.instance, user_uuid=user_uuid).first()
+
+        if view_obj is None:
+            PostContentView.objects.create(post=self.instance, user_uuid=user_uuid)
+        else:
+            view_obj.viewed_last_at = timezone.now()
+            view_obj.save()
+
+        return True
+
+    def get_num_likes(self, obj):
+        return obj.post_likes.count()
+
+    def get_num_comments(self, obj):
+        return obj.comments.count()

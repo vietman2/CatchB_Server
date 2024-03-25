@@ -1,6 +1,8 @@
 from django.db import models
 
-from core.models import TimeStampedModel, Report, Like, CustomAutoField  # pylint: disable=E0611
+from core.models import (  # pylint: disable=E0611
+    TimeStampedModel, Report, Like,
+    Dislike, CustomAutoField)
 from .enums import ForumChoices
 
 class Tag(models.Model):
@@ -37,6 +39,7 @@ class Post(TimeStampedModel):
     images          = models.ManyToManyField(Image, blank=True)
 
     num_clicks      = models.IntegerField(default=0)
+    is_under_review = models.BooleanField(default=False)
 
     objects = models.Manager()
 
@@ -58,8 +61,31 @@ class PostReport(Report):
         db_table = 'post_report'
 
 class PostLike(Like):
-    post            = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post            = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_likes')
 
     class Meta:
         db_table = 'post_like'
+        unique_together = ('post', 'user_uuid')
+
+class PostDislike(Dislike):
+    post            = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='post_dislikes'
+    )
+
+    class Meta:
+        db_table = 'post_dislike'
+        unique_together = ('post', 'user_uuid')
+
+class PostContentView(models.Model):
+    post            = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user_uuid       = models.UUIDField()
+    viewed_first_at = models.DateTimeField(auto_now_add=True)
+    viewed_last_at  = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'content_view'
         unique_together = ('post', 'user_uuid')

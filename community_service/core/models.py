@@ -21,6 +21,14 @@ class Like(models.Model):
     class Meta:
         abstract = True
 
+class Dislike(models.Model):
+    user_uuid       = models.UUIDField(editable=False)
+
+    disliked_at     = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
 class Report(TimeStampedModel):
     report_user_uuid    = models.UUIDField(editable=False)
     report_content      = models.TextField()
