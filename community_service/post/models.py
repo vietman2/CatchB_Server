@@ -1,8 +1,8 @@
 from django.db import models
 
-from core.models import (
+from core.models import (  # pylint: disable=E0611
     TimeStampedModel, Report, Like,
-    Dislike, CustomAutoField)  # pylint: disable=E0611
+    Dislike, CustomAutoField)
 from .enums import ForumChoices
 
 class Tag(models.Model):
