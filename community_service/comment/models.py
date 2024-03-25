@@ -9,7 +9,7 @@ class Comment(TimeStampedModel):
         on_delete=models.DO_NOTHING,
         related_name='comments'
     )
-    commenter_uuid  = models.UUIDField(editable=False)
+    commenter_uuid  = models.UUIDField()
 
     content         = models.TextField()
 
@@ -48,7 +48,11 @@ class ReCommentReport(Report):
         db_table = 'recomment_report'
 
 class CommentLike(Like):
-    comment         = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    comment         = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name='comment_likes'
+    )
 
     class Meta:
         db_table = 'comment_like'
