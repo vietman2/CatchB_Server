@@ -60,6 +60,30 @@ class PostDetailView(APIView):
 
         return get_response(request.headers, request.body, REQUEST_URL, 'GET', {'uuid': uuid})
 
+class PostLikeView(APIView):
+    def post(self, request, pk):
+        if not IsLoggedIn().has_permission(request, self):
+            return Response(
+                {'message': '로그인이 필요합니다.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        REQUEST_URL = f'{community_service_url}/api/posts/{pk}/like/'
+
+        return get_response(request.headers, request.body, REQUEST_URL, 'POST')
+
+class PostDislikeView(APIView):
+    def post(self, request, pk):
+        if not IsLoggedIn().has_permission(request, self):
+            return Response(
+                {'message': '로그인이 필요합니다.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        REQUEST_URL = f'{community_service_url}/api/posts/{pk}/dislike/'
+
+        return get_response(request.headers, request.body, REQUEST_URL, 'POST')
+
 class CommentView(APIView):
     def post(self, request):
         if not IsLoggedIn().has_permission(request, self):
