@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import TimeStampedModel, Report, Like  # pylint: disable=E0611
+from core.models import TimeStampedModel, Report, Like, Dislike  # pylint: disable=E0611
 from post.models import Post
 
 class Comment(TimeStampedModel):
@@ -58,9 +58,27 @@ class CommentLike(Like):
         db_table = 'comment_like'
         unique_together = ('comment', 'user_uuid')
 
+class CommentDislike(Dislike):
+    comment         = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name='comment_dislikes'
+    )
+
+    class Meta:
+        db_table = 'comment_dislike'
+        unique_together = ('comment', 'user_uuid')
+
 class ReCommentLike(Like):
     recomment       = models.ForeignKey(ReComment, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'recomment_like'
+        unique_together = ('recomment', 'user_uuid')
+
+class ReCommentDislike(Dislike):
+    recomment       = models.ForeignKey(ReComment, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'recomment_dislike'
         unique_together = ('recomment', 'user_uuid')
