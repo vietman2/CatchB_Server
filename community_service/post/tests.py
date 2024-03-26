@@ -167,7 +167,6 @@ class PostAPITest(APITestCase):
         # 2. user logged in
         response = self.client.get(self.url + self.post_pk + '/', {'uuid': self.user_uuid})
         self.assertEqual(response.status_code, 200)
-        print(response.data)
 
         # 3. update viewed_last_at
         response = self.client.get(self.url + self.post_pk + '/', {'uuid': self.user_uuid})
