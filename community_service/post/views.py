@@ -122,7 +122,7 @@ class PostViewSet(ModelViewSet):
 
     @action(detail=True, methods=['post'])
     @extend_schema(summary='게시글 좋아요', tags=['게시글'])
-    def like(self, request, pk=None):
+    def like(self, request, pk=None):   ## pylint: disable=W0613
         instance = self.get_object()
 
         try:
@@ -140,7 +140,7 @@ class PostViewSet(ModelViewSet):
 
     @action(detail=True, methods=['post'])
     @extend_schema(summary='게시글 싫어요', tags=['게시글'])
-    def dislike(self, request, pk=None):
+    def dislike(self, request, pk=None):    ## pylint: disable=W0613
         instance = self.get_object()
 
         try:
