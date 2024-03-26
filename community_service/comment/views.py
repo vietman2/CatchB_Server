@@ -15,7 +15,6 @@ class CommentViewSet(ModelViewSet):
     @extend_schema(summary='댓글 작성', tags=['댓글'])
     def create(self, request, *args, **kwargs):
         try:
-            print(request.data)
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
