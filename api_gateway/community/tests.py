@@ -67,7 +67,7 @@ class PostAPITests(APITestCase):
 class PostDetailAPITests(APITestCase):
     def setUp(self):
         self.community_server = 'http://localhost:8002'
-    
+
     @requests_mock.Mocker()
     def test_post_detail(self, m):
         m.get(
