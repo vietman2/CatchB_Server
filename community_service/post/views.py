@@ -14,7 +14,7 @@ from .serializers import (
     PostDetailSerializer, PostLikeSerializer
 )
 
-def getForum(text):
+def get_forum(text):
     if text == '덕아웃':
         return ForumChoices.DUGOUT
     if text == '드래프트':
@@ -75,7 +75,7 @@ class PostViewSet(ModelViewSet):
     @extend_schema(summary='게시글 작성', tags=['게시글'])
     def create(self, request, *args, **kwargs):
         data = request.data
-        data['forum'] = getForum(data['forum'])
+        data['forum'] = get_forum(data['forum'])
 
         try:
             serializer = PostCreateSerializer(data=data)
@@ -93,7 +93,7 @@ class PostViewSet(ModelViewSet):
     @extend_schema(summary='게시글 목록 조회', tags=['게시글'])
     def list(self, request, *args, **kwargs):
         if 'forum' in request.query_params:
-            forum = getForum(request.query_params['forum'])
+            forum = get_forum(request.query_params['forum'])
             queryset = self.queryset.filter(forum=forum, is_deleted=False, is_under_review=False)
 
             serializer = PostSimpleSerializer(queryset, many=True)
