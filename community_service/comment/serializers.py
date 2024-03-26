@@ -28,11 +28,11 @@ class CommentListSerializer(serializers.ModelSerializer):
     def get_created_at(self, obj):  ## pylint: disable=R0911
         delta = timezone.now() - obj.created_at
 
-        if delta.seconds < 60:
-            return '방금 전'
-        if delta.seconds < 3600:
-            return f'{delta.seconds // 60}분 전'
         if delta.days < 1:
+            if delta.seconds < 60:
+                return '방금 전'
+            if delta.seconds < 3600:
+                return f'{delta.seconds // 60}분 전'
             return f'{delta.seconds // 3600}시간 전'
         if delta.days < 7:
             return f'{delta.days}일 전'
