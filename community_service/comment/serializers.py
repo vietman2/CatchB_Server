@@ -51,17 +51,17 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     def get_num_likes(self, obj):
         return obj.comment_likes.count()
-    
+
     def get_num_dislikes(self, obj):
         return obj.comment_dislikes.count()
 
     def get_num_recomments(self, obj):
         return obj.recomments.count()
-    
+
     def get_is_liked(self, obj):
         user = self.context.get('uuid', None)
         return obj.comment_likes.filter(user_uuid=user).exists()
-    
+
     def get_is_disliked(self, obj):
         user = self.context.get('uuid', None)
         return obj.comment_dislikes.filter(user_uuid=user).exists()
