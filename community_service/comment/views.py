@@ -49,13 +49,16 @@ class CommentViewSet(ModelViewSet):
 
         ## return number of comments
         num_comments = comments.count()
-        return Response({'comments': serializer.data, 'num_comments': num_comments}, status=status.HTTP_200_OK)
+        return Response(
+            {'comments': serializer.data, 'num_comments': num_comments},
+            status=status.HTTP_200_OK
+        )
 
     @action(detail=True, methods=['post'])
     @extend_schema(summary='댓글 좋아요', tags=['댓글'])
-    def like(self, request, pk=None):
+    def like(self, request, pk=None):   ## pylint: disable=W0613
         comment = self.get_object()
-        
+
         try:
             serializer = CommentLikeSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -63,17 +66,17 @@ class CommentViewSet(ModelViewSet):
 
         except ValidationError as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-        
+
         simple_serializer = CommentListSerializer(updated_comment)
         simple_serializer.context['uuid'] = request.data['user_uuid']
-        
+
         return Response(simple_serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     @extend_schema(summary='댓글 싫어요', tags=['댓글'])
-    def dislike(self, request, pk=None):
+    def dislike(self, request, pk=None):    ## pylint: disable=W0613
         comment = self.get_object()
-        
+
         try:
             serializer = CommentLikeSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -81,8 +84,8 @@ class CommentViewSet(ModelViewSet):
 
         except ValidationError as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-        
+
         simple_serializer = CommentListSerializer(updated_comment)
         simple_serializer.context['uuid'] = request.data['user_uuid']
-        
+
         return Response(simple_serializer.data, status=status.HTTP_200_OK)

@@ -86,7 +86,7 @@ class CommentLikeSerializer(serializers.ModelSerializer):
             comment.comment_likes.create(user_uuid=user_uuid)
 
         return comment
-    
+
     def dislike(self, **kwargs):
         user_uuid = self.validated_data['user_uuid']
         comment = kwargs['instance']

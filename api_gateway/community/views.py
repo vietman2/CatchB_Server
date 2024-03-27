@@ -107,7 +107,7 @@ class CommentView(APIView):
                 'GET',
                 request.query_params
             )
-        
+
         uuid = get_user_info(request)['user_id']
         params = request.query_params.copy()
         params['user_uuid'] = uuid
