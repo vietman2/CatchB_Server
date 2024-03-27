@@ -95,3 +95,51 @@ class CommentView(APIView):
         REQUEST_URL = f'{community_service_url}/api/comments/'
 
         return get_response(request.headers, request.body, REQUEST_URL, 'POST')
+
+    def get(self, request):
+        REQUEST_URL = f'{community_service_url}/api/comments/'
+
+        if not IsLoggedIn().has_permission(request, self):
+            return get_response(
+                request.headers,
+                request.body,
+                REQUEST_URL,
+                'GET',
+                request.query_params
+            )
+        
+        uuid = get_user_info(request)['user_id']
+        params = request.query_params.copy()
+        params['user_uuid'] = uuid
+
+        return get_response(
+            request.headers,
+            request.body,
+            REQUEST_URL,
+            'GET',
+            params
+        )
+
+class CommentLikeView(APIView):
+    def post(self, request, pk):
+        if not IsLoggedIn().has_permission(request, self):
+            return Response(
+                {'message': '로그인이 필요합니다.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        REQUEST_URL = f'{community_service_url}/api/comments/{pk}/like/'
+
+        return get_response(request.headers, request.body, REQUEST_URL, 'POST')
+
+class CommentDislikeView(APIView):
+    def post(self, request, pk):
+        if not IsLoggedIn().has_permission(request, self):
+            return Response(
+                {'message': '로그인이 필요합니다.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        REQUEST_URL = f'{community_service_url}/api/comments/{pk}/dislike/'
+
+        return get_response(request.headers, request.body, REQUEST_URL, 'POST')
