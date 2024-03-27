@@ -36,13 +36,23 @@ class ReComment(TimeStampedModel):
         ordering = ['created_at']
 
 class CommentReport(Report):
-    comment         = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True)
+    comment         = models.ForeignKey(
+        Comment,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='comment_reports'
+    )
 
     class Meta:
         db_table = 'comment_report'
 
 class ReCommentReport(Report):
-    recomment       = models.ForeignKey(ReComment, on_delete=models.SET_NULL, null=True)
+    recomment       = models.ForeignKey(
+        ReComment,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='recomment_reports'
+    )
 
     class Meta:
         db_table = 'recomment_report'

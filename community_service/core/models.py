@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
-from .enums import ReportReason
+from .enums import ReportReason, ReviewStatus, ReportStatus
 
 class TimeStampedModel(models.Model):
     created_at      = models.DateTimeField(auto_now_add=True)
@@ -38,7 +38,14 @@ class Report(TimeStampedModel):
         default=ReportReason.OTHER
     )
 
-    reviewed            = models.BooleanField(default=False)
+    review_status       = models.IntegerField(
+        choices=ReviewStatus.choices,
+        default=ReviewStatus.SUBMITTED
+    )
+    report_status       = models.IntegerField(
+        choices=ReportStatus.choices,
+        default=ReportStatus.PENDING
+    )
     feedback            = models.TextField(blank=True)
 
     class Meta:
