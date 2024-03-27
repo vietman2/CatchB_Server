@@ -65,3 +65,38 @@ class CommentListSerializer(serializers.ModelSerializer):
     def get_is_disliked(self, obj):
         user = self.context.get('uuid', None)
         return obj.comment_dislikes.filter(user_uuid=user).exists()
+
+class CommentLikeSerializer(serializers.ModelSerializer):
+    user_uuid = serializers.UUIDField(write_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['user_uuid']
+
+    def like(self, **kwargs):
+        user_uuid = self.validated_data['user_uuid']
+        comment = kwargs['instance']
+
+        if comment.comment_likes.filter(user_uuid=user_uuid).exists():
+            comment.comment_likes.filter(user_uuid=user_uuid).delete()
+        elif comment.comment_dislikes.filter(user_uuid=user_uuid).exists():
+            comment.comment_dislikes.filter(user_uuid=user_uuid).delete()
+            comment.comment_likes.create(user_uuid=user_uuid)
+        else:
+            comment.comment_likes.create(user_uuid=user_uuid)
+
+        return comment
+    
+    def dislike(self, **kwargs):
+        user_uuid = self.validated_data['user_uuid']
+        comment = kwargs['instance']
+
+        if comment.comment_dislikes.filter(user_uuid=user_uuid).exists():
+            comment.comment_dislikes.filter(user_uuid=user_uuid).delete()
+        elif comment.comment_likes.filter(user_uuid=user_uuid).exists():
+            comment.comment_likes.filter(user_uuid=user_uuid).delete()
+            comment.comment_dislikes.create(user_uuid=user_uuid)
+        else:
+            comment.comment_dislikes.create(user_uuid=user_uuid)
+
+        return comment
