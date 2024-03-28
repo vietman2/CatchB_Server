@@ -55,7 +55,12 @@ class Steal(Post):
         db_table = 'steal'
 
 class PostReport(Report):
-    post            = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
+    post            = models.ForeignKey(
+        Post,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='post_reports'
+    )
 
     class Meta:
         db_table = 'post_report'
